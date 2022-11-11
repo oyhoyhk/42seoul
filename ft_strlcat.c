@@ -1,0 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/07 12:52:41 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/11 08:18:34 by yooh             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "libft.h"
+
+size_t	ft_strlcat(char *restrict dst, const char *restrict src, size_t dstsize)
+{
+	size_t	dst_len;
+	size_t	src_len;
+	size_t	i;
+
+	if (!dst)
+		return (ft_strlen(src) + dstsize);
+	if (!src)
+		return (ft_strlen(dst));
+	src_len = ft_strlen(src);
+	dst_len = ft_strlen(dst);
+	i = 0;
+	if (dst_len + 1 > dstsize)
+		return (src_len + dstsize);
+	if (dst_len + 1 < dstsize)
+	{
+		while (src[i] && dst_len + 1 + i < dstsize)
+		{
+			dst[dst_len + i] = src[i];
+			i++;
+		}
+	}
+	dst[dst_len + i] = 0;
+	return (dst_len + src_len);
+}
