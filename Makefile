@@ -6,7 +6,7 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/09 12:35:52 by yooh              #+#    #+#              #
-#    Updated: 2022/11/11 14:49:47 by yooh             ###   ########.fr        #
+#    Updated: 2022/11/12 10:53:13 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,6 +71,12 @@ AR			= ar rcs
 
 INCLUDES	= ./libft.h
 
+ifdef	BONUS
+			OBJ_SWITCH = $(OBJS) $(OBJS_B)
+else
+			OBJ_SWITCH = $(OBJS)
+endif
+
 all		: $(NAME)
 
 %.o		: %.c
@@ -84,10 +90,10 @@ fclean	:	clean
 
 re		: 	fclean all
 
-$(NAME)	:	$(OBJS)
+$(NAME)	:	$(OBJ_SWITCH)
 			$(AR) $@ $^
 
-bonus	: $(OBJS) $(OBJS_B)
-			$(AR) $(NAME) $^
+bonus	:
+			$(MAKE) BONUS=1 $(NAME)
 
-.PHONY	: all clean fclean re
+.PHONY	:	all clean fclean re bonus

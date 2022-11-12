@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:52:41 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 08:18:34 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/13 06:58:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,6 @@ size_t	ft_strlcat(char *restrict dst, const char *restrict src, size_t dstsize)
 	size_t	src_len;
 	size_t	i;
 
-	if (!dst)
-		return (ft_strlen(src) + dstsize);
-	if (!src)
-		return (ft_strlen(dst));
 	src_len = ft_strlen(src);
 	dst_len = ft_strlen(dst);
 	i = 0;

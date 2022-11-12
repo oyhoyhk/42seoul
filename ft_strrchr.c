@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:24:52 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 10:51:05 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/11 15:24:50 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_strrchr(const char *s, int c)
 			result = (char *)s;
 		s++;
 	}
-	if (c == 0)
+	if ((char)c == 0)
 		return ((char *) s);
 	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:35:26 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/10 11:15:54 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/13 07:02:59 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 
 	temp = (unsigned char *) dest;
 	source = (unsigned char *) src;
-	if (!dest && !src)
-		return (0);
 	if (dest <= src)
 		while (n--)
 			*temp++ = *source++;

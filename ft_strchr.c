@@ -6,22 +6,24 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:23:38 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 11:00:50 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/11 15:24:28 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 char	*ft_strchr(const char *s, int c)
 {
 	int		i;
+	char	*str;
 
+	str = (char *)s;
 	i = 0;
-	while (s[i])
+	while (str[i])
 	{
-		if ((s[i]) == (char)c)
-			return ((char *)(s + i));
+		if ((str[i]) == (char)c)
+			return (str + i);
 		i++;
 	}
-	if (c == 0)
-		return ((char *)(s + i));
+	if ((char)c == 0)
+		return (str + i);
 	return (0);
 }
