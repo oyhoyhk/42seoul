@@ -6,12 +6,11 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 16:17:22 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 17:16:12 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 10:36:43 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
 t_list	*ft_lstnew(void *content)
 {

@@ -6,11 +6,10 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:52:41 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/13 06:58:35 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 10:38:21 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
 size_t	ft_strlcat(char *restrict dst, const char *restrict src, size_t dstsize)

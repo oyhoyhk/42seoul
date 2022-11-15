@@ -6,29 +6,27 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 17:35:55 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 12:02:00 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 11:51:50 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
-char	*get_empty_string(void)
+void	*get_empty_string(void)
 {
-	char	*result;
+	void	*result;
 
-	result = (char *) malloc(sizeof(char) * 1);
+	result = ft_calloc(1, 1);
 	if (!result)
 		return (NULL);
-	result[0] = '\0';
 	return (result);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	unsigned int	i;
-	unsigned int	count;
-	char			*result;
+	size_t	i;
+	size_t	count;
+	char	*result;
 
 	if (!s)
 		return (NULL);

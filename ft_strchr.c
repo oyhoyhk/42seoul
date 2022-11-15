@@ -6,13 +6,15 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:23:38 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 15:24:28 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 10:43:19 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 char	*ft_strchr(const char *s, int c)
 {
-	int		i;
+	size_t	i;
 	char	*str;
 
 	str = (char *)s;

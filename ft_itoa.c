@@ -6,15 +6,15 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:47:16 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/10 16:40:41 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 10:48:39 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-int	count_digit_numbers(long long n)
+size_t	count_digit_numbers(long long n)
 {
-	int	count;
+	size_t	count;
 
 	count = 0;
 	while (n > 0)
@@ -23,6 +23,18 @@ int	count_digit_numbers(long long n)
 		n /= 10;
 	}
 	return (count);
+}
+
+char	*create_zero_string(void)
+{
+	char	*result;
+
+	result = (char *) malloc(sizeof(char) + 1);
+	if (!result)
+		return (NULL);
+	result[0] = '0';
+	result[1] = '\0';
+	return (result);
 }
 
 void	put_number_in_result(char *result, long long num, int count)
@@ -37,29 +49,17 @@ void	put_number_in_result(char *result, long long num, int count)
 	return ;
 }
 
-char	*get_zero_string(void)
-{
-	char	*result;
-
-	result = (char *) malloc(sizeof(char) * 2);
-	if (!result)
-		return (NULL);
-	result[0] = '0';
-	result[1] = '\0';
-	return (result);
-}
-
 char	*ft_itoa(int n)
 {
 	int			sign;
-	int			count;
+	size_t		count;
 	char		*result;
 	long long	num;
 
 	sign = 0;
 	num = (long long) n;
 	if (num == 0)
-		return (get_zero_string());
+		return (create_zero_string());
 	if (num < 0)
 	{
 		sign = 1;

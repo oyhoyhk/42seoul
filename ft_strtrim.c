@@ -6,16 +6,15 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 07:28:04 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/11 12:07:42 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 10:41:38 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
-int	has_char(char ch, char const *set)
+size_t	has_char(char ch, char const *set)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (set[i])
@@ -27,35 +26,24 @@ int	has_char(char ch, char const *set)
 	return (0);
 }
 
-char	*create_empty_string(void)
-{
-	char	*result;
-
-	result = (char *) malloc(sizeof(char) * 1);
-	if (!result)
-		return (NULL);
-	result[0] = '\0';
-	return (result);
-}
-
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	int	left;
-	int	right;
+	size_t	left;
+	size_t	right;
 
 	if (!s1 || !set)
 		return (NULL);
 	if (!ft_strlen(s1))
-		return (create_empty_string());
+		return (ft_calloc(1, 1));
 	if (!ft_strlen(set))
 		return (ft_strdup(s1));
 	left = 0;
 	right = ft_strlen(s1) - 1;
 	while (has_char(s1[left], set))
 		left++;
-	while (has_char(s1[right], set))
+	while (right > 0 && has_char(s1[right], set))
 		right--;
 	if (left > right)
-		return (create_empty_string());
+		return (ft_calloc(1, 1));
 	return (ft_substr(s1, left, right - left + 1));
 }

@@ -6,18 +6,17 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:13:16 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/10 11:13:26 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/14 10:42:40 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
 char	*ft_strdup(const char *string)
 {
 	const size_t	len = ft_strlen(string);
 	char			*result;
-	int				i;
+	size_t			i;
 
 	result = (char *) malloc(sizeof(char) * len + 1);
 	if (!result || !string)
