@@ -6,13 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:47:16 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/14 10:48:39 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/15 14:15:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	count_digit_numbers(long long n)
+static	size_t	count_digit_numbers(long long n)
 {
 	size_t	count;
 
@@ -25,7 +25,7 @@ size_t	count_digit_numbers(long long n)
 	return (count);
 }
 
-char	*create_zero_string(void)
+static	char	*create_zero_string(void)
 {
 	char	*result;
 
@@ -37,7 +37,7 @@ char	*create_zero_string(void)
 	return (result);
 }
 
-void	put_number_in_result(char *result, long long num, int count)
+static	void	put_number_in_result(char *result, long long num, int count)
 {
 	result[count--] = '\0';
 	while (num > 0)

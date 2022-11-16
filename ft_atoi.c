@@ -6,11 +6,11 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 11:58:13 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/10 11:13:41 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/15 14:14:32 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isspace(char ch)
+static int	ft_isspace(char ch)
 {
 	if (ch == ' '
 		|| ch == '\t'

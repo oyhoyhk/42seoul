@@ -6,13 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 07:28:04 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/14 10:41:38 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/15 14:17:20 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	has_char(char ch, char const *set)
+static	size_t	has_char(char ch, char const *set)
 {
 	size_t	i;
 

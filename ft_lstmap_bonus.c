@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap.c                                        :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 16:25:26 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/14 09:55:31 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/16 08:11:59 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_clear_func(t_list *head, void (*del)(void *));
+static	void	*ft_clear_func(t_list *head, void (*del)(void *));
 
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
@@ -40,7 +40,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	return (head);
 }
 
-void	*ft_clear_func(t_list *head, void (*del)(void *))
+static	void	*ft_clear_func(t_list *head, void (*del)(void *))
 {
 	ft_lstclear(&head, del);
 	return (NULL);

@@ -6,13 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 08:21:05 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/14 12:22:24 by yooh             ###   ########.fr       */
+/*   Updated: 2022/11/15 14:18:10 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	count_words(char const *s, char c)
+static	size_t	count_words(char const *s, char c)
 {
 	size_t	i;
 	size_t	cnt;
@@ -33,7 +33,8 @@ size_t	count_words(char const *s, char c)
 	return (cnt);
 }
 
-char	*allocate_word(char *word, char const *s, size_t k, size_t word_len)
+static	char	*allocate_word(char *word, char const *s,
+		size_t k, size_t word_len)
 {
 	size_t	i;
 
@@ -44,7 +45,7 @@ char	*allocate_word(char *word, char const *s, size_t k, size_t word_len)
 	return (word);
 }
 
-int	check_index_and_free_result(char **result, size_t cur)
+static	int	check_index_and_free_result(char **result, size_t cur)
 {
 	size_t	i;
 
@@ -60,7 +61,8 @@ int	check_index_and_free_result(char **result, size_t cur)
 	return (0);
 }
 
-int	create_result(char **result, char const *s, char c, size_t word_count)
+static	int	create_result(char **result, char const *s,
+		char c, size_t word_count)
 {
 	size_t	i;
 	size_t	j;
