@@ -6,7 +6,7 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/09 12:35:52 by yooh              #+#    #+#              #
-#    Updated: 2022/11/16 15:31:07 by yooh             ###   ########.fr        #
+#    Updated: 2022/11/17 08:04:21 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,9 +61,9 @@ OBJS_B		= $(SRC_B:.c=.o)
 
 NAME		= libft.a
 
-CC			= gcc
+CC			= cc
 
-CFLAG		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror
 
 RM			= rm -f
 
@@ -80,7 +80,7 @@ endif
 all		: $(NAME)
 
 %.o		: %.c
-			$(CC) $(CFLAG) -c $< -o $@
+			$(CC) $(CFLAGS) -c $< -o $@
 
 clean	:
 			$(RM) $(OBJS) $(OBJS_B)
