@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 21:36:32 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/05 07:06:08 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 07:16:32 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ static int	dfs_find_present(int x, int y, t_mlx_info *mlx, int **visited)
 {
 	int			m;
 	int			n;
+	int			result;
 
 	m = 0;
 	while (mlx->board[m])
@@ -87,12 +88,13 @@ static int	dfs_find_present(int x, int y, t_mlx_info *mlx, int **visited)
 		|| mlx->board[x][y] == 'E')
 		return (0);
 	visited[x][y] = 1;
-	if (mlx->board[x][y] == 'C')
-		return (1);
-	return (dfs_find_present(x - 1, y, mlx, visited)
+	result = dfs_find_present(x - 1, y, mlx, visited)
 		+ dfs_find_present(x + 1, y, mlx, visited)
 		+ dfs_find_present(x, y - 1, mlx, visited)
-		+ dfs_find_present(x, y + 1, mlx, visited));
+		+ dfs_find_present(x, y + 1, mlx, visited);
+	if (mlx->board[x][y] == 'C')
+		return (result + 1);
+	return (result);
 }
 
 void	escape_check(t_mlx_info *game)
