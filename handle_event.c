@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 19:07:49 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/05 12:50:16 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/06 13:47:22 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	key_event(int keycode, t_mlx_info *game)
 	draw_imgs(*game);
 	game->game_info.traps_count = (game->game_info.traps_count + 1) % 4;
 	handle_game_over(game, &game->game_info);
-	ft_printf("move_count : %d\n", game->game_info.move_count);
 	return (0);
 }
 
