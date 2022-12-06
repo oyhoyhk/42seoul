@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 19:07:49 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/04 06:51:32 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 12:50:16 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static t_game_info	check_object_exist(t_mlx_info *game);
 int	key_event(int keycode, t_mlx_info *game)
 {
 	if (game->game_info.game_over)
-		exit(1);
+		exit(0);
 	if (!(keycode == KEY_A || keycode == KEY_D || keycode == KEY_ESC
 			|| keycode == KEY_S || keycode == KEY_W))
 		return (0);
 	if (keycode == KEY_ESC)
-		exit(1);
+		exit(0);
 	if (keycode == KEY_A)
 		move(0, -1, game);
 	else if (keycode == KEY_D)

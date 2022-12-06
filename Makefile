@@ -18,6 +18,7 @@ SRCS		=	deque.c						\
 				so_long_utils.c				\
 				get_next_line.c				\
 				get_next_line_utils.c		\
+				ft_bzero.c					\
 
 CFLAGS		=	-Werror -Wextra -Wall
 

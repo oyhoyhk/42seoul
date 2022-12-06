@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 13:57:53 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/03 22:35:34 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 20:37:31 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,32 @@ typedef struct s_trap_info
 {
 	int		x;
 	int		y;
-
 }	t_trap_info;
+
+typedef struct s_images
+{
+	void	*wall;
+	void	*player_1;
+	void	*player_2;
+	void	*player_3;
+	void	*trap;
+	void	*present_1;
+	void	*present_2;
+	void	*goal;
+}	t_images;
 
 typedef struct s_game_info
 {
-	int		cur_x;
-	int		cur_y;
-	int		present_count;
-	int		total_present;
-	int		move_count;
-	int		game_over;
-	int		traps_count;
-	int		player_count;
-	int		goal_count;
-	t_deque	*traps;
+	int			cur_x;
+	int			cur_y;
+	int			present_count;
+	int			total_present;
+	int			move_count;
+	int			game_over;
+	int			traps_count;
+	int			player_count;
+	int			goal_count;
+	t_deque		*traps;
 }	t_game_info;
 
 typedef struct s_mlx_info
@@ -72,6 +83,7 @@ typedef struct s_mlx_info
 	char				**board;
 	t_size_info			size_info;
 	struct s_game_info	game_info;
+	struct s_images		images;
 }	t_mlx_info;
 
 typedef struct s_count_info
@@ -119,5 +131,8 @@ char			*get_player_url(int *player);
 void			patrol_trap(t_mlx_info *game);
 void			escape_check(t_mlx_info *game);
 void			perror_and_exit(int err);
+void			ft_bzero(void *s, size_t n);
+void			set_images(t_images *images, t_mlx_info *game);
+void			free_visited(int **visited, char **board);
 
 #endif

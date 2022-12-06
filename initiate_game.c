@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 10:53:23 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/04 19:41:23 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 21:03:23 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,13 @@ static void	move_trap(int dx, int dy, t_trap_info *trap_info, t_mlx_info *game);
 
 void	set_mlx_info(t_mlx_info *game, char *filename)
 {
+	ft_bzero(game, sizeof(game));
+	ft_bzero(&game->game_info, sizeof(game->game_info));
 	game->mlx = mlx_init();
+	if (game->mlx == NULL)
+		perror_and_exit(ENOMEM);
+	set_images(&game->images, game);
 	game->board = parse_deque_to_arr(parse_file_to_deque(filename));
-	game->game_info.present_count = 0;
-	game->game_info.total_present = 0;
-	game->game_info.game_over = 0;
-	game->game_info.traps = NULL;
-	game->game_info.traps_count = 0;
-	game->game_info.move_count = 0;
-	game->game_info.player_count = 0;
-	game->game_info.goal_count = 0;
 	game->size_info = cal_window_size(game->board);
 	game->win = mlx_new_window(game->mlx, game->size_info.width * 60,
 			game->size_info.height * 60, "so_long");

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 20:06:44 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/03 20:26:58 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 21:06:09 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_deque	*deque_push(t_deque **head, void *value)
 	if (*head == NULL)
 	{
 		*head = new;
-		return (create_deque(value));
+		return (new);
 	}
 	cur = *head;
 	while (cur->right)
@@ -71,7 +71,11 @@ void	free_deque(t_deque *dq)
 	{
 		tmp = dq;
 		dq = dq->right;
-		free(dq->value);
+		if (tmp->left)
+			tmp->left = NULL;
+		if (tmp->right)
+			tmp->right = NULL;
+		free(tmp->value);
 		free(tmp);
 	}
 }

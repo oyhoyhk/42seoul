@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 21:36:32 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/05 07:16:32 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 20:38:41 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,6 @@ void	escape_check(t_mlx_info *game)
 		|| dfs_find_present(game->game_info.cur_x, game->game_info.cur_y,
 			game, visited_to_find_present) != game->game_info.total_present)
 		perror_and_exit(EIO);
+	free_visited(visited_to_find_goal, game->board);
+	free_visited(visited_to_find_present, game->board);
 }

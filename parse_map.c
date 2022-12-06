@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 10:37:44 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/03 22:20:57 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/05 21:07:04 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_deque	*parse_file_to_deque(char *name)
 	t_deque	*dq;
 	char	*result;
 
+	dq = NULL;
 	fd = open(name, O_RDONLY);
 	if (fd == -1)
 		perror_and_exit(EBADF);
@@ -26,7 +27,8 @@ t_deque	*parse_file_to_deque(char *name)
 		perror_and_exit(ENOMEM);
 	while (result)
 	{
-		deque_push(&dq, result);
+		deque_push(&dq, ft_strdup(result));
+		free(result);
 		result = get_next_line(fd);
 	}
 	return (dq);
@@ -35,9 +37,11 @@ t_deque	*parse_file_to_deque(char *name)
 char	**parse_deque_to_arr(t_deque *dq)
 {
 	char	**result;
+	t_deque	*tmp;
 	ssize_t	m;
 	ssize_t	i;
 
+	tmp = dq;
 	m = deque_length(dq);
 	result = (char **) malloc(sizeof(char *) * (m + 1));
 	if (result == NULL)
@@ -45,10 +49,11 @@ char	**parse_deque_to_arr(t_deque *dq)
 	i = 0;
 	while (i < m)
 	{
-		result[i] = dq->value;
+		result[i] = ft_strdup(dq->value);
 		i++;
 		dq = dq->right;
 	}
+	free_deque(tmp);
 	result[i] = NULL;
 	return (result);
 }
