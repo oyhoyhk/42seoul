@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/04 07:07:44 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/09 20:32:49 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/11 13:40:27 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
-# include "get_next_line.h"
+# include "gnl.h"
 # include <string.h>
 # include <stdio.h>
-# include <errno.h>
-
-# define NO_FD			1
-# define MALLOC_FAILED	2
-# define NO_COMMAND		3
-# define COMMAND_FAILED	4
-# define ARGUE_ERROR	5
 
 typedef struct s_data
 {
@@ -54,4 +47,8 @@ void	set_default(t_data *data, int argc, char **argv);
 void	do_child_things(t_data data, int i, char *cmd, char **env);
 void	do_parent_things(int i, int argc, t_data *data);
 void	handle_error(void);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+
 #endif

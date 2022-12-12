@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 14:54:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/09 20:41:40 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/11 11:19:21 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	heredoc_setting(t_data *data, int temp_fd[2], int argc, char **argv)
 {
 	if (pipe(temp_fd) == -1)
 		handle_error();
-	data->out = open(argv[argc - 1], O_CREAT | O_TRUNC | O_RDWR, 0777);
+	data->out = open(argv[argc - 1], O_APPEND | O_RDWR, 0777);
 	if (data->out == -1)
 		handle_error();
 	if (pipe(temp_fd) == -1)

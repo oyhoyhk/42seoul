@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 14:57:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/09 20:49:29 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/12 09:54:42 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,29 @@
 
 void	set_default(t_data *data, int argc, char **argv)
 {
+	pid_t	pid;
+	int		fd[2];
+
 	data->in = open(argv[1], O_RDONLY, 0644);
 	data->out = open(argv[argc - 1], O_CREAT | O_TRUNC | O_RDWR, 0644);
 	data->argc = argc;
-	if (data->in == -1 || data->out == -1)
+	if (data->in == -1)
 	{
 		perror("");
-		write(data->in, "", 0);
+		pipe(fd);
+		pid = fork();
+		if (pid == 0)
+			return (write(fd[0], "", 0), exit(0));
+		wait(NULL);
+		close(fd[1]);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			handle_error();
 	}
-	dup2(data->in, STDIN_FILENO);
+	else
+		if (dup2(data->in, STDIN_FILENO) == -1)
+			handle_error();
+	if (data->out == -1)
+		handle_error();
 }
 
 void	do_child_things(t_data data, int i, char *cmd, char **env)
