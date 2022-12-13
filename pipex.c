@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/04 07:09:44 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/13 06:56:21 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/14 06:36:10 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int	main(int argc, char **argv, char **env)
 {
 	if (argc != 5)
 	{
-		write(1, "Only Needs 4 Arguments\n", ft_strlen("Only Needs 4 Arguments\n"));
+		write(2, "Only Needs 4 Arguments\n",
+			ft_strlen("Only Needs 4 Arguments\n"));
 		exit(1);
 	}
 	default_pipe(argc, argv, env);
