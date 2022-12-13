@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 14:57:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/12 09:54:42 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/13 06:40:16 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	do_parent_things(int i, int argc, t_data *data)
 {
 	if (i < argc - 1)
 	{
-		wait(NULL);
 		if (close(data->fd[1]) == -1)
 			handle_error();
 		if (dup2(data->fd[0], STDIN_FILENO) == -1)

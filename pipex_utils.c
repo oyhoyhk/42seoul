@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 07:47:02 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/11 13:40:49 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/13 07:00:25 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ char	**get_cmd_info(char *cmd, char **env)
 	else
 		result = ft_split(temp, ' ');
 	if (result == NULL)
-		handle_error();
+	{
+		perror("command not found: ");
+		exit(1);
+	}
 	free_2d_arr((void **)path_list);
 	return (result);
 }
