@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:11:12 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:25:12 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 20:09:16 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,6 @@ int	count_pipe(char **list)
 	while (list[i])
 		i++;
 	return (i);
-}
-
-void	free_2d_arr(char **arr)
-{
-	int		i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
 }
 
 void	show_token(t_token *token)

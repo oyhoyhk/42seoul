@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 07:08:52 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:27:27 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 20:07:02 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static char	*append_cmd(char *cmd, char *new);
 static int	append_file_info(int cur_type, t_token *token, char *name);
-static void	set_start_point(int	*start, int *i, int *cur_type, char *input);
 static int	handle_prev_token_and_set(t_tokenizing_info *info,
 				t_token *token, char *input);
 static void	skip_space(char *input, t_tokenizing_info *info);
@@ -40,7 +39,6 @@ t_token	*tokenize_input(char *input)
 	if (!handle_prev_token_and_set(&info, token, input))
 		return (NULL);
 	token->cmd_info = ft_split(info.cmd, ' ');
-	ft_bzero(info.cmd, ft_strlen(info.cmd));
 	free(info.cmd);
 	return (token);
 }

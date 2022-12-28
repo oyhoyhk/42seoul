@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:23:47 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 20:13:34 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,33 +67,36 @@ typedef struct s_token
 }	t_token;
 
 // cmd.cz
-char	**get_cmd_info(char *str);
-char	*create_absolute_route(char *str);
-void	execute_cmd(char **cmd, int i, int count, t_fds fds);
+char		**get_cmd_info(char *str);
+char		*create_absolute_route(char *str);
+void		execute_cmd(char **cmd, int i, int count, t_fds fds);
 
 // redirect.c
-int		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds);
-void	handle_redirect_stdout(t_token *token, t_fds fds);
+int			handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds);
+void		handle_redirect_stdout(t_token *token, t_fds fds);
 
 // read.c
-void	read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds);
-void	start_read(t_fds fds);
+void		read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds);
+void		start_read(t_fds fds);
 
 // tokenize.c
-t_token	*tokenize_input(char *input);
+t_token		*tokenize_input(char *input);
 
 // utils.c
-int		count_pipe(char **list);
-void	show_token(t_token *token);// 나중에 지워야함
-void	free_2d_arr(char **arr);
-void	set_start_point(int	*start, int *i, int *cur_type, char *input);
+int			count_pipe(char **list);
+void		show_token(t_token *token);// 나중에 지워야함
+void		set_start_point(int	*start, int *i, int *cur_type, char *input);
 
 // pipe.c
-void	run_pipelines(char **pipelines, t_fds fds,
-			int pipe_count, pid_t *pid_list);
-void	kill_zombie_process(int pipe_count, pid_t *pid_list, t_fds fds);
+void		run_pipelines(char **pipelines, t_fds fds,
+				int pipe_count, pid_t *pid_list);
+void		kill_zombie_process(int pipe_count, pid_t *pid_list, t_fds fds);
+
+// free.c
+void		free_2d_arr(char **arr);
+void		free_token(t_token *token);
 
 // signal.c
-void	setsignal(void);
+void		setsignal(void);
 
 #endif

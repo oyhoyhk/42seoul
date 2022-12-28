@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:19:22 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 20:12:07 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	run_pipelines(char **pipelines, t_fds fds,
 		if (i + 1 < pipe_count)
 			dup2(fds.fd[0], STDIN_FILENO);
 		i++;
+		free_token(token);
 	}
 }
 

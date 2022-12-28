@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:19:35 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 20:03:21 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ static void	execute_readline(char *input, t_fds fds)
 	close(fds.fd[0]);
 	close(fds.fd[1]);
 	kill_zombie_process(pipe_count, pid_list, fds);
+	free(pid_list);
+	free_2d_arr(execution_list);
 }
 
 void	start_read(t_fds fds)
@@ -94,5 +96,7 @@ void	start_read(t_fds fds)
 		}
 		add_history(input);
 		execute_readline(input, fds);
+		free(input);
+		system("leaks minishell");
 	}
 }
