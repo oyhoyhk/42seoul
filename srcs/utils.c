@@ -6,11 +6,21 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:11:12 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 10:22:34 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 19:25:12 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	count_pipe(char **list)
+{
+	int		i;
+
+	i = 0;
+	while (list[i])
+		i++;
+	return (i);
+}
 
 void	free_2d_arr(char **arr)
 {
@@ -88,5 +98,39 @@ void	show_token(t_token *token)
 		}
 		printf("[%s]\n", ((t_file_info *)(cur->content))->filename);
 		cur = cur->next;
+	}
+}
+
+static void	handle_redirect_in(int *start, int *i, int *cur_type, char *input)
+{
+	*cur_type = REDIRECT_IN;
+	*start = *i + 1;
+	if (input[*i + 1] == '<')
+	{
+		*cur_type = REDIRECT_HEREDOC;
+		*start = *i + 2;
+		*i += 1;
+	}
+}
+
+void	set_start_point(int	*start, int *i, int *cur_type, char *input)
+{
+	if (input[*i] == ' ')
+	{
+		*cur_type = CMD;
+		*start = *i + 1;
+	}
+	if (input[*i] == '<')
+		handle_redirect_in(start, i, cur_type, input);
+	if (input[*i] == '>')
+	{
+		*cur_type = REDIRECT_TRUNC_OUT;
+		*start = *i + 1;
+		if (input[*i + 1] == '>')
+		{
+			*cur_type = REDIRECT_APPEND_OUT;
+			*start = *i + 2;
+			*i += 1;
+		}
 	}
 }

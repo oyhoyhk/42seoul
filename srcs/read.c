@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_from_stdin.c                                  :+:      :+:    :+:   */
+/*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 16:14:28 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 19:19:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_heredoc_string(int count)
+static char	*get_heredoc_string(int count)
 {
 	char	*base;
 	int		i;
@@ -60,4 +60,39 @@ void	read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds)
 	wait(NULL);
 	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO);
+}
+
+static void	execute_readline(char *input, t_fds fds)
+{
+	int		i;
+	int		pipe_count;
+	pid_t	*pid_list;
+	char	**execution_list;
+
+	execution_list = ft_split(input, '|');
+	i = 0;
+	pipe_count = count_pipe(execution_list);
+	pid_list = (pid_t *) malloc(sizeof(pid_t) * (pipe_count));
+	run_pipelines(execution_list, fds, pipe_count, pid_list);
+	dup2(fds.stdin_fd, STDIN_FILENO);
+	close(fds.fd[0]);
+	close(fds.fd[1]);
+	kill_zombie_process(pipe_count, pid_list, fds);
+}
+
+void	start_read(t_fds fds)
+{
+	char	*input;
+
+	while (1)
+	{
+		input = readline("minishell > ");
+		if (input == NULL)
+		{
+			printf("you should terminate shell\n");
+			return ;
+		}
+		add_history(input);
+		execute_readline(input, fds);
+	}
 }

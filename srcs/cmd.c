@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_cmd_info.c                                     :+:      :+:    :+:   */
+/*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/26 10:50:13 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 19:15:22 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,26 @@ char	*create_absolute_route(char *str)
 	}
 	free_2d_arr(list);
 	return (NULL);
+}
+
+void	execute_cmd(char **cmd, int i, int count, t_fds fds)
+{
+	char	*absolute_route;
+
+	close(fds.fd[0]);
+	if (i + 1 == count)
+		dup2(fds.stdout_fd, STDOUT_FILENO);
+	else
+		dup2(fds.fd[1], STDOUT_FILENO);
+	absolute_route = create_absolute_route(cmd[0]);
+	if (absolute_route == NULL)
+	{
+		write(2, "minishell: ", ft_strlen("minishell: "));
+		write(2, cmd[0], ft_strlen(cmd[0]));
+		write(2, ": command not found\n", ft_strlen(": command not found\n"));
+		exit(1);
+	}
+	free(cmd[0]);
+	cmd[0] = absolute_route;
+	execve(cmd[0], cmd, NULL);
 }
