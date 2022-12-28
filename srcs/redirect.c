@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:15:15 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:18:43 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 07:50:27 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	handle_file_open_error(void);
 
-int	handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
+int	handle_redirect_stdin(t_token *token, t_fds fds)
 {
 	t_list	*cur;
 	int		in_fd;
@@ -35,8 +35,7 @@ int	handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 		else
 		{
 			dup2(fds.stdin_fd, STDIN_FILENO);
-			read_from_stdin(fd, ((t_file_info *)cur->content)->filename,
-				pipe_count, fds);
+			read_from_stdin(fd, ((t_file_info *)cur->content)->filename, fds);
 		}
 		cur = cur->next;
 	}

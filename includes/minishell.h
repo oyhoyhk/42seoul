@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 20:13:34 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 07:50:33 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ char		*create_absolute_route(char *str);
 void		execute_cmd(char **cmd, int i, int count, t_fds fds);
 
 // redirect.c
-int			handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds);
+int			handle_redirect_stdin(t_token *token, t_fds fds);
 void		handle_redirect_stdout(t_token *token, t_fds fds);
 
 // read.c
-void		read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds);
+void		read_from_stdin(int fd[2], char *word, t_fds fds);
 void		start_read(t_fds fds);
 
 // tokenize.c
@@ -95,6 +95,9 @@ void		kill_zombie_process(int pipe_count, pid_t *pid_list, t_fds fds);
 // free.c
 void		free_2d_arr(char **arr);
 void		free_token(t_token *token);
+
+// parse.c
+char		**parse_readline(char *input);
 
 // signal.c
 void		setsignal(void);

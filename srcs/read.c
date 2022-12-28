@@ -6,49 +6,25 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 20:03:21 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 07:49:41 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_heredoc_string(int count)
-{
-	char	*base;
-	int		i;
-	char	*temp;
-	char	*result;
-
-	base = ft_strdup("heredoc> ");
-	result = "heredoc> ";
-	temp = "pipe ";
-	i = 0;
-	while (i < count)
-	{
-		result = ft_strjoin(temp, base);
-		free(base);
-		base = result;
-		i++;
-	}
-	free(base);
-	return (result);
-}
-
-void	read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds)
+void	read_from_stdin(int fd[2], char *word, t_fds fds)
 {
 	char	*result;
-	char	*heredoc_str;
 	pid_t	pid;
 
 	pipe(fd);
 	pid = fork();
-	heredoc_str = get_heredoc_string(pipe_count - 1);
 	if (pid == 0)
 	{
 		close(fd[0]);
 		while (1)
 		{
-			write(fds.stdout_fd, heredoc_str, ft_strlen(heredoc_str));
+			write(fds.stdout_fd, "> ", ft_strlen("> "));
 			result = get_next_line(fds.stdin_fd);
 			if (!result || ft_strncmp(result, word, ft_strlen(result) - 1) == 0)
 				break ;
@@ -69,7 +45,7 @@ static void	execute_readline(char *input, t_fds fds)
 	pid_t	*pid_list;
 	char	**execution_list;
 
-	execution_list = ft_split(input, '|');
+	execution_list = parse_readline(input);
 	i = 0;
 	pipe_count = count_pipe(execution_list);
 	pid_list = (pid_t *) malloc(sizeof(pid_t) * (pipe_count));
@@ -97,6 +73,5 @@ void	start_read(t_fds fds)
 		add_history(input);
 		execute_readline(input, fds);
 		free(input);
-		system("leaks minishell");
 	}
 }

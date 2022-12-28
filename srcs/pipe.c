@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 20:12:07 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 07:51:33 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	run_pipelines(char **pipelines, t_fds fds,
 	while (pipelines[i])
 	{
 		token = tokenize_input(pipelines[i]);
-		if (!handle_redirect_stdin(token, pipe_count, fds) && i++)
+		if (!handle_redirect_stdin(token, fds) && i++)
 			continue ;
 		handle_redirect_stdout(token, fds);
 		pipe(fds.fd);
