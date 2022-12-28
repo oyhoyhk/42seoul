@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 13:59:21 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 15:38:09 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,10 +145,20 @@ int	start_read(t_fds fds)
 	return (1);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char *envp[])
 {
-	t_fds	fds;
+	t_fds			fds;
+	struct termios	ter;
 
+	/*** need to remove ***/
+	(void)envp;
+	(void)argv;
+	/*** need to remove ***/
+
+	tcgetattr(STDIN_FILENO, &ter);
+	ter.c_lflag &= ~(ECHOCTL);
+	tcsetattr(STDOUT_FILENO, TCSANOW, &ter);
+	setsignal();
 	fds.stdin_fd = dup(STDIN_FILENO);
 	fds.stdout_fd = dup(STDOUT_FILENO);
 
@@ -157,7 +167,6 @@ int	main(int argc, char **argv)
 		printf("Too Many Arguments!\n");
 		exit(1);
 	}
-	*argv = 0;
 	while (1)
 	{
 		if (start_read(fds) == 0)

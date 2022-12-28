@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 13:48:11 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 15:38:37 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
-#include "../libft/libft.h"
+# include <termios.h>
+#include "libft.h"
 #include "gnl.h"
 
 # define TRUE	1
@@ -74,5 +75,8 @@ void	read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds);
 char	*get_heredoc_string(int count);
 
 void	show_token(t_token *token);
+
+// signal.c
+void	setsignal(void);
 
 # endif
