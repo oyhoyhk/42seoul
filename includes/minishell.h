@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 10:43:34 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 13:48:11 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ char	**get_cmd_info(char *str);
 void	free_2d_arr(char **arr);
 char	*create_absolute_route(char *str);
 t_token	*tokenize_input(char *input);
-void	read_from_stdin(int fd[2], pid_t pid, char *word, int argc);
+void	read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds);
+char	*get_heredoc_string(int count);
 
 void	show_token(t_token *token);
 

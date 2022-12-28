@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 12:40:21 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 13:59:21 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 {
 	t_list	*cur;
 	int		in_fd;
-	pid_t	pid;
 	int		fd[2];
 
 	cur = token->redirect_in;
@@ -72,19 +71,16 @@ void		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 				// read failed
 				return ;
 			}
-			printf("in_fd : %d\n", in_fd);
 			dup2(in_fd, STDIN_FILENO);
 			close(in_fd);
-			
 		}
 		else
 		{
+			dup2(fds.stdin_fd, STDIN_FILENO);
 			pipe(fd);
-			pid = fork();
-			read_from_stdin(fd, pid, ((t_file_info *)cur->content)->filename, pipe_count);
+			read_from_stdin(fd, ((t_file_info *)cur->content)->filename, pipe_count, fds);
 		}
-		fds.stdin_fd++;
-		fds.stdin_fd--;
+		dup2(fd[1], STDOUT_FILENO);
 		cur = cur->next;
 		//dup2(fds.stdin_fd, STDIN_FILENO);
 	}

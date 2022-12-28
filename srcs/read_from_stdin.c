@@ -6,13 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 10:56:59 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 15:35:22 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_heredoc_string(int count)
+char	*get_heredoc_string(int count)
 {
 	char	*base;
 	int		i;
@@ -34,26 +34,31 @@ static char	*get_heredoc_string(int count)
 	return (result);
 }
 
-void	read_from_stdin(int fd[2], pid_t pid, char *word, int argc)
+void	read_from_stdin(int fd[2], char *word, int pipe_count, t_fds fds)
 {
 	char	*result;
 	char	*heredoc_str;
+	pid_t	pid;
 
+	pipe(fd);
+	pid = fork();
+	heredoc_str = get_heredoc_string(pipe_count - 1);
 	if (pid == 0)
 	{
 		while (1)
 		{
-			heredoc_str = get_heredoc_string(argc - 5);
-			write(1, heredoc_str, ft_strlen(heredoc_str));
-			result = get_next_line(STDIN_FILENO);
+			write(fds.stdout_fd, heredoc_str, ft_strlen(heredoc_str));
+			result = get_next_line(fds.stdin_fd);
 			if (!result || ft_strncmp(result, word, ft_strlen(result) - 1) == 0)
 				break ;
-			write(fd[1], result, ft_strlen(result));
+			write(fd[0], result, ft_strlen(result));
 			free(result);
 		}
 		exit(0);
 	}
 	wait(NULL);
+	close(fd[0]);
+	dup2(fd[1], fds.stdin_fd);
 	//if (close(fd[1]) == -1 || dup2(fd[0], STDIN_FILENO) == -1) 
 	//	handle_error();
 }
