@@ -2,3 +2,4 @@
 minishell
 *.a
 *.tmp
+*.out

@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 14:49:36 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/28 15:04:21 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include <signal.h>
 # include <termios.h>
-#include "../libft/libft.h"
+#include "libft.h"
 #include "gnl.h"
 
 # define TRUE	1
