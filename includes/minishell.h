@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 10:43:34 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 15:04:21 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
-#include "../libft/libft.h"
+# include <termios.h>
+#include "libft.h"
 #include "gnl.h"
 
 # define TRUE	1
@@ -73,5 +74,8 @@ t_token	*tokenize_input(char *input);
 void	read_from_stdin(int fd[2], pid_t pid, char *word, int argc);
 
 void	show_token(t_token *token);
+
+// signal.c
+void	setsignal(void);
 
 # endif
