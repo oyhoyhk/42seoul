@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 15:38:09 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 17:31:29 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,12 @@ void	excute_cmd(char **cmd, int i, int count, t_fds fds)
 	execve(cmd[0], cmd, NULL);
 }
 
-void		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
+int	handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 {
 	t_list	*cur;
 	int		in_fd;
 	int		fd[2];
+	pid_t	pid;
 
 	cur = token->redirect_in;
 	while (cur)
@@ -68,8 +69,18 @@ void		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 			in_fd = open(((t_file_info *)cur->content)->filename, O_RDONLY, 0644);
 			if (in_fd == -1)
 			{
-				// read failed
-				return ;
+				perror("");
+				pipe(fd);
+				pid = fork();
+				if (pid == 0)
+				{
+					write(fd[0], "", 0);
+					exit(0);
+				}
+				wait(NULL);
+				close(fd[1]);
+				dup2(fd[0], STDIN_FILENO);
+				return (0);
 			}
 			dup2(in_fd, STDIN_FILENO);
 			close(in_fd);
@@ -77,12 +88,32 @@ void		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 		else
 		{
 			dup2(fds.stdin_fd, STDIN_FILENO);
-			pipe(fd);
 			read_from_stdin(fd, ((t_file_info *)cur->content)->filename, pipe_count, fds);
 		}
-		dup2(fd[1], STDOUT_FILENO);
 		cur = cur->next;
-		//dup2(fds.stdin_fd, STDIN_FILENO);
+	}
+	return (1);
+}
+
+void	handle_redirect_stdout(t_token *token, t_fds fds)
+{
+	t_list	*cur;
+	int		fd;
+	char	*file;
+	int		type;
+
+	cur = token->redirect_out;
+	//dup2(fds.stdout_fd, STDOUT_FILENO);
+	while (cur)
+	{
+		type = ((t_file_info *)(cur->content))->type;
+		file = ((t_file_info *)(cur->content))->filename;
+		if (type == REDIRECT_TRUNC_OUT)
+			fd = open(file, O_CREAT | O_TRUNC | O_RDWR, 0644);
+		else
+			fd = open(file, O_CREAT | O_APPEND | O_RDWR, 0644);
+		dup2(fd, fds.stdout_fd);
+		cur = cur->next;
 	}
 }
 
@@ -105,8 +136,13 @@ void		serial_excution(char *input, t_fds fds)
 	while (excution_list[i])
 	{
 		token = tokenize_input(excution_list[i]);
-		show_token(token);
-		handle_redirect_stdin(token, pipe_count, fds);
+		//show_token(token);
+		if (!handle_redirect_stdin(token, pipe_count, fds))
+		{
+			i++;
+			continue;
+		}
+		handle_redirect_stdout(token, fds);
 		pipe(fds.fd);
 		pid = fork();
 		if (pid == 0)
