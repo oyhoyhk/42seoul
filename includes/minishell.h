@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/26 11:58:33 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 10:43:34 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
-#include "libft.h"
+#include "../libft/libft.h"
+#include "gnl.h"
 
 # define TRUE	1
 # define FALSE	0
@@ -34,18 +35,43 @@ typedef struct s_fds
 
 typedef int bool;
 
+enum Property
+{
+	CMD,
+	REDIRECT_IN,
+	REDIRECT_HEREDOC,
+	REDIRECT_TRUNC_OUT,
+	REDIRECT_APPEND_OUT,
+};
+
+typedef struct s_tokenizing_info
+{
+	int		i;
+	int		start;
+	int		cur_type;
+	char	*temp;
+	char	*cmd;
+}	t_tokenizing_info;
+
+typedef struct s_file_info
+{
+	int		type;
+	char	*filename;
+}	t_file_info;
+
 typedef struct s_token
 {
-	bool	redirect_in;
-	bool	redirect_out_trunc;
-	bool	redirect_out_append;
-	bool	heredoc;
-	char	*infile;
-	char	*outfile;
+	t_list	*redirect_in;
+	t_list	*redirect_out;
 	char	**cmd_info;
 }	t_token;
 
 char	**get_cmd_info(char *str);
 void	free_2d_arr(char **arr);
 char	*create_absolute_route(char *str);
+t_token	*tokenize_input(char *input);
+void	read_from_stdin(int fd[2], pid_t pid, char *word, int argc);
+
+void	show_token(t_token *token);
+
 # endif

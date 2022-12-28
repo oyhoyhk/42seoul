@@ -6,7 +6,7 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2022/12/24 11:19:00 by yooh             ###   ########.fr        #
+#    Updated: 2022/12/27 07:37:40 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ all : $(NAME)
 	$(CC) $(CFLAGS) $(CINCLUDE) $(RL_INCLUDE) $(FT_INCLUDE) -c $< -o $@
 
 $(NAME) : $(OBJS)
-	$(MAKE) -C $(FT_DIR) all
+	$(MAKE) bonus -C $(FT_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB)
 
 clean :
@@ -58,7 +58,7 @@ re : fclean all
 # for test
 test: $(OBJS)
 	$(CC) $(CFLAGS) $(CINCLUDE) $(RL_INCLUDE) $(FT_INCLUDE) -c test.c -o test.o
-	$(MAKE) -C $(FT_DIR) all
+	$(MAKE) -C $(FT_DIR) bonus
 	$(CC) $(CFLAGS) -o test $(filter-out %/main.o,$(OBJS)) test.o $(RL_LIB) $(FT_LIB)
 tclean: fclean
 	$(RM) test test.o

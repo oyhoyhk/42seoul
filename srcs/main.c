@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/26 14:12:46 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/28 12:40:21 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	handle_open_redirection(char **result)
 	const char	*arg_error = "minishell: parse error near '\n'";
 	const char	*open_error = "minishell: no such file or directory: ";
 
-	printf("redirection!\n");
 	if (result[1] == NULL)
 	{
 		write(2, arg_error, ft_strlen(arg_error));
@@ -32,72 +31,93 @@ void	handle_open_redirection(char **result)
 		write(2, "\n", 1);
 		exit(1);
 	}
-	printf("let's dup2!\n");
 	dup2(fd, STDIN_FILENO);
 }
 
-void	excute_cmd(char *input, int i, int count, t_fds fds)
+void	excute_cmd(char **cmd, int i, int count, t_fds fds)
 {
-	char	**result;
+	char	*absolute_route;
 
-	result = ft_split(input, ' ');
 	close(fds.fd[0]);
 	if (i + 1 == count)
 		dup2(fds.stdout_fd, STDOUT_FILENO);
 	else
 		dup2(fds.fd[1], STDOUT_FILENO);
-	result = get_cmd_info(input);
-	if (ft_strncmp(result[0], "<", -1) == 0)
+	absolute_route = create_absolute_route(cmd[0]);
+	if (absolute_route == NULL)
 	{
-		handle_open_redirection(result);
-		char	**temp;
-		int		length;
-		int		idx;
-		length = 0;
-		idx = 2;
-		while (result[idx])
-		{
-			idx++;
-			length++;
-		}
-		temp = (char **) malloc(sizeof(char *) * (length + 1));
-		idx = 0;
-		while (idx < length)
-		{
-			temp[idx] = result[idx + 2];
-			idx++;
-		}
-		temp[idx] = NULL;
-		execve(create_absolute_route(temp[0]), temp, NULL);
+		//명령어 없음
+		exit(1);
 	}
-	execve(result[0], result, NULL);
-	
+	free(cmd[0]);
+	cmd[0] = absolute_route;
+	execve(cmd[0], cmd, NULL);
 }
 
-void		serial_excution(char *cmd_string, t_fds fds)
+void		handle_redirect_stdin(t_token *token, int pipe_count, t_fds fds)
 {
-	char	**cmd_list;
+	t_list	*cur;
+	int		in_fd;
+	pid_t	pid;
+	int		fd[2];
+
+	cur = token->redirect_in;
+	while (cur)
+	{
+		if (((t_file_info *)cur->content)->type == REDIRECT_IN)
+		{
+			in_fd = open(((t_file_info *)cur->content)->filename, O_RDONLY, 0644);
+			if (in_fd == -1)
+			{
+				// read failed
+				return ;
+			}
+			printf("in_fd : %d\n", in_fd);
+			dup2(in_fd, STDIN_FILENO);
+			close(in_fd);
+			
+		}
+		else
+		{
+			pipe(fd);
+			pid = fork();
+			read_from_stdin(fd, pid, ((t_file_info *)cur->content)->filename, pipe_count);
+		}
+		fds.stdin_fd++;
+		fds.stdin_fd--;
+		cur = cur->next;
+		//dup2(fds.stdin_fd, STDIN_FILENO);
+	}
+}
+
+void		serial_excution(char *input, t_fds fds)
+{
 	int		i;
-	int		count;
+	int		pipe_count;
 	pid_t	*pid_list;
 	int		status;
 	pid_t	pid;
+	char	**excution_list;
+	t_token	*token;
 	
-	cmd_list = ft_split(cmd_string, '|');
-	count = 0;
+	excution_list = ft_split(input, '|');
+	pipe_count = 0;
 	i = 0;
-	while (cmd_list[count])
-		count++;
-	pid_list = (pid_t *) malloc(sizeof(pid_t) * (count));
-	while (cmd_list[i])
+	while (excution_list[pipe_count])
+		pipe_count++;
+	pid_list = (pid_t *) malloc(sizeof(pid_t) * (pipe_count));
+	while (excution_list[i])
 	{
+		token = tokenize_input(excution_list[i]);
+		show_token(token);
+		handle_redirect_stdin(token, pipe_count, fds);
 		pipe(fds.fd);
 		pid = fork();
 		if (pid == 0)
-			excute_cmd(cmd_list[i], i, count, fds);
+			excute_cmd(token->cmd_info, i, pipe_count, fds);
 		pid_list[i] = pid;
 		close(fds.fd[1]);
-		if (i + 1 < count)
+		if (i + 1 < pipe_count)
 			dup2(fds.fd[0], STDIN_FILENO);
 		i++;
 	}
@@ -106,7 +126,7 @@ void		serial_excution(char *cmd_string, t_fds fds)
 	close(fds.fd[1]);
 	i = 0;
 	status = 0;
-	while (i < count)
+	while (i < pipe_count)
 	{
 		waitpid(pid_list[i], &status, 0);
 		dup2(fds.stdin_fd, STDIN_FILENO);
@@ -117,8 +137,6 @@ void		serial_excution(char *cmd_string, t_fds fds)
 int	start_read(t_fds fds)
 {
 	char	*input;
-	char	**serial_list;
-	int		i;
 
 	input = readline("minishell > ");
 	if (input == NULL)
@@ -127,11 +145,7 @@ int	start_read(t_fds fds)
 		return 0;
 	}
 	add_history(input);
-
-	i = -1;
-	serial_list = ft_split(input, ';');
-	while (serial_list[++i])
-		serial_excution(serial_list[i], fds);
+	serial_excution(input, fds);
 	return (1);
 }
 
