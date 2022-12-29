@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/29 16:50:35 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/29 16:55:41 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,6 @@ int	builtin_cd(char **cmd)
 		return (0);
 	if (chdir(cmd[1]) == 0)
 		return (0);
-	perror("cd: Noa a directory\n");
+	perror("cd: No such file or directory\n");
 	return (1);
 }
