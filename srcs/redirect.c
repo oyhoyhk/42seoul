@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:15:15 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/29 07:50:27 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 08:51:12 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	handle_redirect_stdin(t_token *token, t_fds fds)
 			if (in_fd == -1)
 				return (handle_file_open_error());
 			dup2(in_fd, STDIN_FILENO);
-			close(in_fd);
 		}
 		else
 		{
@@ -42,7 +41,7 @@ int	handle_redirect_stdin(t_token *token, t_fds fds)
 	return (1);
 }
 
-void	handle_redirect_stdout(t_token *token, t_fds fds)
+void	handle_redirect_stdout(t_token *token, int i, int pipe_count, t_fds fds)
 {
 	t_list	*cur;
 	int		fd;
@@ -50,6 +49,11 @@ void	handle_redirect_stdout(t_token *token, t_fds fds)
 	int		type;
 
 	cur = token->redirect_out;
+	if (i + 1 < pipe_count)
+		dup2(fds.fd[1], STDOUT_FILENO);
+	else
+		dup2(fds.fd[1], STDOUT_FILENO);
+		//dup2(fds.stdout_fd, STDOUT_FILENO);
 	while (cur)
 	{
 		type = ((t_file_info *)(cur->content))->type;
@@ -58,7 +62,7 @@ void	handle_redirect_stdout(t_token *token, t_fds fds)
 			fd = open(file, O_CREAT | O_TRUNC | O_RDWR, 0644);
 		else
 			fd = open(file, O_CREAT | O_APPEND | O_RDWR, 0644);
-		dup2(fd, fds.stdout_fd);
+		dup2(fd, STDOUT_FILENO);
 		cur = cur->next;
 	}
 }

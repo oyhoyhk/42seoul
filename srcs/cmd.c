@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 19:15:22 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 08:20:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,15 @@ void	execute_cmd(char **cmd, int i, int count, t_fds fds)
 {
 	char	*absolute_route;
 
+	i = 0;
+	count = 0;
 	close(fds.fd[0]);
-	if (i + 1 == count)
-		dup2(fds.stdout_fd, STDOUT_FILENO);
-	else
-		dup2(fds.fd[1], STDOUT_FILENO);
+	//dup2(fds.fd[1], STDOUT_FILENO);
+	//if (i + 1 == count)
+	//	dup2(fds.fd[1], STDOUT_FILENO);
+	//	//dup2(fds.stdout_fd, STDOUT_FILENO);
+	//else
+	//	dup2(fds.fd[1], STDOUT_FILENO);
 	absolute_route = create_absolute_route(cmd[0]);
 	if (absolute_route == NULL)
 	{

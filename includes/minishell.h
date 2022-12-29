@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/29 07:50:33 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/29 08:31:20 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void		execute_cmd(char **cmd, int i, int count, t_fds fds);
 
 // redirect.c
 int			handle_redirect_stdin(t_token *token, t_fds fds);
-void		handle_redirect_stdout(t_token *token, t_fds fds);
+void		handle_redirect_stdout(t_token *token,
+				int i, int pipe_count, t_fds fds);
 
 // read.c
 void		read_from_stdin(int fd[2], char *word, t_fds fds);
