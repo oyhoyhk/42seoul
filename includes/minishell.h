@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 15:33:58 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/30 15:37:22 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,13 @@ typedef struct s_token
 	t_list	*redirect_out;
 	char	**cmd_info;
 }	t_token;
+
+typedef struct s_global
+{
+	char		**env;
+	t_fds		fds;
+	t_token		*token;	
+}	t_global;
 
 // cmd.cz
 char		**get_cmd_info(char *str);
