@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/29 08:31:20 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/30 09:46:55 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_fds
 {
 	int	stdin_fd;
 	int	stdout_fd;
-	int	fd[2];
+	int fd[2];
 }	t_fds;
 
 enum e_Property
@@ -69,7 +69,7 @@ typedef struct s_token
 // cmd.cz
 char		**get_cmd_info(char *str);
 char		*create_absolute_route(char *str);
-void		execute_cmd(char **cmd, int i, int count, t_fds fds);
+void		execute_cmd(char **cmd, int i, int count);
 
 // redirect.c
 int			handle_redirect_stdin(t_token *token, t_fds fds);
@@ -77,7 +77,7 @@ void		handle_redirect_stdout(t_token *token,
 				int i, int pipe_count, t_fds fds);
 
 // read.c
-void		read_from_stdin(int fd[2], char *word, t_fds fds);
+void		read_from_stdin(char *word, t_fds fds);
 void		start_read(t_fds fds);
 
 // tokenize.c

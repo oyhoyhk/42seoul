@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:15:15 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/29 08:51:12 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/30 15:18:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	handle_redirect_stdin(t_token *token, t_fds fds)
 {
 	t_list	*cur;
 	int		in_fd;
-	int		fd[2];
 
 	cur = token->redirect_in;
 	while (cur)
@@ -33,8 +32,7 @@ int	handle_redirect_stdin(t_token *token, t_fds fds)
 		}
 		else
 		{
-			dup2(fds.stdin_fd, STDIN_FILENO);
-			read_from_stdin(fd, ((t_file_info *)cur->content)->filename, fds);
+			read_from_stdin(((t_file_info *)cur->content)->filename, fds);
 		}
 		cur = cur->next;
 	}
@@ -50,10 +48,12 @@ void	handle_redirect_stdout(t_token *token, int i, int pipe_count, t_fds fds)
 
 	cur = token->redirect_out;
 	if (i + 1 < pipe_count)
+	{
+		//close(fds.fd[0]);
 		dup2(fds.fd[1], STDOUT_FILENO);
+	}
 	else
-		dup2(fds.fd[1], STDOUT_FILENO);
-		//dup2(fds.stdout_fd, STDOUT_FILENO);
+		dup2(fds.stdout_fd, STDOUT_FILENO);
 	while (cur)
 	{
 		type = ((t_file_info *)(cur->content))->type;
@@ -77,7 +77,7 @@ static int	handle_file_open_error(void)
 	pid = fork();
 	if (pid == 0)
 	{
-		write(fd[0], "", 0);
+		ft_putstr_fd("", fd[0]);
 		exit(0);
 	}
 	wait(NULL);
