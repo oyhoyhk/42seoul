@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 14:44:36 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/29 16:30:25 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/30 18:07:12 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	handler(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	printf("signum: %d\n", signum);
 }
 
 void	setsignal(void)

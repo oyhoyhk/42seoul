@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 15:37:22 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/30 17:05:50 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void		handle_redirect_stdout(t_token *token,
 
 // read.c
 void		read_from_stdin(char *word, t_fds fds);
-void		start_read(t_fds fds);
+void		start_read(t_global global);
 
 // tokenize.c
 t_token		*tokenize_input(char *input);

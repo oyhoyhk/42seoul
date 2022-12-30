@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 07:08:52 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 20:07:02 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/30 16:47:07 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	handle_prev_token_and_set(t_tokenizing_info *info,
 	{
 		if (ft_strlen(info->temp) == 0)
 		{
-			printf("minishell: parse error near `\\n'");
+			printf("minishell: parse error\n");
 			return (0);
 		}
 		if (!append_file_info(info->cur_type, token, info->temp))
