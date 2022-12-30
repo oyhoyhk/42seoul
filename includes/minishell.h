@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 09:46:55 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/30 15:33:58 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,12 @@ char		**parse_readline(char *input);
 
 // signal.c
 void		setsignal(void);
+void		setsignal_ignored(void);
+
+//builtin_1.c
+int			builtin_echo(char **cmd);
+int			builtin_pwd(char **cmd);
+int			builtin_exit(char **cmd);
+int			builtin_cd(char **cmd);
 
 #endif
