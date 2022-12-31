@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 13:52:05 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 16:11:31 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,8 @@ typedef struct s_global
 	t_token		*token;	
 }	t_global;
 
-// cmd.cz
-char		**get_cmd_info(char *str);
-char		*create_absolute_route(char *str);
-void		execute_cmd(char **cmd, int i, int count);
+// cmd.c
+void		execute_cmd(t_global *global, char **cmd, int i, int count);
 
 // redirect.c
 int			handle_redirect_stdin(t_token *token, t_fds fds);
@@ -99,18 +97,17 @@ void		handle_redirect_stdout(t_token *token,
 
 // read.c
 void		read_from_stdin(char *word, t_fds fds);
-void		start_read(t_global global);
+void		start_read(t_global *global);
 
 // tokenize.c
 t_token		*tokenize_input(char *input);
 
 // utils.c
 int			count_pipe(char **list);
-void		show_token(t_token *token);// 나중에 지워야함
 void		set_start_point(int	*start, int *i, int *cur_type, char *input);
 
 // pipe.c
-void		run_pipelines(char **pipelines, t_fds fds,
+void		run_pipelines(t_global *global, char **pipelines, t_fds fds,
 				int pipe_count, pid_t *pid_list);
 void		kill_zombie_process(int pipe_count, pid_t *pid_list, t_fds fds);
 
