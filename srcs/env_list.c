@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 18:26:41 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 13:44:38 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 19:10:51 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ char	**env_list_to_array(t_envl *lst)
 	while (cur)
 	{
 		pair = (t_pair *)cur->content;
-		ret[i] = pair_to_str(pair);
+		if (pair->value)
+			ret[i] = pair_to_str(pair);
 		++i;
 		cur = cur->next;
 	}

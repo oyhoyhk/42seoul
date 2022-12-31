@@ -5,3 +5,4 @@ minishell
 *.out
 test.c
 test
+.vscode
