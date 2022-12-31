@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 15:35:18 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 18:52:59 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ int	builtin_pwd(t_global *global, char **cmd)
 
 	printf(FOR_BUILTIN_CHECK);
 	(void)global;
-	if (cmd[1])
-		return (builtin_error_exit("pwd: too many arguments\n", 1));
+	(void)cmd;
 	path = malloc(sizeof(char) * size);
 	getcwd(path, size);
 	printf("%s\n", path);

@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 12:55:53 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 13:51:16 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 19:16:12 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,27 +42,42 @@ t_pair	*pair_dup(t_pair *pair)
  */
 t_pair	*pair_make_from_str(const char *env)
 {
-	char	**pair;
 	t_pair	*ret;
+	int		i;
 
+	i = 0;
 	ret = malloc(sizeof(t_pair));
-	pair = ft_split(env, '=');
-	free(pair);
-	ret->key = pair[0];
-	ret->value = pair[1];
+	while (env[i])
+	{
+		if (env[i] == '=')
+			break ;
+		++i;
+	}
+	if (!env[i])
+	{
+		ret->key = ft_strdup(env);
+		ret->value = NULL;
+	}
+	else
+	{
+		ret->key = ft_substr(env, 0, i);
+		ret->value = ft_substr(env, i + 1, ft_strlen(env) - i - 1);
+	}
 	return (ret);
 }
 
 /**
  * @brief t_pair를 등호로 연결된 문자열로 바꿔준다.
  * @param t_pair
- * @return char* ex) "key=value"
+ * @return char* ex) "key=value" 만약 value가 null이면 return NULL
  */
 char	*pair_to_str(const t_pair *pair)
 {
 	char	*ret;
 	char	*temp;
 
+	if (!pair->value)
+		return (NULL);
 	temp = ft_strjoin(pair->key, "=");
 	ret = ft_strjoin(temp, pair->value);
 	free(temp);
