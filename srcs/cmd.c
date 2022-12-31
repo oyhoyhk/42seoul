@@ -3,51 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 09:54:00 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 16:25:11 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**get_cmd_info(char *str)
+int	is_path(const char *path)
 {
-	char		**result;
-	char		*cmd;
-	const char	*error_str = "minishell: command not found: ";
+	int	i;
 
-	result = ft_split(str, ' ');
-	if (ft_strncmp(result[0], "<", -1) == 0
-		|| ft_strncmp(result[0], "<<", -1) == 0
-		|| access(result[0], X_OK) == 0)
-		return (result);
-	cmd = create_absolute_route(result[0]);
-	if (cmd == NULL)
+	i = 0;
+	while (path[i])
 	{
-		ft_putstr_fd((char *)error_str, STDERR_FILENO);
-		ft_putstr_fd(result[0], STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
-		free_2d_arr(result);
-		exit(1);
+		if (path[i] == '/')
+			return (TRUE);
+		++i;
 	}
-	free((void *)result[0]);
-	result[0] = cmd;
-	return ((char **)result);
+	return (FALSE);
 }
 
-char	*create_absolute_route(char *str)
+char	*create_absolute_route(t_global *global, const char *str)
 {
-	char		*env;
+	t_pair		*pair;
 	char		**list;
 	int			i;
 	char		*temp;
 	char		*result;
 
 	i = 0;
-	env = getenv("PATH");
-	list = ft_split(env, ':');
+	pair = env_find(global, "PATH")->content;
+	if (pair == NULL)
+		return (NULL);
+	list = ft_split(pair->value, ':');
 	while (list[i])
 	{
 		temp = ft_strjoin(list[i], "/");
@@ -65,13 +56,20 @@ char	*create_absolute_route(char *str)
 	return (NULL);
 }
 
-void	execute_cmd(char **cmd, int i, int count)
+char	*create_valid_exec_route(t_global *global, const char *str)
+{
+	if (is_path(str))
+		return (ft_strdup(str));
+	return (create_absolute_route(global, str));
+}
+
+void	execute_cmd(t_global *global, char **cmd, int i, int count)
 {
 	char	*absolute_route;
 
 	i = 0;
 	count = 0;
-	absolute_route = create_absolute_route(cmd[0]);
+	absolute_route = create_valid_exec_route(global, cmd[0]);
 	if (absolute_route == NULL)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -81,5 +79,5 @@ void	execute_cmd(char **cmd, int i, int count)
 	}
 	free(cmd[0]);
 	cmd[0] = absolute_route;
-	execve(cmd[0], cmd, NULL);
+	execve(cmd[0], cmd, env_list_to_array(global->envl));
 }

@@ -6,7 +6,7 @@
 #    By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2022/12/31 12:26:29 by dongglee         ###   ########.fr        #
+#    Updated: 2022/12/31 15:30:00 by dongglee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,3 +62,6 @@ test: $(OBJS) test.c
 	$(CC) $(CFLAGS) -o test $(filter-out %/main.o,$(OBJS)) test.o $(RL_LIB) $(FT_LIB)
 tclean: fclean
 	$(RM) test test.o
+
+tmpclean:
+	$(RM) *.tmp

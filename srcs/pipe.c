@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 11:33:02 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 15:45:56 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	run_pipelines(char **pipelines, t_fds fds,
+void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 			int pipe_count, pid_t *pid_list)
 {
 	int			i;
@@ -32,7 +32,7 @@ void	run_pipelines(char **pipelines, t_fds fds,
 			close(fds.fd[0]);
 			handle_redirect_stdout(token, i, pipe_count, fds);
 			close(fds.fd[1]);
-			execute_cmd(token->cmd_info, i, pipe_count);
+			execute_cmd(global, token->cmd_info, i, pipe_count);
 		}
 		close(fds.fd[1]);
 		dup2(fds.fd[0], STDIN_FILENO);
