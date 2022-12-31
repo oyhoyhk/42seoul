@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2022/12/27 07:37:40 by yooh             ###   ########.fr        #
+#    Updated: 2022/12/31 12:26:29 by dongglee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ fclean : clean
 re : fclean all
 
 # for test
-test: $(OBJS)
+test: $(OBJS) test.c
 	$(CC) $(CFLAGS) $(CINCLUDE) $(RL_INCLUDE) $(FT_INCLUDE) -c test.c -o test.o
 	$(MAKE) -C $(FT_DIR) bonus
 	$(CC) $(CFLAGS) -o test $(filter-out %/main.o,$(OBJS)) test.o $(RL_LIB) $(FT_LIB)
