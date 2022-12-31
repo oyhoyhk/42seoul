@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/29 16:55:41 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/30 15:59:35 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,19 @@
 
 // TODO: Implemente functions related to environment variables
 
-int	builtin_echo(char **cmd)
+int	builtin_error_exit(const char *msg, int status_code)
+{
+	perror(msg);
+	return (status_code);
+}
+
+int	builtin_echo(t_global *global, char **cmd)
 {
 	int		flag_newline;
 	int		i;
 
 	printf(FOR_BUILTIN_CHECK);
+	(void)global;
 	i = 1;
 	flag_newline = TRUE;
 	if (ft_strncmp(cmd[i], "-n", 3) == 0)
@@ -43,17 +50,15 @@ int	builtin_echo(char **cmd)
 	return (0);
 }
 
-int	builtin_pwd(char **cmd)
+int	builtin_pwd(t_global *global, char **cmd)
 {
 	char		*path;
 	const int	size = 2046;
 
 	printf(FOR_BUILTIN_CHECK);
+	(void)global;
 	if (cmd[1])
-	{
-		perror("pwd: too many arguments\n");
-		return (1);
-	}
+		builtin_error_exit("pwd: too many arguments\n", 1);
 	path = malloc(sizeof(char) * size);
 	getcwd(path, size);
 	printf("%s\n", path);
@@ -61,40 +66,35 @@ int	builtin_pwd(char **cmd)
 	return (0);
 }
 
-int	builtin_exit(char **cmd)
+int	builtin_exit(t_global *global, char **cmd)
 {
 	int	i;
 
 	printf(FOR_BUILTIN_CHECK);
-	if (cmd[1])
-	{
-		if (cmd[2] != NULL)
-		{
-			perror("exit: too many arguments\n");
-			return (1);
-		}
-		i = 0;
-		if (cmd[1][i] == '-')
-			++i;
-		while (cmd[1][i])
-		{
-			if (!ft_isdigit(cmd[1][i++]))
-			{
-				perror("exit: numeric argument required\n");
-				return (255);
-			}
-		}
-		return (((unsigned)ft_atoi(cmd[1])) % 256);
-	}
-	return (0);
+	(void)global;
+	i = 0;
+	if (!cmd[1])
+		return (0);
+	if (cmd[2] != NULL)
+		return (builtin_error_exit("exit: too many arguments\n", 1));
+	i += cmd[1][i] == '-';
+	if (ft_strlen(cmd[1]) > 9)
+		return (builtin_error_exit(
+				"exit: numeric argument required\n", 255));
+	while (cmd[1][i])
+		if (!ft_isdigit(cmd[1][i++]))
+			return (builtin_error_exit(
+					"exit: numeric argument required\n", 255));
+	return (((unsigned)ft_atoi(cmd[1])) % 256);
 }
 
-int	builtin_cd(char **cmd)
+int	builtin_cd(t_global *global, char **cmd)
 {
+	printf(FOR_BUILTIN_CHECK);
+	(void)global;
 	if (!cmd[1])
 		return (0);
 	if (chdir(cmd[1]) == 0)
 		return (0);
-	perror("cd: No such file or directory\n");
-	return (1);
+	return (builtin_error_exit("cd: No such file or directory\n", 1));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 17:05:50 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 12:35:37 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_fds
 {
 	int	stdin_fd;
 	int	stdout_fd;
-	int fd[2];
+	int	fd[2];
 }	t_fds;
 
 enum e_Property
@@ -66,9 +66,23 @@ typedef struct s_token
 	char	**cmd_info;
 }	t_token;
 
+typedef struct s_pair
+{
+	char	*key;
+	char	*value;
+}	t_pair;
+
+/**
+ * t_list의 각 content 타입은 t_pair이다.
+ */
+typedef struct s_envl
+{
+	t_list	*env_list;
+}	t_envl;
+
 typedef struct s_global
 {
-	char		**env;
+	t_envl		*envl;
 	t_fds		fds;
 	t_token		*token;	
 }	t_global;
@@ -111,10 +125,24 @@ char		**parse_readline(char *input);
 void		setsignal(void);
 void		setsignal_ignored(void);
 
-//builtin_1.c
-int			builtin_echo(char **cmd);
-int			builtin_pwd(char **cmd);
-int			builtin_exit(char **cmd);
-int			builtin_cd(char **cmd);
+// builtin_1.c
+int			builtin_error_exit(const char *msg, int status_code);
+int			builtin_echo(t_global *global, char **cmd);
+int			builtin_pwd(t_global *global, char **cmd);
+int			builtin_exit(t_global *global, char **cmd);
+int			builtin_cd(t_global *global, char **cmd);
+
+// env_list.c
+void		pair_destroy(t_pair *pair);
+t_pair		*pair_make_from_str(const char *env);
+char		*pair_to_str(const t_pair *pair);
+t_envl		*env_array_to_list(char **envp);
+char		**env_list_to_array(t_envl *lst);
+
+// envp.c
+// int			env_find(t_global *global, const char *key);
+// void		env_create(t_global *global, const char *key, const char *value);
+// void		env_update(t_global *global, const char *key, const char *value);
+// void		env_delete(t_global *global, const char *key);
 
 #endif
