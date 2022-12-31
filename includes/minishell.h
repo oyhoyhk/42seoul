@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 12:35:37 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 13:52:05 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,17 +132,20 @@ int			builtin_pwd(t_global *global, char **cmd);
 int			builtin_exit(t_global *global, char **cmd);
 int			builtin_cd(t_global *global, char **cmd);
 
-// env_list.c
+// env_pair.c
 void		pair_destroy(t_pair *pair);
 t_pair		*pair_make_from_str(const char *env);
 char		*pair_to_str(const t_pair *pair);
+t_pair		*pair_dup(t_pair *pair);
+
+// env_list.c
 t_envl		*env_array_to_list(char **envp);
 char		**env_list_to_array(t_envl *lst);
+void		env_list_delete_one(t_envl *lst, t_list *emt);
 
-// envp.c
-// int			env_find(t_global *global, const char *key);
-// void		env_create(t_global *global, const char *key, const char *value);
-// void		env_update(t_global *global, const char *key, const char *value);
-// void		env_delete(t_global *global, const char *key);
+// env.c
+t_list		*env_find(t_global *global, const char *key);
+void		env_update_one(t_global *global, t_pair *pair);
+void		env_delete_one(t_global *global, const char *key);
 
 #endif

@@ -6,52 +6,11 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 18:26:41 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 11:32:38 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 13:44:38 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	pair_destroy(t_pair *pair)
-{
-	free(pair->key);
-	free(pair->value);
-	free(pair);
-}
-
-/**
- * @brief 등호로 연결된 문자열을 받아서 pair로 바꿔준다.
- * @param char* ex) "key=value"
- * @return t_pair
- */
-t_pair	*pair_make_from_str(const char *env)
-{
-	char	**pair;
-	t_pair	*ret;
-
-	ret = malloc(sizeof(t_pair));
-	pair = ft_split(env, '=');
-	free(pair);
-	ret->key = pair[0];
-	ret->value = pair[1];
-	return (ret);
-}
-
-/**
- * @brief t_pair를 등호로 연결된 문자열로 바꿔준다.
- * @param t_pair
- * @return char* ex) "key=value"
- */
-char	*pair_to_str(const t_pair *pair)
-{
-	char	*ret;
-	char	*temp;
-
-	temp = ft_strjoin(pair->key, "=");
-	ret = ft_strjoin(temp, pair->value);
-	free(temp);
-	return (ret);
-}
 
 /**
  * key와 value가 등호로 연결된 배열을 환경변수 연결 리스트로 변환
@@ -97,4 +56,29 @@ char	**env_list_to_array(t_envl *lst)
 	}
 	ret[i] = NULL;
 	return (ret);
+}
+
+void	env_list_delete_one(t_envl *lst, t_list *emt)
+{
+	t_list	*cur;
+
+	if (emt == NULL)
+		return ;
+	cur = lst->env_list;
+	if (emt == cur)
+	{
+		lst->env_list = cur->next;
+		pair_destroy(emt->content);
+		return ;
+	}
+	while (cur && cur->next)
+	{
+		if (cur->next == emt)
+		{
+			cur->next = cur->next->next;
+			pair_destroy(emt->content);
+			return ;
+		}
+		cur = cur->next;
+	}
 }
