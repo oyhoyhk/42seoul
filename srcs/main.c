@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 17:05:35 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 14:42:13 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ int	main(int argc, char **argv, char *envp[])
 	struct termios	ter;
 
 	/*** need to remove ***/
-	(void)envp;
 	(void)argv;
 	/*** need to remove ***/
 	bzero(&global, sizeof(t_global));
+	global.envl = env_array_to_list(envp);
 	tcgetattr(STDIN_FILENO, &ter);
 	ter.c_lflag &= ~(ECHOCTL);
 	tcsetattr(STDOUT_FILENO, TCSANOW, &ter);

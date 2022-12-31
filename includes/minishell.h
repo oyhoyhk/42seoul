@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 13:52:05 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 16:33:31 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ typedef struct s_global
 }	t_global;
 
 // cmd.cz
-char		**get_cmd_info(char *str);
 char		*create_absolute_route(char *str);
 void		execute_cmd(char **cmd, int i, int count);
 
@@ -106,7 +105,6 @@ t_token		*tokenize_input(char *input);
 
 // utils.c
 int			count_pipe(char **list);
-void		show_token(t_token *token);// 나중에 지워야함
 void		set_start_point(int	*start, int *i, int *cur_type, char *input);
 
 // pipe.c

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 11:18:49 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 14:54:43 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,9 @@ void	start_read(t_global global)
 	{
 		input = readline("minishell > ");
 		if (input == NULL)
-		{
-			printf("you should terminate shell\n");
 			return ;
-		}
-		add_history(input);
+		if (ft_strlen(input))
+			add_history(input);
 		execute_readline(input, global);
 		free(input);
 	}
