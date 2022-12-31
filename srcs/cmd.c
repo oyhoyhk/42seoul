@@ -3,39 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/30 09:54:00 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 14:51:57 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**get_cmd_info(char *str)
-{
-	char		**result;
-	char		*cmd;
-	const char	*error_str = "minishell: command not found: ";
-
-	result = ft_split(str, ' ');
-	if (ft_strncmp(result[0], "<", -1) == 0
-		|| ft_strncmp(result[0], "<<", -1) == 0
-		|| access(result[0], X_OK) == 0)
-		return (result);
-	cmd = create_absolute_route(result[0]);
-	if (cmd == NULL)
-	{
-		ft_putstr_fd((char *)error_str, STDERR_FILENO);
-		ft_putstr_fd(result[0], STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
-		free_2d_arr(result);
-		exit(1);
-	}
-	free((void *)result[0]);
-	result[0] = cmd;
-	return ((char **)result);
-}
 
 char	*create_absolute_route(char *str)
 {
