@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 14:54:43 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 20:05:42 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	read_from_stdin(char *word, t_fds fds)
 	dup2(fd[0], STDIN_FILENO);
 }
 
-static void	execute_readline(char *input, t_global global)
+static void	execute_readline(t_global *global, char *input)
 {
 	int		i;
 	int		pipe_count;
@@ -52,16 +52,16 @@ static void	execute_readline(char *input, t_global global)
 	i = 0;
 	pipe_count = count_pipe(execution_list);
 	pid_list = (pid_t *) malloc(sizeof(pid_t) * (pipe_count));
-	run_pipelines(execution_list, global.fds, pipe_count, pid_list);
-	dup2(global.fds.stdin_fd, STDIN_FILENO);
-	close(global.fds.fd[0]);
-	close(global.fds.fd[1]);
-	kill_zombie_process(pipe_count, pid_list, global.fds);
+	run_pipelines(global, execution_list, global->fds, pipe_count, pid_list);
+	dup2(global->fds.stdin_fd, STDIN_FILENO);
+	close(global->fds.fd[0]);
+	close(global->fds.fd[1]);
+	kill_zombie_process(pipe_count, pid_list, global->fds);
 	free(pid_list);
 	free_2d_arr(execution_list);
 }
 
-void	start_read(t_global global)
+void	start_read(t_global *global)
 {
 	char	*input;
 
@@ -70,9 +70,10 @@ void	start_read(t_global global)
 		input = readline("minishell > ");
 		if (input == NULL)
 			return ;
-		if (ft_strlen(input))
-			add_history(input);
-		execute_readline(input, global);
+		if (ft_strlen(input) == 0)
+			continue ;
+		add_history(input);
+		execute_readline(global, input);
 		free(input);
 	}
 }

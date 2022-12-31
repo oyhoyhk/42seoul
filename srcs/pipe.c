@@ -6,13 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 14:49:53 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 17:05:18 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	run_pipelines(char **pipelines, t_fds fds,
+void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 			int pipe_count, pid_t *pid_list)
 {
 	int			i;
@@ -23,6 +23,8 @@ void	run_pipelines(char **pipelines, t_fds fds,
 	while (pipelines[i])
 	{
 		token = tokenize_input(pipelines[i]);
+		if (ft_strncmp(token->cmd_info[0], "exit", -1) == 0)
+			exit(builtin_exit(global, token->cmd_info));
 		if (token == NULL || (!handle_redirect_stdin(token, fds) && i++))
 			break ;
 		pipe(fds.fd);
@@ -32,7 +34,7 @@ void	run_pipelines(char **pipelines, t_fds fds,
 			close(fds.fd[0]);
 			handle_redirect_stdout(token, i, pipe_count, fds);
 			close(fds.fd[1]);
-			execute_cmd(token->cmd_info, i, pipe_count);
+			execute_cmd(global, token->cmd_info, i, pipe_count);
 		}
 		close(fds.fd[1]);
 		dup2(fds.fd[0], STDIN_FILENO);

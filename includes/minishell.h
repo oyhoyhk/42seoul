@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:33:31 by yooh             ###   ########.fr       */
+/*   Updated: 2022/12/31 18:37:05 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,8 @@ typedef struct s_global
 	t_token		*token;	
 }	t_global;
 
-// cmd.cz
-char		*create_absolute_route(char *str);
-void		execute_cmd(char **cmd, int i, int count);
+// cmd.c
+void		execute_cmd(t_global *global, char **cmd, int i, int count);
 
 // redirect.c
 int			handle_redirect_stdin(t_token *token, t_fds fds);
@@ -98,7 +97,7 @@ void		handle_redirect_stdout(t_token *token,
 
 // read.c
 void		read_from_stdin(char *word, t_fds fds);
-void		start_read(t_global global);
+void		start_read(t_global *global);
 
 // tokenize.c
 t_token		*tokenize_input(char *input);
@@ -108,7 +107,7 @@ int			count_pipe(char **list);
 void		set_start_point(int	*start, int *i, int *cur_type, char *input);
 
 // pipe.c
-void		run_pipelines(char **pipelines, t_fds fds,
+void		run_pipelines(t_global *global, char **pipelines, t_fds fds,
 				int pipe_count, pid_t *pid_list);
 void		kill_zombie_process(int pipe_count, pid_t *pid_list, t_fds fds);
 
@@ -118,6 +117,8 @@ void		free_token(t_token *token);
 
 // parse.c
 char		**parse_readline(char *input);
+
+char	*parse_dollar(char *input, t_global *global);
 
 // signal.c
 void		setsignal(void);

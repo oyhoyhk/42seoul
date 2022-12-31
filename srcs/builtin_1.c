@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/30 15:59:35 by dongglee         ###   ########.fr       */
+/*   Updated: 2022/12/31 17:07:31 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int	builtin_error_exit(const char *msg, int status_code)
 {
-	perror(msg);
+	ft_putstr_fd(msg, STDERR_FILENO);
 	return (status_code);
 }
 
@@ -58,7 +58,7 @@ int	builtin_pwd(t_global *global, char **cmd)
 	printf(FOR_BUILTIN_CHECK);
 	(void)global;
 	if (cmd[1])
-		builtin_error_exit("pwd: too many arguments\n", 1);
+		return (builtin_error_exit("pwd: too many arguments\n", 1));
 	path = malloc(sizeof(char) * size);
 	getcwd(path, size);
 	printf("%s\n", path);
@@ -71,6 +71,7 @@ int	builtin_exit(t_global *global, char **cmd)
 	int	i;
 
 	printf(FOR_BUILTIN_CHECK);
+	printf("exit\n");
 	(void)global;
 	i = 0;
 	if (!cmd[1])
