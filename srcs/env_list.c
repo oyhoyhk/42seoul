@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 18:26:41 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 19:10:51 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/01 16:40:52 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,18 @@ void	env_list_delete_one(t_envl *lst, t_list *emt)
 		}
 		cur = cur->next;
 	}
+}
+
+char	*env_getenv(t_global *global, char *key)
+{
+	t_list	*tar;
+	t_pair	*pair;
+
+	tar = env_find(global, key);
+	if (!tar)
+		return (ft_calloc(1, 1));
+	pair = (t_pair *)tar->content;
+	if (!pair->value)
+		return (ft_calloc(1, 1));
+	return (strdup(pair->value));
 }
