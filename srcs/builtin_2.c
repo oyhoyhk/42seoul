@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 16:00:07 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 20:01:41 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/01 16:07:57 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_valid_key(const char *key)
 		i = 0;
 		while (key[i])
 		{
-			if (!ft_isalnum(key[i]))
+			if (!(ft_isalnum(key[i]) || key[i] == '_'))
 				return (FALSE);
 			++i;
 		}
@@ -33,7 +33,7 @@ int	is_valid_key(const char *key)
 
 void	print_valid_error(const char *cmd, const char *id)
 {
-	ft_putchar_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
 	ft_putstr_fd(": `", STDERR_FILENO);
 	ft_putstr_fd(id, STDERR_FILENO);
 	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
@@ -102,6 +102,7 @@ static int	export_push(t_global *global, char **cmd)
 {
 	int		i;
 	t_pair	*pair;
+	t_list	*cmp;
 	int		ret;
 
 	i = 1;
@@ -109,12 +110,13 @@ static int	export_push(t_global *global, char **cmd)
 	while (cmd[i])
 	{
 		pair = pair_make_from_str(cmd[i]);
+		cmp = env_find(global, pair->key);
 		if (!is_valid_key(pair->key))
 		{
 			print_valid_error("export", cmd[i]);
 			ret = 1;
 		}
-		else if (!(pair->value == NULL && env_find(global, pair->key)))
+		else if ((!cmp) || (cmp && pair->value))
 			env_update_one(global, pair);
 		pair_destroy(pair);
 		++i;
@@ -131,5 +133,5 @@ int	builtin_export(t_global *global, char **cmd)
 	if (cmd[1] == NULL)
 		return (export_print(global));
 	else
-		return (export_add(global, cmd));
+		return (export_push(global, cmd));
 }

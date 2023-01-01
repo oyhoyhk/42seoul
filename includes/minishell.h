@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:11:31 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/01 16:03:37 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,11 @@ int			builtin_echo(t_global *global, char **cmd);
 int			builtin_pwd(t_global *global, char **cmd);
 int			builtin_exit(t_global *global, char **cmd);
 int			builtin_cd(t_global *global, char **cmd);
+
+// builtin_2.c
+int			builtin_env(t_global *global, char **cmd);
+int 		builtin_unset(t_global *global, char **cmd);
+int 		builtin_export(t_global *global, char **cmd);
 
 // env_pair.c
 void		pair_destroy(t_pair *pair);
