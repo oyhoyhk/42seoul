@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 18:37:05 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/01 13:25:48 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void		free_token(t_token *token);
 // parse.c
 char		**parse_readline(char *input);
 
-char	*parse_dollar(char *input, t_global *global);
+char		*handle_dollar(char *input, t_global *global);
 
 // signal.c
 void		setsignal(void);

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 17:05:18 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/01 13:32:30 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 	int			i;
 	t_token		*token;
 	pid_t		pid;
+	char		*line;
 
 	i = 0;
 	while (pipelines[i])
 	{
+		line = handle_dollar(pipelines[i], global);
+		free(pipelines[i]);
+		pipelines[i] = line;
 		token = tokenize_input(pipelines[i]);
 		if (ft_strncmp(token->cmd_info[0], "exit", -1) == 0)
 			exit(builtin_exit(global, token->cmd_info));
