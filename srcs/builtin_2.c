@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 16:00:07 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/01 16:35:45 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/01 16:36:36 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,5 +133,5 @@ int	builtin_export(t_global *global, char **cmd)
 	if (cmd[1] == NULL)
 		return (export_print(global));
 	else
-		return (export_push(global, cmd));
+		return (export_add(global, cmd));
 }

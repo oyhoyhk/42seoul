@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:56:00 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/01 16:50:36 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	is_path(const char *path)
 	while (path[i])
 	{
 		if (path[i] == '/')
+		
 			return (TRUE);
 		++i;
 	}
@@ -59,7 +60,11 @@ char	*create_absolute_route(t_global *global, const char *str)
 char	*create_valid_exec_route(t_global *global, const char *str)
 {
 	if (is_path(str))
-		return (ft_strdup(str));
+	{
+		if (access(str, X_OK) == 0)
+			return (ft_strdup(str));
+		return (NULL);
+	}
 	return (create_absolute_route(global, str));
 }
 
