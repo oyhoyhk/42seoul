@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/01 16:03:37 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/01 16:40:56 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,8 @@ int			builtin_cd(t_global *global, char **cmd);
 
 // builtin_2.c
 int			builtin_env(t_global *global, char **cmd);
-int 		builtin_unset(t_global *global, char **cmd);
-int 		builtin_export(t_global *global, char **cmd);
+int			builtin_unset(t_global *global, char **cmd);
+int			builtin_export(t_global *global, char **cmd);
 
 // env_pair.c
 void		pair_destroy(t_pair *pair);
@@ -144,6 +144,7 @@ t_pair		*pair_dup(t_pair *pair);
 t_envl		*env_array_to_list(char **envp);
 char		**env_list_to_array(t_envl *lst);
 void		env_list_delete_one(t_envl *lst, t_list *emt);
+char		*env_getenv(t_global *global, char *key);
 
 // env.c
 t_list		*env_find(t_global *global, const char *key);
