@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 12:55:53 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 19:16:12 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/01 16:01:45 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ t_pair	*pair_dup(t_pair *pair)
 		return (NULL);
 	ret = malloc(sizeof(t_pair));
 	ret->key = ft_strdup(pair->key);
-	ret->value = ft_strdup(pair->value);
+	if (pair->value)
+		ret->value = ft_strdup(pair->value);
+	else
+		ret->value = NULL;
 	return (ret);
 }
 
