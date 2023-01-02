@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 20:05:42 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 13:10:22 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,29 @@ void	read_from_stdin(char *word, t_fds fds)
 	dup2(fd[0], STDIN_FILENO);
 }
 
+static int	input_valid_check(char *input)
+{
+	int		single_quote_count;
+	int		double_quote_count;
+	int		i;
+
+	single_quote_count = 0;
+	double_quote_count = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'')
+			single_quote_count++;
+		if (input[i] == '\"')
+			double_quote_count++;
+		i++;
+	}
+	if (single_quote_count % 2 == 1
+		|| double_quote_count % 2 == 1)
+		return (0);
+	return (1);
+}
+
 static void	execute_readline(t_global *global, char *input)
 {
 	int		i;
@@ -48,6 +71,8 @@ static void	execute_readline(t_global *global, char *input)
 	pid_t	*pid_list;
 	char	**execution_list;
 
+	if (!input_valid_check(input))
+		return ;
 	execution_list = parse_readline(input);
 	i = 0;
 	pipe_count = count_pipe(execution_list);
@@ -56,7 +81,7 @@ static void	execute_readline(t_global *global, char *input)
 	dup2(global->fds.stdin_fd, STDIN_FILENO);
 	close(global->fds.fd[0]);
 	close(global->fds.fd[1]);
-	kill_zombie_process(pipe_count, pid_list, global->fds);
+	kill_zombie_process(pipe_count, global, pid_list);
 	free(pid_list);
 	free_2d_arr(execution_list);
 }

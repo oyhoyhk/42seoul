@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:41:53 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 13:08:39 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	init(t_global *global, char *envp[])
 
 int	main(int argc, char **argv, char *envp[])
 {
-	t_global		global;
+	t_global		*global;
 
 	/*** need to remove ***/
 	(void)argv;
@@ -38,7 +38,10 @@ int	main(int argc, char **argv, char *envp[])
 		printf("Too Many Arguments!\n");
 		exit(1);
 	}
-	init(&global, envp);
-	start_read(&global);
+	global = (t_global *) malloc(sizeof(t_global));
+	if (global == NULL)
+		return (1);
+	init(global, envp);
+	start_read(global);
 	return (0);
 }

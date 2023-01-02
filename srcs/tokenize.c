@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 07:08:52 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/01 13:33:59 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 10:25:27 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,24 @@ t_token	*tokenize_input(char *input)
 	info.cmd = ft_calloc(1, 1);
 	while (input[info.i])
 	{
-		if (ft_strchr(">< ", input[info.i])
+		if (input[info.i] == '\'' && info.in_single_quote)
+			info.in_single_quote = FALSE;
+		else if (input[info.i] == '\'' && !info.in_single_quote)
+			info.in_single_quote = TRUE;
+		if (input[info.i] == '\"' && info.in_double_quote)
+			info.in_double_quote = FALSE;
+		else if (input[info.i] == '\"' && !info.in_double_quote)
+			info.in_double_quote = TRUE;
+		if (ft_strchr(">< ", input[info.i]) && !info.in_double_quote
+			&& !info.in_single_quote 
 			&& !handle_prev_token_and_set(&info, token, input))
 			return (NULL);
 		(info.i)++;
 	}
 	if (!handle_prev_token_and_set(&info, token, input))
 		return (NULL);
-	token->cmd_info = ft_split(info.cmd, ' ');
+	//token->cmd_info = ft_split(info.cmd, ' ');
+	token->cmd_info = split_cmd(info.cmd);
 	free(info.cmd);
 	return (token);
 }
@@ -48,7 +58,17 @@ static int	handle_prev_token_and_set(t_tokenizing_info *info,
 {
 	char	*temp;
 
+	if (input[info->start] == '\'' || input[info->start] == '\"')
+	{
+		info->start++;
+		info->i--;
+	}
 	info->temp = ft_substr(input, info->start, info->i - info->start);
+	//if (input[info->start] == '\'' || input[info->start] == '\"')
+	//{
+	//	info->start--;
+	//	info->i++;
+	//}
 	if (info->cur_type == CMD)
 	{
 		temp = append_cmd(info->cmd, info->temp);

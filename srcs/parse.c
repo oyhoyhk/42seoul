@@ -6,14 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 20:14:41 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/01 10:26:57 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 09:28:03 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static t_list	*parse_readline_to_list(char *input);
-static char		**parse_list_to_arr2d(t_list *list);
 static void		set_double_quote_flag(char *input, int i, int *flag);
 
 char	**parse_readline(char *input)
@@ -23,6 +22,7 @@ char	**parse_readline(char *input)
 
 	list = parse_readline_to_list(input);
 	result = parse_list_to_arr2d(list);
+	ft_lstclear(&list, free_string);
 	return (result);
 }
 
@@ -53,7 +53,7 @@ static t_list	*parse_readline_to_list(char *input)
 	return (list);
 }
 
-static char	**parse_list_to_arr2d(t_list *list)
+char	**parse_list_to_arr2d(t_list *list)
 {
 	const int	length = ft_lstsize(list);
 	char		**result;
@@ -63,7 +63,7 @@ static char	**parse_list_to_arr2d(t_list *list)
 	i = 0;
 	while (i < length)
 	{
-		result[i] = (char *)(list->content);
+		result[i] = ft_strdup((char *)(list->content));
 		list = list->next;
 		i++;
 	}

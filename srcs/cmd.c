@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/01 16:50:36 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 13:27:29 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	execute_cmd(t_global *global, char **cmd, int i, int count)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		exit(1);
+		exit(127);
 	}
 	free(cmd[0]);
 	cmd[0] = absolute_route;
