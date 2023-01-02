@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 13:32:52 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 13:56:48 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,7 @@ void	kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list)
 	{
 		wait(&status);
 		if (global->last_pid == pid_list[pipe_count - 1])
-		{
-			printf("last status : %d\n", status);
-			global->status = status;
-		}
+			global->status = status % 255;
 		dup2(global->fds.stdin_fd, STDIN_FILENO);
 		i++;
 	}

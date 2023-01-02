@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 17:23:07 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 13:08:47 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 13:52:14 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*handle_dollar(char *input, t_global *global)
 			in_double_quote = 0;
 		else if (input[i] == '\"' && !in_double_quote)
 			in_double_quote = i;
-		if (input[i] == '$' && (in_single_quote == 0 || in_single_quote < in_double_quote))
+		if (input[i] == '$' && (in_single_quote == 0 || in_single_quote > in_double_quote))
 		{
 
 			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
