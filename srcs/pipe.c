@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 13:56:48 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 15:26:15 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 	char		*line;
 
 	i = 0;
+	setsignal_ignored();
 	while (pipelines[i])
 	{
 		line = handle_dollar(pipelines[i], global);
@@ -31,6 +32,12 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 			exit(builtin_exit(global, token->cmd_info));
 		if (token == NULL || (!handle_redirect_stdin(token, fds) && i++))
 			break ;
+		if (is_unprintable_builtin(token->cmd_info))
+		{
+			run_unprintable_builtin(global, token->cmd_info);
+			++i;
+			continue ;
+		}
 		pipe(fds.fd);
 		pid = fork();
 		if (pid == 0)

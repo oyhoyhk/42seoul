@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 13:23:23 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 15:23:25 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ char		**parse_list_to_arr2d(t_list *list);
 char		*handle_dollar(char *input, t_global *global);
 char		**split_cmd(char *input);
 
+char	*parse_dollar(char *input, t_global *global);
+
 // signal.c
 void		setsignal(void);
 void		setsignal_ignored(void);
@@ -160,5 +162,11 @@ char		*env_getenv(t_global *global, char *key);
 t_list		*env_find(t_global *global, const char *key);
 void		env_update_one(t_global *global, t_pair *pair);
 void		env_delete_one(t_global *global, const char *key);
+
+// run_builtin.c
+int			is_unprintable_builtin(char **cmd);
+int			run_unprintable_builtin(t_global *global, char **cmd);
+int			is_printable_builtin(char **cmd);
+int			run_printable_builtin(t_global *global, char **cmd);
 
 #endif
