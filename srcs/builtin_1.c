@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/12/31 18:52:59 by dongglee         ###   ########.fr       */
+=======
+/*   Updated: 2022/12/31 17:07:31 by yooh             ###   ########.fr       */
+>>>>>>> b26dae0ad7d2e5b074e29c8d30eb255d370f8c8f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +74,7 @@ int	builtin_exit(t_global *global, char **cmd)
 	int	i;
 
 	printf(FOR_BUILTIN_CHECK);
+	printf("exit\n");
 	(void)global;
 	i = 0;
 	if (!cmd[1])

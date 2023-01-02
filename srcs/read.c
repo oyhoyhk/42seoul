@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/01/02 13:38:35 by dongglee         ###   ########.fr       */
+=======
+/*   Updated: 2022/12/31 20:05:42 by yooh             ###   ########.fr       */
+>>>>>>> b26dae0ad7d2e5b074e29c8d30eb255d370f8c8f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +74,9 @@ void	start_read(t_global *global)
 	{
 		input = readline("minishell > ");
 		if (input == NULL)
-		{
-			printf("you should terminate shell\n");
 			return ;
-		}
+		if (ft_strlen(input) == 0)
+			continue ;
 		add_history(input);
 		execute_readline(global, input);
 		free(input);

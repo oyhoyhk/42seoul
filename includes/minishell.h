@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/01/01 16:40:56 by dongglee         ###   ########.fr       */
+=======
+/*   Updated: 2022/12/31 18:37:05 by yooh             ###   ########.fr       */
+>>>>>>> b26dae0ad7d2e5b074e29c8d30eb255d370f8c8f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +121,8 @@ void		free_token(t_token *token);
 
 // parse.c
 char		**parse_readline(char *input);
+
+char	*parse_dollar(char *input, t_global *global);
 
 // signal.c
 void		setsignal(void);

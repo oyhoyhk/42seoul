@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/01/02 13:37:41 by dongglee         ###   ########.fr       */
+=======
+/*   Updated: 2022/12/31 17:05:18 by yooh             ###   ########.fr       */
+>>>>>>> b26dae0ad7d2e5b074e29c8d30eb255d370f8c8f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +28,8 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 	while (pipelines[i])
 	{
 		token = tokenize_input(pipelines[i]);
+		if (ft_strncmp(token->cmd_info[0], "exit", -1) == 0)
+			exit(builtin_exit(global, token->cmd_info));
 		if (token == NULL || (!handle_redirect_stdin(token, fds) && i++))
 			break ;
 		pipe(fds.fd);
