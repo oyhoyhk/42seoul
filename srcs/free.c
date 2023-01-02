@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 20:08:51 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/28 20:13:38 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 08:06:31 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_2d_arr(char **arr)
 	free(arr);
 }
 
-static void	free_string(void *str)
+void	free_string(void *str)
 {
 	free((char *)str);
 }

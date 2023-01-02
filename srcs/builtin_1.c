@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
 /*   Updated: 2023/01/02 15:22:14 by dongglee         ###   ########.fr       */

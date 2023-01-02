@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
 /*   Updated: 2023/01/02 16:03:56 by dongglee         ###   ########.fr       */
@@ -20,6 +20,7 @@ int	is_path(const char *path)
 	while (path[i])
 	{
 		if (path[i] == '/')
+		
 			return (TRUE);
 		++i;
 	}
@@ -59,7 +60,11 @@ char	*create_absolute_route(t_global *global, const char *str)
 char	*create_valid_exec_route(t_global *global, const char *str)
 {
 	if (is_path(str))
-		return (ft_strdup(str));
+	{
+		if (access(str, X_OK) == 0)
+			return (ft_strdup(str));
+		return (NULL);
+	}
 	return (create_absolute_route(global, str));
 }
 
@@ -77,7 +82,7 @@ void	execute_cmd(t_global *global, char **cmd, int i, int count)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		exit(1);
+		exit(127);
 	}
 	free(cmd[0]);
 	cmd[0] = absolute_route;

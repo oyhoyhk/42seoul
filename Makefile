@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+         #
+#    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2022/12/31 15:30:00 by dongglee         ###   ########.fr        #
+#    Updated: 2023/01/02 06:53:48 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,8 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	$(MAKE) bonus -C $(FT_DIR)
-	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB) -g 
+# -g 나중에 빼야함
 
 clean :
 	$(MAKE) -C $(FT_DIR) clean

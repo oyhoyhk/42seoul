@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
 /*   Updated: 2023/01/02 15:23:25 by dongglee         ###   ########.fr       */
@@ -51,6 +51,8 @@ typedef struct s_tokenizing_info
 	int		cur_type;
 	char	*temp;
 	char	*cmd;
+	int		in_single_quote;
+	int		in_double_quote;
 }	t_tokenizing_info;
 
 typedef struct s_file_info
@@ -84,7 +86,9 @@ typedef struct s_global
 {
 	t_envl		*envl;
 	t_fds		fds;
-	t_token		*token;	
+	t_token		*token;
+	int			status;
+	pid_t		last_pid;
 }	t_global;
 
 // cmd.c
@@ -109,14 +113,20 @@ void		set_start_point(int	*start, int *i, int *cur_type, char *input);
 // pipe.c
 void		run_pipelines(t_global *global, char **pipelines, t_fds fds,
 				int pipe_count, pid_t *pid_list);
-void		kill_zombie_process(int pipe_count, pid_t *pid_list, t_fds fds);
+void		kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list);
 
 // free.c
 void		free_2d_arr(char **arr);
 void		free_token(t_token *token);
+void		free_string(void *str);
 
 // parse.c
 char		**parse_readline(char *input);
+char		**parse_list_to_arr2d(t_list *list);
+
+// parse2.c
+char		*handle_dollar(char *input, t_global *global);
+char		**split_cmd(char *input);
 
 char	*parse_dollar(char *input, t_global *global);
 

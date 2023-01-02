@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 16:00:07 by dongglee          #+#    #+#             */
 /*   Updated: 2023/01/02 15:25:03 by dongglee         ###   ########.fr       */
@@ -105,7 +105,7 @@ static int	export_print(t_global *global)
 	return (0);
 }
 
-static int	export_push(t_global *global, char **cmd)
+static int	export_add(t_global *global, char **cmd)
 {
 	int		i;
 	t_pair	*pair;
@@ -141,5 +141,5 @@ int	builtin_export(t_global *global, char **cmd)
 	if (cmd[1] == NULL)
 		return (export_print(global));
 	else
-		return (export_push(global, cmd));
+		return (export_add(global, cmd));
 }
