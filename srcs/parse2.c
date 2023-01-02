@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 17:23:07 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 13:52:14 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 21:59:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char	*handle_dollar(char *input, t_global *global)
 			in_double_quote = i;
 		if (input[i] == '$' && (in_single_quote == 0 || in_single_quote > in_double_quote))
 		{
-
 			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
 			prev = i + 1;
 			i++;
@@ -100,32 +99,36 @@ char	**split_cmd(char *input)
 	in_single_quote = FALSE;
 	while (input[i])
 	{
-		if (input[i] == '\"' && in_double_quote == TRUE)
-			in_double_quote = FALSE;
-		else if (input[i] == '\"' && in_double_quote == FALSE)
-			in_double_quote = TRUE;
-		if (input[i] == '\'' && in_single_quote == TRUE)
-			in_single_quote = FALSE;
-		else if (input[i] == '\'' && in_single_quote == FALSE)
-			in_single_quote = TRUE;
-		if (input[i] == ' ' && in_single_quote == FALSE && in_double_quote == FALSE)
+		if (input[i] == '\"')
 		{
-			if ((input[prev] == '\"' && in_single_quote == TRUE) || (input[prev] == '\'' && in_double_quote == TRUE))
-			{
-				prev++;
-				i--;
-			}
 			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-			if (input[prev - 1] == '\"' || (input[prev - 1] == '\'' && !in_double_quote))
-				i++; 
-			while (input[i] == ' ')
+			prev = ++i;
+			while (input[i] != '\"')
+				i++;
+			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev - 1)));
+			prev = i + 1;
+		}
+		if (input[i] == '\'')
+		{
+			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
+			prev = ++i;
+			while (input[i] != '\'')
+				i++;
+			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev - 1)));
+			prev = i + 1;
+		}
+		if (input[i] == ' ')
+		{
+			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
+			prev = i + 1;
+			while (input[i] == ' ' && (input[i] != '\"' || input[i] != '\''))
 				i++;
 			prev = i;
-			i--;
+			i -= 1;
 		}
 		i++;
 	}
-	if ((input[prev] == '\"' && in_single_quote == TRUE) || (input[prev] == '\'' && in_double_quote == TRUE))
+	if (input[prev] == '\"' || input[prev] == '\'')
 	{
 		prev++;
 		i--;

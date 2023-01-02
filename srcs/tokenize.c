@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 07:08:52 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 10:25:27 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 21:59:27 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ t_token	*tokenize_input(char *input)
 	}
 	if (!handle_prev_token_and_set(&info, token, input))
 		return (NULL);
-	//token->cmd_info = ft_split(info.cmd, ' ');
 	token->cmd_info = split_cmd(info.cmd);
 	free(info.cmd);
 	return (token);
@@ -58,17 +57,10 @@ static int	handle_prev_token_and_set(t_tokenizing_info *info,
 {
 	char	*temp;
 
-	if (input[info->start] == '\'' || input[info->start] == '\"')
-	{
-		info->start++;
-		info->i--;
-	}
-	info->temp = ft_substr(input, info->start, info->i - info->start);
-	//if (input[info->start] == '\'' || input[info->start] == '\"')
-	//{
-	//	info->start--;
-	//	info->i++;
-	//}
+	if (input && (input[info->start] == '\'' || input[info->start] == '\"'))
+		info->temp = ft_substr(input, info->start + 1, info->i - info->start - 2);
+	else
+		info->temp = ft_substr(input, info->start, info->i - info->start);
 	if (info->cur_type == CMD)
 	{
 		temp = append_cmd(info->cmd, info->temp);
@@ -85,7 +77,6 @@ static int	handle_prev_token_and_set(t_tokenizing_info *info,
 		}
 		if (!append_file_info(info->cur_type, token, info->temp))
 			return (0);
-		free(info->temp);
 	}
 	set_start_point(&info->start, &info->i, &info->cur_type, input);
 	skip_space(input, info);
@@ -103,19 +94,12 @@ static void	skip_space(char *input, t_tokenizing_info *info)
 
 static int	append_file_info(int cur_type, t_token *token, char *name)
 {
-	char		*temp;
 	t_list		*new;
 	t_file_info	*file_info;
 
-	temp = ft_strtrim(name, " ");
-	if (ft_strlen(temp) == 0)
-	{
-		free(temp);
-		return (0);
-	}
 	file_info = (t_file_info *) malloc(sizeof(t_file_info));
 	file_info->type = cur_type;
-	file_info->filename = temp;
+	file_info->filename = name;
 	new = ft_lstnew((void *) file_info);
 	if (new == NULL || file_info == NULL)
 		return (0);

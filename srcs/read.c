@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 14:52:48 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/02 20:30:39 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ static void	execute_readline(t_global *global, char *input)
 	dup2(global->fds.stdin_fd, STDIN_FILENO);
 	close(global->fds.fd[0]);
 	close(global->fds.fd[1]);
-	setsignal();
 	kill_zombie_process(pipe_count, global, pid_list);
 	free(pid_list);
 	free_2d_arr(execution_list);
+	setsignal();
 }
 
 void	start_read(t_global *global)

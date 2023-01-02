@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 15:26:15 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/02 21:01:57 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,19 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 		free(pipelines[i]);
 		pipelines[i] = line;
 		token = tokenize_input(pipelines[i]);
+		if (token == NULL)
+		{
+			ft_putstr_fd("minishell: syntax error\n", 2);
+			break ;
+		}
 		if (ft_strncmp(token->cmd_info[0], "exit", -1) == 0)
 			exit(builtin_exit(global, token->cmd_info));
-		if (token == NULL || (!handle_redirect_stdin(token, fds) && i++))
-			break ;
+		if (!handle_redirect_stdin(token, fds))
+		{
+			i++;
+			global->status = 1;
+			continue;
+		}
 		if (is_unprintable_builtin(token->cmd_info))
 		{
 			run_unprintable_builtin(global, token->cmd_info);
@@ -42,6 +51,7 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 		pid = fork();
 		if (pid == 0)
 		{
+			signal(SIGINT, SIG_DFL);
 			close(fds.fd[0]);
 			handle_redirect_stdout(token, i, pipe_count, fds);
 			close(fds.fd[1]);

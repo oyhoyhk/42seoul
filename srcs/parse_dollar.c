@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 17:23:07 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 20:06:25 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 21:02:23 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,12 @@ char	*parse_dollar(char *input, t_global *global)
 			single_quote = FALSE;
 		if (single_quote == FALSE && input[i] == '$')
 		{
-			printf("%s", ft_substr(input, prev, i- prev));
 			ft_lstadd_back(&word_list, ft_lstnew((void *)(ft_substr(input, prev, i - prev))));
 			prev = i + 1;
 			count = i;
 			while (input[count] != ' ' && input[count] != '\0')
 				count++;
 			result = env_find(global, ft_substr(input, prev, count - prev));
-			printf("%s", ((t_pair *)result->content)->value);
 			i++;
 		}
 		if (input[i] == '\0')
