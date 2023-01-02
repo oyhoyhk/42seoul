@@ -6,11 +6,16 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 16:00:07 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/01 16:07:57 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/02 15:25:03 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// TODO: remove before submitting.
+#define FOR_BUILTIN_CHECK "run in builtin\n"
+
+// TODO: Implemente functions related to environment variable
 
 int	is_valid_key(const char *key)
 {
@@ -45,6 +50,7 @@ int	builtin_env(t_global *global, char **cmd)
 	t_list	*cur;
 	t_pair	*pair;
 
+	printf(FOR_BUILTIN_CHECK);
 	if (cmd[1])
 		return (builtin_error_exit("env: too many arguments\n", 1));
 	envl = global->envl;
@@ -64,6 +70,7 @@ int	builtin_unset(t_global *global, char **cmd)
 	int	i;
 	int	ret;
 
+	printf(FOR_BUILTIN_CHECK);
 	i = 1;
 	ret = 0;
 	while (cmd[i])
@@ -130,6 +137,7 @@ static int	export_push(t_global *global, char **cmd)
 int	builtin_export(t_global *global, char **cmd)
 {
 
+	printf(FOR_BUILTIN_CHECK);
 	if (cmd[1] == NULL)
 		return (export_print(global));
 	else

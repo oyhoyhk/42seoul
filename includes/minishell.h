@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/01/01 16:40:56 by dongglee         ###   ########.fr       */
-=======
-/*   Updated: 2022/12/31 18:37:05 by yooh             ###   ########.fr       */
->>>>>>> b26dae0ad7d2e5b074e29c8d30eb255d370f8c8f
+/*   Updated: 2023/01/02 15:23:25 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,5 +152,11 @@ char		*env_getenv(t_global *global, char *key);
 t_list		*env_find(t_global *global, const char *key);
 void		env_update_one(t_global *global, t_pair *pair);
 void		env_delete_one(t_global *global, const char *key);
+
+// run_builtin.c
+int			is_unprintable_builtin(char **cmd);
+int			run_unprintable_builtin(t_global *global, char **cmd);
+int			is_printable_builtin(char **cmd);
+int			run_printable_builtin(t_global *global, char **cmd);
 
 #endif

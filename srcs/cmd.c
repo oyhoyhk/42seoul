@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:56:00 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/02 15:22:43 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	execute_cmd(t_global *global, char **cmd, int i, int count)
 
 	i = 0;
 	count = 0;
+	if (is_printable_builtin(cmd))
+		exit(run_printable_builtin(global, cmd));
 	absolute_route = create_valid_exec_route(global, cmd[0]);
 	if (absolute_route == NULL)
 	{
