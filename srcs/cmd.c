@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 15:22:43 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/02 16:03:56 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ int	is_path(const char *path)
 
 char	*create_absolute_route(t_global *global, const char *str)
 {
-	t_pair		*pair;
+	t_list		*lst;
 	char		**list;
 	int			i;
 	char		*temp;
 	char		*result;
 
 	i = 0;
-	pair = env_find(global, "PATH")->content;
-	if (pair == NULL)
+	lst = env_find(global, "PATH");
+	if (lst == NULL || lst->content == NULL)
 		return (NULL);
-	list = ft_split(pair->value, ':');
+	list = ft_split(((t_pair *)lst->content)->value, ':');
 	while (list[i])
 	{
 		temp = ft_strjoin(list[i], "/");
