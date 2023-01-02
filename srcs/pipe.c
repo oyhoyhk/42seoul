@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 15:45:56 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/02 13:37:41 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	run_pipelines(t_global *global, char **pipelines, t_fds fds,
 	pid_t		pid;
 
 	i = 0;
+	setsignal_ignored();
 	while (pipelines[i])
 	{
 		token = tokenize_input(pipelines[i]);

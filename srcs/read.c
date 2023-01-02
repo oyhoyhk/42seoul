@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:26:35 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/02 13:38:35 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static void	execute_readline(t_global *global, char *input)
 	close(global->fds.fd[0]);
 	close(global->fds.fd[1]);
 	kill_zombie_process(pipe_count, pid_list, global->fds);
+	setsignal();
 	free(pid_list);
 	free_2d_arr(execution_list);
 }
