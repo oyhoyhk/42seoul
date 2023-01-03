@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 20:30:39 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 11:00:33 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	read_from_stdin(char *word, t_fds fds)
 		{
 			ft_putstr_fd("> ", fds.stdout_fd);
 			result = get_next_line(fds.stdin_fd);
-			if (!result || (ft_strlen(result) != 1 &&
-					ft_strncmp(result, word, ft_strlen(result) - 1) == 0))
+			if (!result || (ft_strlen(result) != 1
+					&& ft_strncmp(result, word, ft_strlen(result) - 1) == 0))
 				break ;
 			ft_putstr_fd(result, fd[1]);
 			free(result);
@@ -77,7 +77,7 @@ static void	execute_readline(t_global *global, char *input)
 	i = 0;
 	pipe_count = count_pipe(execution_list);
 	pid_list = (pid_t *) malloc(sizeof(pid_t) * (pipe_count));
-	run_pipelines(global, execution_list, global->fds, pipe_count, pid_list);
+	run_pipelines(global, execution_list, pipe_count, pid_list);
 	dup2(global->fds.stdin_fd, STDIN_FILENO);
 	close(global->fds.fd[0]);
 	close(global->fds.fd[1]);
@@ -90,16 +90,23 @@ static void	execute_readline(t_global *global, char *input)
 void	start_read(t_global *global)
 {
 	char	*input;
+	char	*trimmed_input;
 
 	while (1)
 	{
 		input = readline("minishell > ");
 		if (input == NULL)
 			return ;
-		if (ft_strlen(input) == 0)
+		trimmed_input = ft_strtrim(input, " ");
+		if (ft_strlen(trimmed_input) == 0)
+		{
+			free(trimmed_input);
+			free(input);
 			continue ;
+		}
 		add_history(input);
 		execute_readline(global, input);
 		free(input);
+		free(trimmed_input);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 07:08:52 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 21:59:27 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 07:08:02 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static char	*append_cmd(char *cmd, char *new);
 static int	append_file_info(int cur_type, t_token *token, char *name);
-static int	handle_prev_token_and_set(t_tokenizing_info *info,
-				t_token *token, char *input);
 static void	skip_space(char *input, t_tokenizing_info *info);
 
 t_token	*tokenize_input(char *input)
@@ -29,22 +27,8 @@ t_token	*tokenize_input(char *input)
 	ft_bzero(token, sizeof(t_token));
 	ft_bzero(&info, sizeof(t_tokenizing_info));
 	info.cmd = ft_calloc(1, 1);
-	while (input[info.i])
-	{
-		if (input[info.i] == '\'' && info.in_single_quote)
-			info.in_single_quote = FALSE;
-		else if (input[info.i] == '\'' && !info.in_single_quote)
-			info.in_single_quote = TRUE;
-		if (input[info.i] == '\"' && info.in_double_quote)
-			info.in_double_quote = FALSE;
-		else if (input[info.i] == '\"' && !info.in_double_quote)
-			info.in_double_quote = TRUE;
-		if (ft_strchr(">< ", input[info.i]) && !info.in_double_quote
-			&& !info.in_single_quote 
-			&& !handle_prev_token_and_set(&info, token, input))
-			return (NULL);
-		(info.i)++;
-	}
+	if (!parse_input_into_token(&info, input, token))
+		return (NULL);
 	if (!handle_prev_token_and_set(&info, token, input))
 		return (NULL);
 	token->cmd_info = split_cmd(info.cmd);
@@ -52,15 +36,12 @@ t_token	*tokenize_input(char *input)
 	return (token);
 }
 
-static int	handle_prev_token_and_set(t_tokenizing_info *info,
+int	handle_prev_token_and_set(t_tokenizing_info *info,
 				t_token *token, char *input)
 {
 	char	*temp;
 
-	if (input && (input[info->start] == '\'' || input[info->start] == '\"'))
-		info->temp = ft_substr(input, info->start + 1, info->i - info->start - 2);
-	else
-		info->temp = ft_substr(input, info->start, info->i - info->start);
+	info->temp = ft_substr(input, info->start, info->i - info->start);
 	if (info->cur_type == CMD)
 	{
 		temp = append_cmd(info->cmd, info->temp);

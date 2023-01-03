@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 15:23:25 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/03 11:37:16 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,18 @@ typedef struct s_token
 	char	**cmd_info;
 }	t_token;
 
+typedef struct s_parse_info
+{
+	int		i;
+	int		prev;
+	int		single;
+	int		doub;
+	t_list	*list;
+	char	*result;
+	char	*temp;
+	char	**cmd_list;
+}	t_parse_info;
+
 typedef struct s_pair
 {
 	char	*key;
@@ -92,7 +104,7 @@ typedef struct s_global
 }	t_global;
 
 // cmd.c
-void		execute_cmd(t_global *global, char **cmd, int i, int count);
+void		execute_cmd(t_global *global, char **cmd);
 
 // redirect.c
 int			handle_redirect_stdin(t_token *token, t_fds fds);
@@ -105,18 +117,24 @@ void		start_read(t_global *global);
 
 // tokenize.c
 t_token		*tokenize_input(char *input);
+int			handle_prev_token_and_set(t_tokenizing_info *info,
+				t_token *token, char *input);
 
 // utils.c
 int			count_pipe(char **list);
 void		set_start_point(int	*start, int *i, int *cur_type, char *input);
+int			parse_input_into_token(t_tokenizing_info *info,
+				char *input, t_token *token);
+void		print_logo(void);
 
 // pipe.c
-void		run_pipelines(t_global *global, char **pipelines, t_fds fds,
+void		run_pipelines(t_global *global, char **pipelines,
 				int pipe_count, pid_t *pid_list);
-void		kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list);
+void		kill_zombie_process(int pipe_count,
+				t_global *global, pid_t *pid_list);
 
 // free.c
-void		free_2d_arr(char **arr);
+int			free_2d_arr(char **arr);
 void		free_token(t_token *token);
 void		free_string(void *str);
 
@@ -128,8 +146,8 @@ char		**parse_list_to_arr2d(t_list *list);
 char		*handle_dollar(char *input, t_global *global);
 char		**split_cmd(char *input);
 
-char	*parse_dollar(char *input, t_global *global);
-
+// parse_dollar.c
+void		parse_dollars(char **origin, t_global *global);
 // signal.c
 void		setsignal(void);
 void		setsignal_ignored(void);
@@ -144,6 +162,8 @@ int			builtin_cd(t_global *global, char **cmd);
 // builtin_2.c
 int			builtin_env(t_global *global, char **cmd);
 int			builtin_unset(t_global *global, char **cmd);
+
+// bu9iltin_3.c
 int			builtin_export(t_global *global, char **cmd);
 
 // env_pair.c
@@ -168,5 +188,9 @@ int			is_unprintable_builtin(char **cmd);
 int			run_unprintable_builtin(t_global *global, char **cmd);
 int			is_printable_builtin(char **cmd);
 int			run_printable_builtin(t_global *global, char **cmd);
+
+// error.c
+int			print_syntax_error(void);
+void		print_valid_error(const char *cmd, const char *id);
 
 #endif

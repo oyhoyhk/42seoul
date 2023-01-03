@@ -6,16 +6,11 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/02 15:22:14 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/03 12:38:45 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// TODO: remove before submitting.
-#define FOR_BUILTIN_CHECK "run in builtin\n"
-
-// TODO: Implemente functions related to environment variables
 
 int	builtin_error_exit(const char *msg, int status_code)
 {
@@ -28,7 +23,6 @@ int	builtin_echo(t_global *global, char **cmd)
 	int		flag_newline;
 	int		i;
 
-	printf(FOR_BUILTIN_CHECK);
 	(void)global;
 	i = 1;
 	flag_newline = TRUE;
@@ -55,7 +49,6 @@ int	builtin_pwd(t_global *global, char **cmd)
 	char		*path;
 	const int	size = 2046;
 
-	printf(FOR_BUILTIN_CHECK);
 	(void)global;
 	(void)cmd;
 	path = malloc(sizeof(char) * size);
@@ -69,7 +62,6 @@ int	builtin_exit(t_global *global, char **cmd)
 {
 	int	i;
 
-	printf(FOR_BUILTIN_CHECK);
 	printf("exit\n");
 	(void)global;
 	i = 0;
@@ -90,7 +82,6 @@ int	builtin_exit(t_global *global, char **cmd)
 
 int	builtin_cd(t_global *global, char **cmd)
 {
-	printf(FOR_BUILTIN_CHECK);
 	(void)global;
 	if (!cmd[1])
 		return (0);

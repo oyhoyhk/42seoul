@@ -1,40 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/28 20:08:51 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 09:56:17 by yooh             ###   ########.fr       */
+/*   Created: 2023/01/03 07:23:33 by yooh              #+#    #+#             */
+/*   Updated: 2023/01/03 11:49:56 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	free_2d_arr(char **arr)
+int	print_syntax_error(void)
 {
-	int		i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
+	ft_putstr_fd("minishell: syntax error\n", 2);
 	return (1);
 }
 
-void	free_string(void *str)
+void	print_valid_error(const char *cmd, const char *id)
 {
-	free((char *)str);
-}
-
-void	free_token(t_token *token)
-{
-	free_2d_arr(token->cmd_info);
-	ft_lstclear(&(token->redirect_in), free_string);
-	ft_lstclear(&(token->redirect_out), free_string);
-	free(token);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd(": `", STDERR_FILENO);
+	ft_putstr_fd(id, STDERR_FILENO);
+	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 }

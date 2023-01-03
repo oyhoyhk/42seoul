@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:15:15 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 20:07:22 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 07:04:13 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ void	handle_redirect_stdout(t_token *token, int i, int pipe_count, t_fds fds)
 
 	cur = token->redirect_out;
 	if (i + 1 < pipe_count)
-	{
-		//close(fds.fd[0]);
 		dup2(fds.fd[1], STDOUT_FILENO);
-	}
 	else
 		dup2(fds.stdout_fd, STDOUT_FILENO);
 	while (cur)

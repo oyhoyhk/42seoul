@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 17:23:07 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/02 21:59:35 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 09:49:30 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,111 +30,65 @@ char	*join_list(t_list *list)
 	return (result);
 }
 
-char	*handle_dollar(char *input, t_global *global)
+static void	handle_meet_quote(t_parse_info *info, char *input)
 {
-	int		i;
-	int		prev;
-	int		in_single_quote;
-	int		in_double_quote;
-	t_list	*list;
-	char	*result;
-	char	*temp;
-
-	i = 0;
-	prev = 0;
-	list = NULL;
-	in_single_quote = FALSE;
-	in_double_quote = FALSE;
-	while (input[i])
-	{
-		if (input[i] == '\'' && in_single_quote)
-			in_single_quote = 0;
-		else if (input[i] == '\'' && !in_single_quote)
-			in_single_quote = i;
-		if (input[i] == '\"' && in_double_quote)
-			in_double_quote = 0;
-		else if (input[i] == '\"' && !in_double_quote)
-			in_double_quote = i;
-		if (input[i] == '$' && (in_single_quote == 0 || in_single_quote > in_double_quote))
-		{
-			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-			prev = i + 1;
-			i++;
-			if (input[i] == '?')
-			{
-				ft_lstadd_back(&list, ft_lstnew((void *) ft_itoa(global->status)));
-				prev = i + 1;
-				i++;
-				continue ;	
-			}
-			while (input[i] != '\'' && input[i] != '\"' && input[i] != ' ' && input[i] != '$' && input[i] != '\0')
-				i++;
-			temp = ft_substr(input, prev, i - prev);
-			ft_lstadd_back(&list, ft_lstnew((void *)(env_getenv(global, temp))));
-			free(temp);
-			prev = i;
-			i--;
-		}
-		i++;
-	}
-	ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-	result = join_list(list);
-	ft_lstclear(&list, free_string);
-	return (result);
+	if (input[info->i] == '\'' && info->single)
+		info->single = 0;
+	else if (input[info->i] == '\'' && !info->single)
+		info->single = info->i;
+	if (input[info->i] == '\"' && info->doub)
+		info->doub = 0;
+	else if (input[info->i] == '\"' && !info->doub)
+		info->doub = info->i;
 }
 
-char	**split_cmd(char *input)
+static int	handle_meet_dollar(t_parse_info *info,
+				char *input, t_global *global)
 {
-	t_list	*list;
-	int		prev;
-	int		i;
-	int		in_double_quote;
-	int		in_single_quote;
-	char	**result;
+	char	*temp;
 
-	list = NULL;
-	prev = 0;
-	i = 0;
-	in_double_quote = FALSE;
-	in_single_quote = FALSE;
-	while (input[i])
+	temp = ft_substr(input, info->prev, info->i - info->prev);
+	ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
+	info->prev = info->i + 1;
+	info->i++;
+	if (input[info->i] == '?')
 	{
-		if (input[i] == '\"')
-		{
-			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-			prev = ++i;
-			while (input[i] != '\"')
-				i++;
-			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev - 1)));
-			prev = i + 1;
-		}
-		if (input[i] == '\'')
-		{
-			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-			prev = ++i;
-			while (input[i] != '\'')
-				i++;
-			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev - 1)));
-			prev = i + 1;
-		}
-		if (input[i] == ' ')
-		{
-			ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-			prev = i + 1;
-			while (input[i] == ' ' && (input[i] != '\"' || input[i] != '\''))
-				i++;
-			prev = i;
-			i -= 1;
-		}
-		i++;
+		ft_lstadd_back(&info->list,
+			ft_lstnew((void *) ft_itoa(global->status)));
+		info->prev = info->i + 1;
+		info->i++;
+		return (0);
 	}
-	if (input[prev] == '\"' || input[prev] == '\'')
+	while (input[info->i] != '\'' && input[info->i] != '\"'
+		&& input[info->i] != ' ' && input[info->i] != '$'
+		&& input[info->i] != '\0')
+		info->i++;
+	info->temp = ft_substr(input, info->prev, info->i - info->prev);
+	temp = env_getenv(global, info->temp);
+	ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
+	free(info->temp);
+	info->prev = info->i;
+	info->i--;
+	return (1);
+}
+
+char	*handle_dollar(char *input, t_global *global)
+{
+	t_parse_info	info;
+
+	ft_bzero(&info, sizeof(t_parse_info));
+	while (input[info.i])
 	{
-		prev++;
-		i--;
+		handle_meet_quote(&info, input);
+		if (input[info.i] == '$'
+			&& (info.single == 0 || info.single > info.doub)
+			&& !handle_meet_dollar(&info, input, global))
+			continue ;
+		info.i++;
 	}
-	ft_lstadd_back(&list, ft_lstnew((void *)ft_substr(input, prev, i - prev)));
-	result = parse_list_to_arr2d(list);
-	ft_lstclear(&list, free_string);
-	return (result);
+	ft_lstadd_back(&info.list,
+		ft_lstnew((void *)ft_substr(input, info.prev, info.i - info.prev)));
+	info.result = join_list(info.list);
+	ft_lstclear(&info.list, free_string);
+	return (info.result);
 }

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:11:12 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/31 16:42:50 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 12:45:55 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,41 @@ void	set_start_point(int	*start, int *i, int *cur_type, char *input)
 			*i += 1;
 		}
 	}
+}
+
+int	parse_input_into_token(t_tokenizing_info *info,
+				char *input, t_token *token)
+{
+	while (input[info->i])
+	{
+		if (input[info->i] == '\'' && info->in_single_quote)
+			info->in_single_quote = FALSE;
+		else if (input[info->i] == '\'' && !info->in_single_quote)
+			info->in_single_quote = TRUE;
+		if (input[info->i] == '\"' && info->in_double_quote)
+			info->in_double_quote = FALSE;
+		else if (input[info->i] == '\"' && !info->in_double_quote)
+			info->in_double_quote = TRUE;
+		if (ft_strchr(">< ", input[info->i]) && !info->in_double_quote
+			&& !info->in_single_quote
+			&& !handle_prev_token_and_set(info, token, input))
+			return (0);
+		(info->i)++;
+	}
+	return (1);
+}
+
+void	print_logo(void)
+{
+	printf("\n");
+	printf("                  .-')    ('-. .-. \n");
+	printf("                 ( OO ). ( OO )  / \n");
+	printf(" .---. .-----.  (_)---\\_),--. ,--. \n");
+	printf("/_   |/  .-.  \\ /    _ | |  | |  | \n");
+	printf(" |   |   \\_.' / \\  :` `. |   .|  | \n");
+	printf(" |   |/  .-. '.  '..`''.)|       | \n");
+	printf(" |   |  |   |  |.-._)   \\|  .-.  | \n");
+	printf(" |   |\\  '-'  / \\       /|  | |  | \n");
+	printf(" `---' `----''   `-----' `--' `--' \n");
+	printf("\n");
 }
