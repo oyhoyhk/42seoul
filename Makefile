@@ -6,13 +6,13 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2023/01/03 13:08:25 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/03 13:25:55 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 HEADERS_DIR = includes/
 SRC_DIR = srcs/
 CINCLUDE = -I$(HEADERS_DIR)

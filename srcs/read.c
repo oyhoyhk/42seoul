@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 11:00:33 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 15:09:37 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,49 @@ void	read_from_stdin(char *word, t_fds fds)
 	dup2(fd[0], STDIN_FILENO);
 }
 
+static void	cal_info(int *sing, int *doub, char ch)
+{
+	if (ch == '\'')
+	{
+		if (*doub == 1)
+			return ;
+		else
+		{
+			if (*sing == 1)
+				*sing = 0;
+			else
+				*sing = 1;
+		}
+	}
+	if (ch == '\"')
+	{
+		if (*sing == 1)
+			return ;
+		else
+		{
+			if (*doub == 1)
+				*doub = 0;
+			else
+				*doub = 1;
+		}
+	}
+}
+
 static int	input_valid_check(char *input)
 {
-	int		single_quote_count;
-	int		double_quote_count;
+	int		sing;
+	int		doub;
 	int		i;
 
-	single_quote_count = 0;
-	double_quote_count = 0;
+	sing = 0;
+	doub = 0;
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '\'')
-			single_quote_count++;
-		if (input[i] == '\"')
-			double_quote_count++;
+		cal_info(&sing, &doub, input[i]);
 		i++;
 	}
-	if (single_quote_count % 2 == 1
-		|| double_quote_count % 2 == 1)
+	if (sing || doub)
 		return (0);
 	return (1);
 }

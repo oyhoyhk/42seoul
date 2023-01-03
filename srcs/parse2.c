@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 17:23:07 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 09:49:30 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 15:14:42 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ char	*join_list(t_list *list)
 
 static void	handle_meet_quote(t_parse_info *info, char *input)
 {
-	if (input[info->i] == '\'' && info->single)
+	if (input[info->i] == '\'' && info->single != 0)
 		info->single = 0;
-	else if (input[info->i] == '\'' && !info->single)
+	else if (input[info->i] == '\'' && info->single == 0)
 		info->single = info->i;
-	if (input[info->i] == '\"' && info->doub)
+	if (input[info->i] == '\"' && info->doub != 0)
 		info->doub = 0;
-	else if (input[info->i] == '\"' && !info->doub)
+	else if (input[info->i] == '\"' && info->doub == 0)
 		info->doub = info->i;
 }
 
@@ -81,7 +81,7 @@ char	*handle_dollar(char *input, t_global *global)
 	{
 		handle_meet_quote(&info, input);
 		if (input[info.i] == '$'
-			&& (info.single == 0 || info.single > info.doub)
+			&& (info.single == 0 || (info.doub != 0 && info.single > info.doub))
 			&& !handle_meet_dollar(&info, input, global))
 			continue ;
 		info.i++;
