@@ -6,31 +6,25 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2023/01/02 19:50:47 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/03 13:08:25 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -g # g옵션 나중에 빼야함ㅡㅁ
+CFLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = includes/
 SRC_DIR = srcs/
 CINCLUDE = -I$(HEADERS_DIR)
 
- #42seoul
 RL_INCLUDE = -I${HOME}/.brew/opt/readline/include/
 RL_LIB = -L${HOME}/.brew/opt/readline/lib/ -lreadline
-
-## my mac
-#RL_INCLUDE = -I/opt/homebrew/opt/readline/include/
-#RL_LIB = -L/opt/homebrew/opt/readline/lib/ -lreadline
 
 FT_DIR = libft/
 FT_INCLUDE = -I$(FT_DIR)
 FT_LIB = -L$(FT_DIR) -lft
 
-# wildcard 나중에 바꿔야함!
-SRCS = $(wildcard $(SRC_DIR)*.c)
+SRCS = srcs/builtin_1.c srcs/builtin_2.c srcs/builtin_3.c srcs/cmd.c srcs/env.c srcs/env_list.c srcs/env_pair.c srcs/error.c srcs/free.c srcs/gnl.c srcs/gnl_utils.c srcs/main.c srcs/parse.c srcs/parse2.c srcs/parse3.c srcs/parse_dollar.c srcs/pipe.c srcs/read.c srcs/redirect.c srcs/run_builtin.c srcs/signal.c srcs/tokenize.c srcs/utils.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
 
@@ -43,8 +37,7 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	$(MAKE) bonus -C $(FT_DIR)
-	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB) -g 
-# -g 나중에 빼야함
+	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB)
 
 clean :
 	$(MAKE) -C $(FT_DIR) clean
@@ -55,14 +48,3 @@ fclean : clean
 	$(RM) $(NAME)
 
 re : fclean all
-
-# for test
-test: $(OBJS) test.c
-	$(CC) $(CFLAGS) $(CINCLUDE) $(RL_INCLUDE) $(FT_INCLUDE) -c test.c -o test.o
-	$(MAKE) -C $(FT_DIR) bonus
-	$(CC) $(CFLAGS) -o test $(filter-out %/main.o,$(OBJS)) test.o $(RL_LIB) $(FT_LIB)
-tclean: fclean
-	$(RM) test test.o
-
-tmpclean:
-	$(RM) *.tmp
