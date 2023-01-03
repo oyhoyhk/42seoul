@@ -6,18 +6,17 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 17:04:27 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 19:33:34 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	read_from_stdin(char *word, t_fds fds)
+void	read_from_stdin(char *word, t_fds fds, int status)
 {
 	char	*result;
 	pid_t	pid;
 	int		fd[2];
-	int		status;
 
 	pipe(fd);
 	pid = fork();
@@ -29,7 +28,8 @@ void	read_from_stdin(char *word, t_fds fds)
 			ft_putstr_fd("> ", fds.stdout_fd);
 			result = get_next_line(fds.stdin_fd);
 			if (!result || (ft_strlen(result) != 1
-					&& ft_strncmp(result, word, ft_strlen(result) - 1) == 0))
+					&& ft_strncmp(result, word, ft_strlen(word)) == 0
+					&& result[ft_strlen(word)] == '\n'))
 				break ;
 			ft_putstr_fd(result, fd[1]);
 			free(result);

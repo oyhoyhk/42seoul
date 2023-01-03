@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:15:15 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 07:04:13 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 19:33:45 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	handle_redirect_stdin(t_token *token, t_fds fds)
 		}
 		else
 		{
-			read_from_stdin(((t_file_info *)cur->content)->filename, fds);
+			read_from_stdin(((t_file_info *)cur->content)->filename, fds, 0);
 		}
 		cur = cur->next;
 	}
