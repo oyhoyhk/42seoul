@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:09:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 12:35:52 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 16:26:06 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,14 @@ void	execute_cmd(t_global *global, char **cmd)
 	char	*absolute_route;
 	char	**result;
 
-	result = skip_empty_line(cmd);
-	if (!ft_strlen(result[0]))
+	if (!ft_strlen(cmd[0]))
 	{
 		ft_putstr_fd("minishell: command not found:\n", 2);
 		exit(127);
 	}
-	if (is_printable_builtin(result))
-		exit(run_printable_builtin(global, result));
+	if (is_printable_builtin(cmd))
+		exit(run_printable_builtin(global, cmd));
+	result = skip_empty_line(cmd);
 	absolute_route = create_valid_exec_route(global, result[0]);
 	if (absolute_route == NULL)
 	{

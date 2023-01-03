@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 16:24:15 by yooh              #+#    #+#             */
-/*   Updated: 2022/11/16 08:11:29 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 17:01:26 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 		temp = *lst;
 		*lst = (*lst)->next;
 		ft_lstdelone(temp, del);
+		temp = NULL;
 	}
 	return ;
 }

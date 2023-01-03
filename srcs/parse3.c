@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:49:36 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 14:24:05 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 16:30:09 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	handle_meet_single_quote(t_parse_info *info, char *input)
 	temp = ft_substr(input, info->prev, info->i - info->prev);
 	if (temp && ft_strlen(temp))
 		ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
-	info->prev = info->i;
+	info->prev = ++info->i;
 	while (input[info->i] != '\'')
 		info->i++;
 	temp = ft_substr(input, info->prev, info->i - info->prev);

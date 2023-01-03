@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 11:37:16 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 18:51:26 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,5 +192,7 @@ int			run_printable_builtin(t_global *global, char **cmd);
 // error.c
 int			print_syntax_error(void);
 void		print_valid_error(const char *cmd, const char *id);
+
+void	show_token(t_token *token);
 
 #endif

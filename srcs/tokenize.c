@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 07:08:52 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 14:23:35 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 19:07:07 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,16 @@ t_token	*tokenize_input(char *input)
 	ft_bzero(&info, sizeof(t_tokenizing_info));
 	info.cmd = ft_calloc(1, 1);
 	if (!parse_input_into_token(&info, input, token))
+	{
+		free(info.cmd);
 		return (NULL);
+	}
 	if (!handle_prev_token_and_set(&info, token, input))
+	{
+		free(info.cmd);
+		free(token);
 		return (NULL);
+	}
 	token->cmd_info = split_cmd(info.cmd);
 	free(info.cmd);
 	return (token);
@@ -54,6 +61,7 @@ int	handle_prev_token_and_set(t_tokenizing_info *info,
 		if (ft_strlen(info->temp) == 0)
 		{
 			printf("minishell: parse error\n");
+			free(info->temp);
 			return (0);
 		}
 		if (!append_file_info(info->cur_type, token, info->temp))
@@ -77,10 +85,18 @@ static int	append_file_info(int cur_type, t_token *token, char *name)
 {
 	t_list		*new;
 	t_file_info	*file_info;
+	char		*temp;
 
+	if (name[0] == '\'')
+		temp = ft_strtrim(name, "\'");
+	else if (name[0] == '\"')
+		temp = ft_strtrim(name, "\"");
+	else
+		temp = ft_strdup(name);
+	free(name);
 	file_info = (t_file_info *) malloc(sizeof(t_file_info));
 	file_info->type = cur_type;
-	file_info->filename = name;
+	file_info->filename = temp;
 	new = ft_lstnew((void *) file_info);
 	if (new == NULL || file_info == NULL)
 		return (0);

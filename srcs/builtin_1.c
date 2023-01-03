@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/03 12:38:45 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 19:12:15 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	builtin_cd(t_global *global, char **cmd)
 {
 	(void)global;
 	if (!cmd[1])
-		return (0);
+		return (builtin_error_exit("cd: No such file or directory\n", 1));
 	if (chdir(cmd[1]) == 0)
 		return (0);
 	return (builtin_error_exit("cd: No such file or directory\n", 1));

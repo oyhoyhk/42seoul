@@ -6,11 +6,14 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 12:11:12 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 12:45:55 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 19:15:31 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#define TM_RED "\033[0;33m"
+#define TM_RESET "\033[0m"
 
 int	count_pipe(char **list)
 {
@@ -80,6 +83,7 @@ int	parse_input_into_token(t_tokenizing_info *info,
 
 void	print_logo(void)
 {
+	printf(TM_RED);
 	printf("\n");
 	printf("                  .-')    ('-. .-. \n");
 	printf("                 ( OO ). ( OO )  / \n");
@@ -91,4 +95,5 @@ void	print_logo(void)
 	printf(" |   |\\  '-'  / \\       /|  | |  | \n");
 	printf(" `---' `----''   `-----' `--' `--' \n");
 	printf("\n");
+	printf(TM_RESET);
 }

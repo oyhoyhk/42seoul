@@ -6,14 +6,15 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 20:14:41 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 14:24:33 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/03 16:07:45 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static t_list	*parse_readline_to_list(char *input);
-static void		set_double_quote_flag(char *input, int i, int *flag);
+static void		set_double_quote_flag(char *input, int i,
+					int *single_flag, int *double_flag);
 
 char	**parse_readline(char *input)
 {
@@ -26,31 +27,39 @@ char	**parse_readline(char *input)
 	return (result);
 }
 
+static void	set_single_quote_flag(char *input, int i,
+				int *single_flag, int *double_flag)
+{
+	if (*double_flag == FALSE)
+	{
+		if (input[i] == '\'' && *single_flag == TRUE)
+			*single_flag = FALSE;
+		else if (input[i] == '\'' && *single_flag == FALSE)
+			*single_flag = TRUE;
+	}
+}
+
 static t_list	*parse_readline_to_list(char *input)
 {
-	int		i;
-	int		start;
-	int		in_double_quote;
-	t_list	*list;
+	t_parse_info	info;
 
-	i = 0;
-	list = NULL;
-	in_double_quote = FALSE;
-	start = 0;
-	while (input[i])
+	ft_bzero(&info, sizeof(t_parse_info));
+	while (input[info.i])
 	{
-		set_double_quote_flag(input, i, &in_double_quote);
-		if (input[i] == '|' && in_double_quote == FALSE)
+		set_single_quote_flag(input, info.i, &info.single, &info.doub);
+		set_double_quote_flag(input, info.i, &info.single, &info.doub);
+		if (input[info.i] == '|' && info.doub == FALSE)
 		{
-			ft_lstadd_back(&list,
-				ft_lstnew((void *)(ft_substr(input, start, i - start))));
-			start = i + 1;
+			info.temp = ft_substr(input, info.prev, info.i - info.prev);
+			ft_lstadd_back(&info.list,
+				ft_lstnew((void *)info.temp));
+			info.prev = info.i + 1;
 		}
-		i++;
+		info.i++;
 	}
-	ft_lstadd_back(&list,
-		ft_lstnew((void *)(ft_substr(input, start, i - start))));
-	return (list);
+	ft_lstadd_back(&info.list,
+		ft_lstnew((void *)(ft_substr(input, info.prev, info.i - info.prev))));
+	return (info.list);
 }
 
 char	**parse_list_to_arr2d(t_list *list)
@@ -71,10 +80,14 @@ char	**parse_list_to_arr2d(t_list *list)
 	return (result);
 }
 
-static void	set_double_quote_flag(char *input, int i, int *flag)
+static void	set_double_quote_flag(char *input, int i,
+				int *single_flag, int *double_flag)
 {
-	if (input[i] == '"' && *flag == TRUE)
-		*flag = FALSE;
-	else if (input[i] == '"' && *flag == FALSE)
-		*flag = TRUE;
+	if (*single_flag == FALSE)
+	{
+		if (input[i] == '\"' && *double_flag == TRUE)
+			*double_flag = FALSE;
+		else if (input[i] == '\"' && *double_flag == FALSE)
+			*double_flag = TRUE;
+	}
 }
