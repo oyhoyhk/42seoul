@@ -6,13 +6,13 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2023/01/03 17:11:42 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/04 10:18:14 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 HEADERS_DIR = includes/
 SRC_DIR = srcs/
 CINCLUDE = -I$(HEADERS_DIR)
@@ -24,7 +24,7 @@ FT_DIR = libft/
 FT_INCLUDE = -I$(FT_DIR)
 FT_LIB = -L$(FT_DIR) -lft
 
-SRCS = srcs/builtin_1.c srcs/builtin_2.c srcs/builtin_3.c srcs/cmd.c srcs/env.c srcs/env_list.c srcs/env_pair.c srcs/error.c srcs/free.c srcs/gnl.c srcs/gnl_utils.c srcs/main.c srcs/parse.c srcs/parse2.c srcs/parse3.c srcs/parse_dollar.c srcs/pipe.c srcs/read.c srcs/redirect.c srcs/run_builtin.c srcs/signal.c srcs/tokenize.c srcs/utils.c
+SRCS = srcs/builtin_1.c srcs/builtin_2.c srcs/builtin_3.c srcs/cmd.c srcs/env.c srcs/env_list.c srcs/env_pair.c srcs/error.c srcs/free.c srcs/gnl.c srcs/gnl_utils.c srcs/main.c srcs/parse.c srcs/parse2.c srcs/parse3.c srcs/parse_dollar.c srcs/pipe.c srcs/read.c srcs/redirect.c srcs/run_builtin.c srcs/signal.c srcs/tokenize.c srcs/utils.c srcs/parse4.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
 

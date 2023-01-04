@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 19:51:15 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/04 10:14:57 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <stdio.h>
 # include <readline/readline.h>
-# include <readline/history.h>
+# include <readline/history.h>	
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -145,6 +145,8 @@ char		**parse_list_to_arr2d(t_list *list);
 // parse2.c
 char		*handle_dollar(char *input, t_global *global);
 char		**split_cmd(char *input);
+
+char		*parse_quote(char *str);
 
 // parse_dollar.c
 void		parse_dollars(char **origin, t_global *global);

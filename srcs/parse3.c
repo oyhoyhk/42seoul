@@ -6,68 +6,37 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:49:36 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 16:30:09 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/04 14:41:52 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	handle_meet_single_quote(t_parse_info *info, char *input)
+static void	handle_meet_quote(char *input, t_parse_info *info)
 {
-	char	*temp;
-
-	if (info->doub)
-		return ;
-	if (info->single)
-		info->single = 0;
-	else
-		info->single = info->i;
-	temp = ft_substr(input, info->prev, info->i - info->prev);
-	if (temp && ft_strlen(temp))
-		ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
-	info->prev = ++info->i;
-	while (input[info->i] != '\'')
-		info->i++;
-	temp = ft_substr(input, info->prev, info->i - info->prev);
-	if (temp && ft_strlen(temp))
-		ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
-	info->prev = info->i + 1;
+	if (input[info->i] == '\'' && !info->single && !info->doub)
+		info->single = TRUE;
+	else if (input[info->i] == '\'' && info->single && !info->doub)
+		info->single = FALSE;
+	if (input[info->i] == '\"' && !info->single && !info->doub)
+		info->doub = TRUE;
+	else if (input[info->i] == '\"' && !info->single && info->doub)
+		info->doub = FALSE;
 }
 
-static void	handle_meet_double_quote(t_parse_info *info, char *input)
+static void	handle_quote(char **cmd)
 {
+	int		i;
 	char	*temp;
 
-	if (info->single)
-		return ;
-	if (info->doub)
-		info->doub = 0;
-	else
-		info->doub = info->i;
-	temp = ft_substr(input, info->prev, info->i - info->prev);
-	if (temp && ft_strlen(temp))
-		ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
-	info->prev = ++info->i;
-	while (input[info->i] != '\"')
-		info->i++;
-	temp = ft_substr(input, info->prev, info->i - info->prev);
-	if (temp && ft_strlen(temp))
-		ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
-	info->prev = info->i + 1;
-}
-
-static void	handle_meet_space(t_parse_info *info, char *input)
-{
-	char	*temp;
-
-	temp = ft_substr(input, info->prev, info->i - info->prev);
-	ft_lstadd_back(&info->list, ft_lstnew((void *)temp));
-	info->prev = info->i + 1;
-	while (input[info->i] == ' '
-		&& (input[info->i] != '\"' || input[info->i] != '\''))
-		info->i++;
-	info->prev = info->i;
-	info->i -= 1;
+	i = 0;
+	while (cmd[i])
+	{
+		temp = parse_quote(cmd[i]);
+		free(cmd[i]);
+		cmd[i] = temp;
+		i++;
+	}
 }
 
 char	**split_cmd(char *input)
@@ -77,22 +46,22 @@ char	**split_cmd(char *input)
 	ft_bzero(&info, sizeof(t_parse_info));
 	while (input[info.i])
 	{
-		if (input[info.i] == '\'')
-			handle_meet_single_quote(&info, input);
-		if (input[info.i] == '\"')
-			handle_meet_double_quote(&info, input);
-		if (input[info.i] == ' ')
-			handle_meet_space(&info, input);
+		handle_meet_quote(input, &info);
+		if (input[info.i] == ' ' && !info.single && !info.doub)
+		{
+			info.temp = ft_substr(input, info.prev, info.i - info.prev);
+			ft_lstadd_back(&info.list, ft_lstnew((void *)info.temp));
+			while (input[info.i] == ' ')
+				info.i++;
+			info.prev = info.i;
+			info.i--;
+		}
 		info.i++;
 	}
-	if (input[info.prev] == '\"' || input[info.prev] == '\'')
-	{
-		info.prev++;
-		info.i--;
-	}
-	ft_lstadd_back(&info.list,
-		ft_lstnew((void *)ft_substr(input, info.prev, info.i - info.prev)));
+	info.temp = ft_substr(input, info.prev, info.i - info.prev);
+	ft_lstadd_back(&info.list, ft_lstnew((void *)info.temp));
 	info.cmd_list = parse_list_to_arr2d(info.list);
 	ft_lstclear(&info.list, free_string);
+	handle_quote(info.cmd_list);
 	return (info.cmd_list);
 }

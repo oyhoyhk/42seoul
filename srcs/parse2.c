@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 17:23:07 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 15:14:42 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/04 14:48:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ char	*join_list(t_list *list)
 
 static void	handle_meet_quote(t_parse_info *info, char *input)
 {
-	if (input[info->i] == '\'' && info->single != 0)
+	if (input[info->i] == '\'' && info->single)
 		info->single = 0;
-	else if (input[info->i] == '\'' && info->single == 0)
+	else if (input[info->i] == '\'' && !info->single && !info->doub)
 		info->single = info->i;
-	if (input[info->i] == '\"' && info->doub != 0)
+	if (input[info->i] == '\"' && info->doub)
 		info->doub = 0;
-	else if (input[info->i] == '\"' && info->doub == 0)
+	else if (input[info->i] == '\"' && !info->doub && !info->single)
 		info->doub = info->i;
 }
 
