@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/04 14:49:17 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 13:38:07 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,25 @@ void	run_pipelines(t_global *global, char **pipelines,
 
 void	kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list)
 {
-	int		i;
-	int		status;
+	int			i;
+	int			status;
+	int			flag;
 
 	i = 0;
+	flag = 0;
 	while (i < pipe_count)
 	{
 		wait(&status);
 		if (global->last_pid == pid_list[pipe_count - 1])
-			global->status = status % 255;
+		{
+			global->status = (unsigned int) status % 255;
+			if (global->status == 3 && flag == 0)
+			{
+				printf("^\\Quit: 3\n");
+				flag = 1;
+				global->status = 131;
+			}
+		}
 		dup2(global->fds.stdin_fd, STDIN_FILENO);
 		i++;
 	}
@@ -85,6 +95,7 @@ static void	execute_child_process(t_global *global, int i,
 				int pipe_count, t_token *token)
 {
 	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(global->fds.fd[0]);
 	handle_redirect_stdout(token, i, pipe_count, global->fds);
 	close(global->fds.fd[1]);

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 20:14:41 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/03 16:07:45 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 08:19:33 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ char	**parse_readline(char *input)
 	char	**result;
 
 	list = parse_readline_to_list(input);
+	if (list == NULL)
+		return (NULL);
 	result = parse_list_to_arr2d(list);
 	ft_lstclear(&list, free_string);
 	return (result);
@@ -59,6 +61,11 @@ static t_list	*parse_readline_to_list(char *input)
 	}
 	ft_lstadd_back(&info.list,
 		ft_lstnew((void *)(ft_substr(input, info.prev, info.i - info.prev))));
+	if (ft_strlen((char *)info.list->content) == 0)
+	{
+		ft_lstclear(&info.list, free_string);
+		return (NULL);
+	}
 	return (info.list);
 }
 

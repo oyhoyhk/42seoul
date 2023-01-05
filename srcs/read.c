@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/04 14:46:32 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 08:22:07 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,12 @@ static void	execute_readline(t_global *global, char *input)
 	if (!input_valid_check(input))
 		return ;
 	execution_list = parse_readline(input);
+	if (execution_list == NULL)
+	{
+		ft_putstr_fd("minishell: parse error\n", STDERR_FILENO);
+		global->status = 1;
+		return ;
+	}
 	i = 0;
 	pipe_count = count_pipe(execution_list);
 	pid_list = (pid_t *) malloc(sizeof(pid_t) * (pipe_count));
