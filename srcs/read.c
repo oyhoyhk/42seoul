@@ -6,39 +6,69 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 08:22:07 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 16:44:24 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	read_from_stdin(char *word, t_fds fds, int status)
+static int	handle_file_open_error(void)
 {
-	char	*result;
-	pid_t	pid;
 	int		fd[2];
+	pid_t	pid;
 
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
-		close(fd[0]);
+		ft_putstr_fd("", fd[0]);
+		exit(0);
+	}
+	wait(NULL);
+	close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
+	return (0);
+}
+
+
+void	read_from_stdin(char *word, t_global *global,  int status)
+{
+	char		*result;
+	pid_t		pid;
+	int			fd[2];
+	const char	*filename = new_file_name();
+
+	fd[0] = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, exit);
 		while (1)
 		{
-			ft_putstr_fd("> ", fds.stdout_fd);
-			result = get_next_line(fds.stdin_fd);
+			ft_putstr_fd("> ", global->fds.stdout_fd);
+			result = get_next_line(global->fds.stdin_fd);
 			if (!result || (ft_strlen(result) != 1
 					&& ft_strncmp(result, word, ft_strlen(word)) == 0
 					&& result[ft_strlen(word)] == '\n'))
 				break ;
-			ft_putstr_fd(result, fd[1]);
+			ft_putstr_fd(result, fd[0]);
 			free(result);
 		}
 		exit(0);
 	}
 	waitpid(pid, &status, 0);
-	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO);
+	global->status = status;
+	if (status == 512)
+	{
+		global->status = 1;
+		handle_file_open_error();
+		printf("\n");
+	}
+	else
+	{
+		fd[1] = open(filename, O_RDWR, 0644);
+		dup2(fd[1], STDIN_FILENO);
+	}
 }
 
 static void	cal_info(int *sing, int *doub, char ch)

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 13:03:52 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 16:45:45 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,12 @@ typedef struct s_global
 void		execute_cmd(t_global *global, char **cmd);
 
 // redirect.c
-int			handle_redirect_stdin(t_token *token, t_fds fds);
+int			handle_redirect_stdin(t_token *token, t_global *global);
 void		handle_redirect_stdout(t_token *token,
 				int i, int pipe_count, t_fds fds);
 
 // read.c
-void		read_from_stdin(char *word, t_fds fds, int status);
+void		read_from_stdin(char *word, t_global *global, int status);
 void		start_read(t_global *global);
 
 // tokenize.c
@@ -126,6 +126,8 @@ void		set_start_point(int	*start, int *i, int *cur_type, char *input);
 int			parse_input_into_token(t_tokenizing_info *info,
 				char *input, t_token *token);
 void		print_logo(void);
+
+char		*new_file_name(void);
 
 // pipe.c
 void		run_pipelines(t_global *global, char **pipelines,

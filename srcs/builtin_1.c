@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:50:37 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/04 14:42:10 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 14:42:39 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	builtin_echo(t_global *global, char **cmd)
 	(void)global;
 	i = 1;
 	flag_newline = TRUE;
-	if (ft_strncmp(cmd[i], "-n", 3) == 0)
+	if (cmd[i] && ft_strncmp(cmd[i], "-n", 3) == 0)
 	{
 		++i;
 		flag_newline = FALSE;

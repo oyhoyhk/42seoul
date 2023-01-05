@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 18:30:42 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 13:38:07 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/05 15:54:55 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	handle_builtin(t_token *token, t_global *global, int *i)
 {
 	if (ft_strncmp(token->cmd_info[0], "exit", -1) == 0)
 		exit(builtin_exit(global, token->cmd_info));
-	if (!handle_redirect_stdin(token, global->fds))
+	if (!handle_redirect_stdin(token, global))
 	{
 		*i += 1;
 		global->status = 1;
@@ -69,22 +69,23 @@ void	kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list)
 {
 	int			i;
 	int			status;
-	int			flag;
 
 	i = 0;
-	flag = 0;
 	while (i < pipe_count)
 	{
-		wait(&status);
-		if (global->last_pid == pid_list[pipe_count - 1])
+		waitpid(pid_list[i], &status, 0);
+		if (i == pipe_count - 1)
+			global->status = status;
+		if (global->last_pid == pid_list[i])
 		{
-			global->status = (unsigned int) status % 255;
-			if (global->status == 3 && flag == 0)
+			if ((status & 0177) != 0 && (status & 0177) != 0177)
 			{
-				printf("^\\Quit: 3\n");
-				flag = 1;
-				global->status = 131;
+				global->status = status & 0177;
+				if (global->status == SIGQUIT && printf("^\\Quit: 3\n"))
+					global->status = SIGQUIT + 128;
 			}
+			else
+				global->status = (status >> 8) & 0xff;
 		}
 		dup2(global->fds.stdin_fd, STDIN_FILENO);
 		i++;
