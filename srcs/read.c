@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 16:44:24 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 07:24:01 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,23 +150,32 @@ static void	execute_readline(t_global *global, char *input)
 void	start_read(t_global *global)
 {
 	char	*input;
-	char	*trimmed_input;
 
 	while (1)
 	{
 		input = readline("minishell > ");
 		if (input == NULL)
 			return ;
-		trimmed_input = ft_strtrim(input, " ");
-		if (ft_strlen(trimmed_input) == 0)
+		if (ft_strncmp(input, "$", -1) == 0)
 		{
-			free(trimmed_input);
+			ft_putstr_fd("minishell > $: command not found\n", 2);
+			global->status = 127;
+			free(input);
+			continue ;
+		}
+		if (ft_strncmp(input, "", -1) == 0)
+		{
+			free(input);
+			continue ;
+		}
+		if (ft_strncmp(ft_strtrim(input, " "), "", -1) == 0)
+		{
+			add_history(input);
 			free(input);
 			continue ;
 		}
 		add_history(input);
 		execute_readline(global, input);
 		free(input);
-		free(trimmed_input);
 	}
 }
