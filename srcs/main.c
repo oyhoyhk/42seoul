@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 15:45:45 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:53:26 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	print_process(void *context)
 int	main(int argc, __attribute__((unused))char **argv, __attribute__((unused))char *envp[])
 {
 	char	*input;
-	t_list	*pipes;
+	t_list	*processes;
 
 	if (argc != 1)
 	{
@@ -75,8 +75,9 @@ int	main(int argc, __attribute__((unused))char **argv, __attribute__((unused))ch
 		if (ft_strlen(input) == 0)
 			continue ;
 		add_history(input);
-		pipes = parse(input);
-		ft_lstiter(pipes, print_process);
+		processes = parse(input);
+		ft_lstiter(processes, print_process);
+		ft_lstclear(&processes, process_destory);
 		free(input);
 	}
 	return (0);

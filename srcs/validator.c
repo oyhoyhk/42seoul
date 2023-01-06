@@ -29,19 +29,19 @@ static int	is_valid_pipe(t_list *cur)
 	return (token->type == STRING || token->type == REDIRECT);
 }
 
-t_list	*filter(t_list *tokens)
+int	validate_token(t_list **tokens)
 {
 	t_list	*cur;
 	t_token	*token;
 
 
 	if (tokens == NULL)
-		return (NULL);
-	cur = tokens;
+		return (0);
+	cur = *tokens;
 	if (cur && ((t_token *)cur->content)->type == PIPE)
 	{
-		ft_lstclear(&tokens, token_destory);
-		return (NULL);
+		ft_lstclear(tokens, token_destory);
+		return (1);
 	}
 	while (cur)
 	{
@@ -49,10 +49,10 @@ t_list	*filter(t_list *tokens)
 		if ((token->type == REDIRECT && !is_valid_redirect(cur))
 			|| (token->type == PIPE && !is_valid_pipe(cur)))
 		{
-			ft_lstclear(&tokens, token_destory);
-			return (NULL);
+			ft_lstclear(tokens, token_destory);
+			return (1);
 		}
 		cur = cur->next;
 	}
-	return (tokens);
+	return (0);
 }
