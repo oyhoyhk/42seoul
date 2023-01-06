@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 15:50:17 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 17:00:26 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ typedef struct s_file_info
 	char	*filename;
 }	t_file_info;
 
-
 typedef struct s_process
 {
 	t_list	*redirect_in;
@@ -72,10 +71,30 @@ typedef struct s_process
 	t_list	*cmd_info;
 }	t_process;
 
+typedef struct s_envl
+{
+	t_list	*env_list;
+}	t_envl;
+
+typedef struct s_pair
+{
+	char	*key;
+	char	*value;
+}	t_pair;
+
+typedef struct s_global
+{
+	int			stdin_fd;
+	int			stdout_fd;
+	int			fd[2];
+	t_envl		*envl;
+	int			status;
+	pid_t		last_pid;
+}	t_global;
+
 // parse.c
 t_list	*parse(const char *line);
 void	process_destory(void *ptr);
-
 
 // filter.c
 t_list	*filter(t_list *tokens);
@@ -99,5 +118,15 @@ t_list	*create_new_char(char c);
 t_list	*create_new_token(t_list *str_lst, t_type type);
 t_list	*ft_lstappend(t_list	*lst1, t_list *lst2);
 void	token_destory(void *ptr);
+
+// env_list.c
+t_envl		*env_array_to_list(char **envp);
+char		**env_list_to_array(t_envl *lst);
+void		env_list_delete_one(t_envl *lst, t_list *emt);
+char		*env_getenv(t_global *global, char *key);
+
+
+// pipe.c
+void		handle_pipes(t_global *global, t_list *pipes);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 15:45:45 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:57:29 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	print_token(void *content)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = (t_token *)content;
 	printf("%d ", token->type);
@@ -43,7 +43,7 @@ void	print_process(void *context)
 {
 	t_process	*process;
 
-	process = (t_process*) context;
+	process = (t_process *) context;
 	printf("----- pipe start -----\n");
 	printf("redirect_in: ");
 	ft_lstiter(process->redirect_in, print_file_info);
@@ -56,17 +56,37 @@ void	print_process(void *context)
 	printf("\n----- pipe end -----\n");
 }
 
-
-int	main(int argc, __attribute__((unused))char **argv, __attribute__((unused))char *envp[])
+static t_global *init(char *envp[])
 {
-	char	*input;
-	t_list	*pipes;
+	t_global		*global;
+	struct termios	ter;
+
+	global = (t_global *) malloc(sizeof(t_global));
+	if (!global)
+		return (NULL);
+	bzero(global, sizeof(t_global));
+	tcgetattr(STDIN_FILENO, &ter);
+	ter.c_lflag &= ~(ECHOCTL);
+	tcsetattr(STDOUT_FILENO, TCSANOW, &ter);
+	setsignal();
+	global->stdin_fd = dup(STDIN_FILENO);
+	global->stdout_fd = dup(STDOUT_FILENO);
+	global->envl = env_array_to_list(envp);
+	return (global);
+}
+
+int	main(int argc, __attribute__((unused))char **argv, char *envp[])
+{
+	char		*input;
+	t_list		*pipes;
+	t_global	*global;
 
 	if (argc != 1)
 	{
 		printf("Too Many Arguments!\n");
 		exit(1);
 	}
+	global = init(envp);
 	while (1)
 	{
 		input = readline("minishell > ");
@@ -77,6 +97,7 @@ int	main(int argc, __attribute__((unused))char **argv, __attribute__((unused))ch
 		add_history(input);
 		pipes = parse(input);
 		ft_lstiter(pipes, print_process);
+		handle_pipes(global, pipes);
 		free(input);
 	}
 	return (0);
