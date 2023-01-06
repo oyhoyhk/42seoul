@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:24:24 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 19:37:04 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 19:57:35 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,17 @@ int	quote2_state(__attribute__((unused))t_list **tokens, t_lexer *lexer)
 	return (0);
 }
 
-int	redirect_state(t_list **tokens, t_lexer *lexer)
+static int special_state(t_list **tokens, t_lexer *lexer, int status, int type)
 {
 	lexer->type = get_type(lexer->target);
-	if (lexer->target == '>' || lexer->target == '<')
+	if (status)
+	{
 		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
+		return (0);
+	}
 	else
 	{
-		ft_lstadd_back(tokens, create_new_token(lexer->token_buffer, REDIRECT));
+		ft_lstadd_back(tokens, create_new_token(lexer->token_buffer, type));
 		destory_buffer(&lexer->token_buffer);
 	}
 	if (lexer->target == ' ')
@@ -125,24 +128,16 @@ int	redirect_state(t_list **tokens, t_lexer *lexer)
 	return (0);
 }
 
+int	redirect_state(t_list **tokens, t_lexer *lexer)
+{
+	return (special_state(tokens, lexer,
+		lexer->target == '>' || lexer->target == '<' , REDIRECT));
+}
+
 int	pipe_state(t_list **tokens, t_lexer *lexer)
 {
-
-	lexer->type = get_type(lexer->target);
-	if (lexer->target == '|')
-		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
-	else
-	{
-		ft_lstadd_back(tokens, create_new_token(lexer->token_buffer, PIPE));
-		destory_buffer(&lexer->token_buffer);
-	}
-	if (lexer->target == ' ')
-		lexer->type = NORMAL;
-	else if (lexer->type == ENV_VAL)
-		lexer->env_prev = STRING;
-	else
-		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
-	return (0);
+	return (special_state(tokens, lexer,
+		lexer->target == '|', PIPE));
 }
 
 int	env_state(t_list **tokens, t_lexer *lexer)
