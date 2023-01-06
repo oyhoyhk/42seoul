@@ -6,13 +6,16 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 16:56:50 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 17:00:33 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 17:32:34 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_pipes(t_global *global, t_list *pipes)
-{
-	
-}
+//void	handle_pipes(t_global *global, t_list *pipes)
+//{
+//	while (pipes)
+//	{
+//		parse_dollars()
+//	}
+//}

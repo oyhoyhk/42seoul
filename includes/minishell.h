@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 17:00:26 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 17:32:15 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,12 +96,13 @@ typedef struct s_global
 t_list	*parse(const char *line);
 void	process_destory(void *ptr);
 
-// filter.c
-t_list	*filter(t_list *tokens);
+
+// validator.c
+int		validate_token(t_list **tokens);
 
 // lexer.c
 int		lexer_branch(t_list **tokens, t_lexer *lexer, char c);
-t_list	*lex(const char *line);
+int		lex(const char *line, t_list **tokens);
 
 // lexer_fsm.c
 int	normal_state(t_list **tokens, t_lexer *lexer);

@@ -1,10 +1,6 @@
 #include "minishell.h"
 
-// need to processing: [char], ['] ["] [>] [<] [|] [$]
-// flag(int), token_buffer(t_list), env_buffer(t_list), type
-// token list -> token
-
-static void	add_process(t_list **pipes)
+static void	add_process(t_list **processes)
 {
 	t_process	*process;
 
@@ -12,19 +8,19 @@ static void	add_process(t_list **pipes)
 	process->redirect_in = NULL;
 	process->redirect_out = NULL;
 	process->cmd_info = NULL;
-	ft_lstadd_back(pipes, ft_lstnew(process));
+	ft_lstadd_back(processes, ft_lstnew(process));
 }
 
-static void add_string_token(t_list **pipes, t_list *cur)
+static void add_string_token(t_list **processes, t_list *cur)
 {
-	t_list		*last_pipe;
+	t_list		*last_process;
 	t_process	*process;
 	t_token		*token;
 
-	if (*pipes == NULL)
-		add_process(pipes);
-	last_pipe = ft_lstlast(*pipes);
-	process = (t_process *)last_pipe->content;
+	if (*processes == NULL)
+		add_process(processes);
+	last_process = ft_lstlast(*processes);
+	process = (t_process *)last_process->content;
 	token = cur->content;
 	ft_lstadd_back(&process->cmd_info, ft_lstnew(strdup(token->str)));
 }
@@ -42,17 +38,17 @@ static int	get_type_redirect(const char *str)
 	return (-1);
 }
 
-static void	add_redirect_token(t_list **pipes, t_list *cur)
+static void	add_redirect_token(t_list **processes, t_list *cur)
 {
-	t_list		*last_pipe;
+	t_list		*last_process;
 	t_process	*process;
 	t_token		*token;
 	t_file_info	*temp;
 
-	if (*pipes == NULL)
-		add_process(pipes);
-	last_pipe = ft_lstlast(*pipes);
-	process = (t_process *)last_pipe->content;
+	if (*processes == NULL)
+		add_process(processes);
+	last_process = ft_lstlast(*processes);
+	process = (t_process *)last_process->content;
 	token = cur->content;
 	temp = malloc(sizeof(t_file_info));
 	temp->type = get_type_redirect(token->str);
@@ -61,12 +57,12 @@ static void	add_redirect_token(t_list **pipes, t_list *cur)
 	ft_lstadd_back(&process->redirect_in, ft_lstnew(temp));
 }
 
-static void add_pipe_token(t_list **pipes, t_list *cur)
+static void add_process_token(t_list **processes, t_list *cur)
 {
 	(void) cur;
-	if (*pipes == NULL)
-		add_process(pipes);
-	add_process(pipes);
+	if (*processes == NULL)
+		add_process(processes);
+	add_process(processes);
 }
 
 t_list	*make_parse_form(t_list *tokens)
@@ -88,7 +84,7 @@ t_list	*make_parse_form(t_list *tokens)
 			cur = cur->next;
 		}
 		else if (token->type == PIPE)
-			add_pipe_token(&ret, cur);
+			add_process_token(&ret, cur);
 		cur = cur->next;
 	}
 	return (ret);
@@ -118,13 +114,17 @@ void	process_destory(void *ptr)
 t_list	*parse(const char *line)
 {
 	t_list	*tokens;
-	t_list	*pipes;
+	t_list	*processes;
 
-	tokens = filter(lex(line));
-	pipes = NULL;
-	if (tokens == NULL)
+	tokens = NULL;
+	if (lex(line, &tokens)
+		|| validate_token(&tokens))
+	{
 		ft_putstr_fd("syntax error\n", STDERR_FILENO);
-	pipes = make_parse_form(tokens);
+		return (NULL);
+	}
+	processes = NULL;
+	processes = make_parse_form(tokens);
 	ft_lstclear(&tokens, token_destory);
-	return (pipes);
+	return (processes);
 }

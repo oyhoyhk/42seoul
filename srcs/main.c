@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 16:57:29 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 17:31:30 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static t_global *init(char *envp[])
 int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 {
 	char		*input;
-	t_list		*pipes;
+	t_list		*processes;
 	t_global	*global;
 
 	if (argc != 1)
@@ -95,9 +95,9 @@ int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 		if (ft_strlen(input) == 0)
 			continue ;
 		add_history(input);
-		pipes = parse(input);
-		ft_lstiter(pipes, print_process);
-		handle_pipes(global, pipes);
+		processes = parse(input);
+		ft_lstiter(processes, print_process);
+		ft_lstclear(&processes, process_destory);
 		free(input);
 	}
 	return (0);
