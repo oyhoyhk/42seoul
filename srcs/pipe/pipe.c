@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 16:56:50 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 21:14:06 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 21:51:41 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,8 @@ static void	execute_child_process(t_global *global, int i,
 static void	execute_parent_process(t_global *global, pid_t pid,
 				pid_t *pid_list, int i);
 
-static int	handle_builtin(t_process *token, t_global *global)
+static int	handle_builtin(t_process *token, t_global *global, char **cmd_info)
 {
-	char	**cmd_info;
-
-	cmd_info = parse_list_to_arr2d(token->cmd_info);
 	if (cmd_info[0] && ft_strncmp(cmd_info[0], "exit", -1) == 0)
 		exit(builtin_exit(global, cmd_info));
 	if (!handle_redirect_stdin(token, global))
@@ -43,11 +40,13 @@ void	execute_each_process(t_list *processes, t_global *global,
 {
 	t_list	*cur;
 	pid_t	pid;
+	char	**cmd_info;
 
 	cur = processes;
 	while (cur)
 	{	
-		if (handle_builtin((t_process *)cur->content, global))
+		cmd_info = parse_list_to_arr2d(((t_process *)cur->content)->cmd_info);
+		if (handle_builtin((t_process *)cur->content, global, cmd_info))
 		{
 			cur = cur->next;
 			continue ;
@@ -60,6 +59,7 @@ void	execute_each_process(t_list *processes, t_global *global,
 		execute_parent_process(global, pid, pid_list, *count);
 		(*count) += 1;
 		cur = cur->next;
+		free_2d_arr(cmd_info);
 	}
 }
 

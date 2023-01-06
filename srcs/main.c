@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 21:15:19 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 21:54:40 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 		printf("Too Many Arguments!\n");
 		exit(1);
 	}
+	print_logo();
 	global = init(envp);
 	while (1)
 	{
@@ -95,7 +96,7 @@ int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 		if (ft_strlen(input) == 0)
 			continue ;
 		add_history(input);
-		processes = parse(input);
+		processes = parse(global, input);
 		handle_pipes(global, processes);
 		//ft_lstiter(processes, print_process);
 		ft_lstclear(&processes, process_destory);

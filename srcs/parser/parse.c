@@ -114,13 +114,13 @@ void	process_destory(void *ptr)
 	free(ptr);
 }
 
-t_list	*parse(const char *line)
+t_list	*parse(t_global *global, const char *line)
 {
 	t_list	*tokens;
 	t_list	*processes;
 
 	tokens = NULL;
-	if (lex(line, &tokens)
+	if (lex(global, line, &tokens)
 		|| validate_token(&tokens))
 	{
 		ft_putstr_fd("syntax error\n", STDERR_FILENO);
