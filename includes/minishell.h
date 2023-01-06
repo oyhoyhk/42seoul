@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 17:25:52 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 21:02:43 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,10 @@ t_list	*create_new_char(char c);
 t_list	*create_new_token(t_list *str_lst, t_type type);
 t_list	*ft_lstappend(t_list	*lst1, t_list *lst2);
 void	token_destory(void *ptr);
+t_list	*create_new_char_list(const char *str);
+char	*char_list_to_arr(t_list *char_list);
+
+//	myenv.c
+char	*my_getenv(const char *key);
 
 #endif

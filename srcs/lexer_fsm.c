@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:24:24 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 19:57:35 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 21:20:55 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,12 +142,16 @@ int	pipe_state(t_list **tokens, t_lexer *lexer)
 
 int	env_state(t_list **tokens, t_lexer *lexer)
 {
+	char	*env_key;
+	char	*env_value;
 
 	if (lexer->env_buffer == NULL && is_special_char_in_env(lexer->target))
 	{
 		if (lexer->target == '?')
 		{
-			ft_lstadd_back(&lexer->token_buffer, create_new_char('0'));
+			env_value = my_getenv("?");
+			lexer->token_buffer = ft_lstappend(lexer->token_buffer, create_new_char_list(env_value));
+			free(env_value);
 			lexer->type = lexer->env_prev;
 			if (lexer->type == NORMAL)
 				lexer->type = STRING;
@@ -173,10 +177,13 @@ int	env_state(t_list **tokens, t_lexer *lexer)
 		}
 		else
 		{
-			ft_lstadd_front(&lexer->env_buffer, create_new_char('['));
-			ft_lstadd_back(&lexer->env_buffer, create_new_char(']'));
-			lexer->token_buffer = ft_lstappend(lexer->token_buffer, lexer->env_buffer);
-			lexer->env_buffer = NULL;
+			env_key = char_list_to_arr(lexer->env_buffer);
+			env_value = my_getenv(env_key);
+			if (env_value)
+				lexer->token_buffer = ft_lstappend(lexer->token_buffer, create_new_char_list(env_value));
+			destory_buffer(&lexer->env_buffer);
+			free(env_key);
+			free(env_value);
 		}
 	}
 	lexer->type = lexer->env_prev;

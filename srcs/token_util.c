@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:25:23 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 17:25:24 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 21:15:37 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,31 @@ t_list	*create_new_char(char c)
 	return (ft_lstnew(one));
 }
 
-t_list	*create_new_token(t_list *str_lst, t_type type)
+t_list	*create_new_char_list(const char *str)
+{
+	int		i;
+	t_list	*ret;
+
+	ret = NULL;
+	if (str == NULL)
+		return (ret);
+	i = 0;
+	while (str[i])
+	{
+		ft_lstadd_back(&ret, create_new_char(str[i]));
+		++i;
+	}
+	return (ret);
+}
+
+char	*char_list_to_arr(t_list *char_list)
 {
 	char	*str;
-	t_token	*token;
-	t_list	*cur;
 	int		i;
+	t_list	*cur;
 
-	token = malloc(sizeof(t_token));
-	token->type = type;
-	cur = str_lst;
-	str = malloc(sizeof(char) * (ft_lstsize(str_lst) + 1));
+	cur = char_list;
+	str  = malloc(sizeof(char) * (ft_lstsize(char_list) + 1));
 	i = 0;
 	while (cur)
 	{
@@ -48,7 +62,16 @@ t_list	*create_new_token(t_list *str_lst, t_type type)
 		++i;
 	}
 	str[i] = '\0';
-	token->str = str;
+	return (str);
+}
+
+t_list	*create_new_token(t_list *char_list, t_type type)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	token->type = type;
+	token->str = char_list_to_arr(char_list);
 	return (ft_lstnew(token));
 }
 
