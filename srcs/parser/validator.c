@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:25:26 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 17:30:41 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 21:14:51 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static int	is_valid_redirect(t_list *cur)
 		&& strncmp(token->str, "<<", 3)
 		&& strncmp(token->str, ">>", 4))
 		return (0);
-
 	if (cur->next == NULL)
 		return (0);
 	token = cur->next->content;
@@ -45,7 +44,6 @@ int	validate_token(t_list **tokens)
 {
 	t_list	*cur;
 	t_token	*token;
-
 
 	if (tokens == NULL)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 17:32:15 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 20:28:32 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,14 @@
 # include <signal.h>
 # include <string.h>
 # include <termios.h>
+# include <unistd.h>
 # include "libft.h"
+
+# define TRUE	1
+# define FALSE	0
+
+# define TM_RED "\033[0;33m"
+# define TM_RESET "\033[0m"
 
 typedef enum e_type
 {
@@ -90,6 +97,7 @@ typedef struct s_global
 	t_envl		*envl;
 	int			status;
 	pid_t		last_pid;
+	int			flag;
 }	t_global;
 
 // parse.c
@@ -120,14 +128,76 @@ t_list	*create_new_token(t_list *str_lst, t_type type);
 t_list	*ft_lstappend(t_list	*lst1, t_list *lst2);
 void	token_destory(void *ptr);
 
+// signal.c
+void		setsignal(void);
+void		setsignal_ignored(void);
+
+// env.c
+t_list		*env_find(t_global *global, const char *key);
+void		env_update_one(t_global *global, t_pair *pair);
+void		env_delete_one(t_global *global, const char *key);
+
 // env_list.c
 t_envl		*env_array_to_list(char **envp);
 char		**env_list_to_array(t_envl *lst);
 void		env_list_delete_one(t_envl *lst, t_list *emt);
 char		*env_getenv(t_global *global, char *key);
 
+// env_pair.c
+void		pair_destroy(t_pair *pair);
+t_pair		*pair_make_from_str(const char *env);
+char		*pair_to_str(const t_pair *pair);
+t_pair		*pair_dup(t_pair *pair);
+
+// builtin_1.c
+int			builtin_error_exit(const char *msg, int status_code);
+int			builtin_echo(t_global *global, char **cmd);
+int			builtin_pwd(t_global *global, char **cmd);
+int			builtin_exit(t_global *global, char **cmd);
+int			builtin_cd(t_global *global, char **cmd);
+
+// builtin_2.c
+int			builtin_env(t_global *global, char **cmd);
+int			builtin_unset(t_global *global, char **cmd);
+
+// builtin_3.c
+int			builtin_export(t_global *global, char **cmd);
+
+// error.c
+int			print_syntax_error(void);
+void		print_valid_error(const char *cmd, const char *id);
+
+// run_builtin.c
+int			is_unprintable_builtin(char **cmd);
+int			run_unprintable_builtin(t_global *global, char **cmd);
+int			is_printable_builtin(char **cmd);
+int			run_printable_builtin(t_global *global, char **cmd);
+
+// parse2.c
+
+char		*skip_empty_string(t_list *list);
+char		**parse_list_to_arr2d(t_list *list);
+
+// utils.c
+void		print_logo(void);
+int			free_2d_arr(char **arr);
+int			is_path(const char *path);
+void		kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list);
+void		read_from_stdin(char *word, t_global *global, int status);
+char		*new_file_name(void);
+
+// redirect.c
+int			handle_redirect_stdin(t_process *token, t_global *global);
+void		handle_redirect_stdout(t_process *token,
+				int i, int pipe_count, t_global *global);
+
+// cmd.c
+void		execute_cmd(t_global *global, t_list *cmd_list);
 
 // pipe.c
 void		handle_pipes(t_global *global, t_list *pipes);
+
+// gnl.c
+char		*get_next_line(int fd);
 
 #endif

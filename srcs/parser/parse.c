@@ -54,7 +54,10 @@ static void	add_redirect_token(t_list **processes, t_list *cur)
 	temp->type = get_type_redirect(token->str);
 	token = cur->next->content;
 	temp->filename = ft_strdup(token->str);
-	ft_lstadd_back(&process->redirect_in, ft_lstnew(temp));
+	if (temp->type == REDIRECT_IN || temp->type == REDIRECT_HEREDOC)
+		ft_lstadd_back(&process->redirect_in, ft_lstnew(temp));
+	else if (temp->type == REDIRECT_TRUNC_OUT || temp->type == REDIRECT_APPEND_OUT)
+		ft_lstadd_back(&process->redirect_out, ft_lstnew(temp));
 }
 
 static void add_process_token(t_list **processes, t_list *cur)

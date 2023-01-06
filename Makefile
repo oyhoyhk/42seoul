@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+         #
+#    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2023/01/06 13:41:01 by dongglee         ###   ########.fr        #
+#    Updated: 2023/01/06 20:56:15 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,19 +18,27 @@ SRC_DIR = srcs/
 CINCLUDE = -I$(HEADERS_DIR)
 
  #42seoul
-#RL_INCLUDE = -I${HOME}/.brew/opt/readline/include/
-#RL_LIB = -L${HOME}/.brew/opt/readline/lib/ -lreadline
+RL_INCLUDE = -I${HOME}/.brew/opt/readline/include/
+RL_LIB = -L${HOME}/.brew/opt/readline/lib/ -lreadline
 
 ## my mac
-RL_INCLUDE = -I/opt/homebrew/opt/readline/include/
-RL_LIB = -L/opt/homebrew/opt/readline/lib/ -lreadline
+#RL_INCLUDE = -I/opt/homebrew/opt/readline/include/
+#RL_LIB = -L/opt/homebrew/opt/readline/lib/ -lreadline
 
 FT_DIR = libft/
 FT_INCLUDE = -I$(FT_DIR)
 FT_LIB = -L$(FT_DIR) -lft
 
 # wildcard 나중에 바꿔야함!
-SRCS = $(wildcard $(SRC_DIR)*.c)
+#SRCS = $(wildcard $(SRC_DIR)*.c)
+SRCS =	srcs/builtin/builtin_1.c srcs/builtin/builtin_2.c srcs/builtin/builtin_3.c srcs/builtin/run_builtin.c \
+		srcs/env/env.c srcs/env/env_list.c srcs/env/env_pair.c \
+		srcs/etc/error.c srcs/etc/utils.c srcs/etc/utils2.c	\
+		srcs/gnl/gnl_utils.c srcs/gnl/gnl.c	\
+		srcs/parser/lexer.c srcs/parser/lexer_fsm.c srcs/parser/parse.c srcs/parser/token_util.c srcs/parser/validator.c	\
+		srcs/pipe/cmd.c srcs/pipe/pipe.c srcs/pipe/redirect.c \
+		srcs/signal/signal.c	\
+		srcs/main.c srcs/read.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
 

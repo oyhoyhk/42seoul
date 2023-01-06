@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_util.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:25:23 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 17:25:24 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 21:14:59 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	destory_buffer(t_list **buffer)
 
 t_list	*create_new_char(char c)
 {
-	char *one;
+	char	*one;
 
 	one = malloc(sizeof(char));
 	*one = c;

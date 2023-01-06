@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 17:31:30 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 21:15:19 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	print_process(void *context)
 	printf("\n----- pipe end -----\n");
 }
 
-static t_global *init(char *envp[])
+static t_global	*init(char *envp[])
 {
 	t_global		*global;
 	struct termios	ter;
@@ -96,7 +96,8 @@ int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 			continue ;
 		add_history(input);
 		processes = parse(input);
-		ft_lstiter(processes, print_process);
+		handle_pipes(global, processes);
+		//ft_lstiter(processes, print_process);
 		ft_lstclear(&processes, process_destory);
 		free(input);
 	}

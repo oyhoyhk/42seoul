@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_fsm.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:24:24 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 17:25:11 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 20:00:05 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,33 +106,17 @@ int	quote2_state(__attribute__((unused))t_list **tokens, t_lexer *lexer)
 	return (0);
 }
 
-int	redirect_state(t_list **tokens, t_lexer *lexer)
+static int special_state(t_list **tokens, t_lexer *lexer, int status, int type)
 {
 	lexer->type = get_type(lexer->target);
-	if (lexer->target == '>' || lexer->target == '<')
-		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
-	else
+	if (status)
 	{
-		ft_lstadd_back(tokens, create_new_token(lexer->token_buffer, REDIRECT));
-		destory_buffer(&lexer->token_buffer);
+		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
+		return (0);
 	}
-	if (lexer->target == ' ')
-		lexer->type = NORMAL;
-	if (lexer->type == ENV_VAL)
-		lexer->env_prev = STRING;
-
-	return (0);
-}
-
-int	pipe_state(t_list **tokens, t_lexer *lexer)
-{
-
-	lexer->type = get_type(lexer->target);
-	if (lexer->target == '|')
-		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
 	else
 	{
-		ft_lstadd_back(tokens, create_new_token(lexer->token_buffer, PIPE));
+		ft_lstadd_back(tokens, create_new_token(lexer->token_buffer, type));
 		destory_buffer(&lexer->token_buffer);
 	}
 	if (lexer->target == ' ')
@@ -142,6 +126,18 @@ int	pipe_state(t_list **tokens, t_lexer *lexer)
 	else
 		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
 	return (0);
+}
+
+int	redirect_state(t_list **tokens, t_lexer *lexer)
+{
+	return (special_state(tokens, lexer,
+		lexer->target == '>' || lexer->target == '<' , REDIRECT));
+}
+
+int	pipe_state(t_list **tokens, t_lexer *lexer)
+{
+	return (special_state(tokens, lexer,
+		lexer->target == '|', PIPE));
 }
 
 int	env_state(t_list **tokens, t_lexer *lexer)
