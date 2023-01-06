@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 21:40:48 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 15:50:17 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ typedef enum e_type
 	ENV_VAL
 }	t_type;
 
+enum e_property
+{
+	REDIRECT_IN,
+	REDIRECT_HEREDOC,
+	REDIRECT_TRUNC_OUT,
+	REDIRECT_APPEND_OUT,
+};
+
 typedef struct s_token
 {
 	t_type	type;
@@ -50,17 +58,30 @@ typedef struct s_lexer
 	char	target;
 }	t_lexer;
 
+typedef struct s_file_info
+{
+	int		type;
+	char	*filename;
+}	t_file_info;
 
+
+typedef struct s_process
+{
+	t_list	*redirect_in;
+	t_list	*redirect_out;
+	t_list	*cmd_info;
+}	t_process;
 
 // parse.c
 t_list	*parse(const char *line);
-void	token_destory(void *ptr);
+void	process_destory(void *ptr);
 
 
 // filter.c
 t_list	*filter(t_list *tokens);
 
 // lexer.c
+int		lexer_branch(t_list **tokens, t_lexer *lexer, char c);
 t_list	*lex(const char *line);
 
 // lexer_fsm.c
@@ -78,7 +99,5 @@ t_list	*create_new_char(char c);
 t_list	*create_new_token(t_list *str_lst, t_type type);
 t_list	*ft_lstappend(t_list	*lst1, t_list *lst2);
 void	token_destory(void *ptr);
-
-int	lexer_branch(t_list **tokens, t_lexer *lexer, char c);
 
 #endif

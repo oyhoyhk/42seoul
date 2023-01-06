@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2023/01/02 19:50:47 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/06 13:41:01 by dongglee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 NAME = minishell
-CFLAGS = -g # g옵션 나중에 빼야함ㅡㅁ
+CFLAGS = -Wall -Wextra -Werror -g # g옵션 나중에 빼야함ㅡㅁ
 HEADERS_DIR = includes/
 SRC_DIR = srcs/
 CINCLUDE = -I$(HEADERS_DIR)
@@ -43,7 +43,7 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	$(MAKE) bonus -C $(FT_DIR)
-	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB) -g 
+	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB) -g
 # -g 나중에 빼야함
 
 clean :

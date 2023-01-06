@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 21:09:17 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 15:45:45 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // pipe list -> token list -> token
 
-void	print_info(void *content)
+void	print_token(void *content)
 {
 	t_token *token;
 
@@ -23,10 +23,44 @@ void	print_info(void *content)
 	printf("%s@\n", token->str);
 }
 
-int	main(int argc, char **argv, char *envp[])
+void	print_file_info(void *context)
+{
+	t_file_info	*info;
+
+	info = (t_file_info *)context;
+	printf(" [%d %s] ", info->type, info->filename);
+}
+
+void	print_cmd_info(void *context)
+{
+	char	*str;
+
+	str = (char *)context;
+	printf("[%s] ", str);
+}
+
+void	print_process(void *context)
+{
+	t_process	*process;
+
+	process = (t_process*) context;
+	printf("----- pipe start -----\n");
+	printf("redirect_in: ");
+	ft_lstiter(process->redirect_in, print_file_info);
+	printf("\n");
+	printf("redirect_out: ");
+	ft_lstiter(process->redirect_out, print_file_info);
+	printf("\n");
+	printf("cmd: ");
+	ft_lstiter(process->cmd_info, print_cmd_info);
+	printf("\n----- pipe end -----\n");
+}
+
+
+int	main(int argc, __attribute__((unused))char **argv, __attribute__((unused))char *envp[])
 {
 	char	*input;
-	t_list	*tokens;
+	t_list	*pipes;
 
 	if (argc != 1)
 	{
@@ -41,9 +75,8 @@ int	main(int argc, char **argv, char *envp[])
 		if (ft_strlen(input) == 0)
 			continue ;
 		add_history(input);
-		tokens = parse(input);
-		ft_lstiter(tokens, print_info);
-		ft_lstclear(&tokens, token_destory);
+		pipes = parse(input);
+		ft_lstiter(pipes, print_process);
 		free(input);
 	}
 	return (0);

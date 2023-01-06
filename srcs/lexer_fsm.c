@@ -27,7 +27,7 @@ int	is_special_char_in_env(char c)
 		|| c == '!' || ft_isdigit(c));
 }
 
-int	normal_state(t_list **tokens, t_lexer *lexer)
+int	normal_state(__attribute__((unused))t_list **tokens, t_lexer *lexer)
 {
 	t_type	type;
 
@@ -75,7 +75,7 @@ int	string_state(t_list **tokens, t_lexer *lexer)
 	return (0);
 }
 
-int	quote1_state(t_list **tokens, t_lexer *lexer)
+int	quote1_state(__attribute__((unused))t_list **tokens, t_lexer *lexer)
 {
 	if (lexer->target == '\'')
 		lexer->type = STRING;
@@ -84,7 +84,7 @@ int	quote1_state(t_list **tokens, t_lexer *lexer)
 	return (0);
 }
 
-int	quote2_state(t_list **tokens, t_lexer *lexer)
+int	quote2_state(__attribute__((unused))t_list **tokens, t_lexer *lexer)
 {
 	if (lexer->target == '"')
 		lexer->type = STRING;

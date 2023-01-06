@@ -6,13 +6,13 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 21:39:51 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/05 21:43:49 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/05 21:56:21 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		lexer_branch(t_list **tokens, t_lexer *lexer, char c)
+int		lexer_branch(t_list **tokens, t_lexer *lexer, char c)
 {
 	lexer->target = c;
 	if (lexer->type == NORMAL)
@@ -32,7 +32,7 @@ static int		lexer_branch(t_list **tokens, t_lexer *lexer, char c)
 	return (1);
 }
 
-t_list	*destory_lex_context(t_list **tokens, t_lexer *lexer)
+static t_list	*destory_lex_context(t_list **tokens, t_lexer *lexer)
 {
 	ft_lstclear(tokens, token_destory);
 	destory_buffer(&lexer->env_buffer);
@@ -52,16 +52,16 @@ t_list	*lex(const char *line)
 	while (line[cur])
 	{
 		if (lexer_branch(&tokens, &lexer, line[cur]))
-			return (destory_lex_context(tokens, &lexer));
+			return (destory_lex_context(&tokens, &lexer));
 		++cur;
 	}
 	if (lexer.type == QUOTE_1
 		|| lexer.type == QUOTE_2
 		|| lexer.type == REDIRECT
 		|| lexer.type == PIPE)
-		return (destory_lex_context(tokens, &lexer));
+		return (destory_lex_context(&tokens, &lexer));
 	if ((lexer.type == STRING || lexer.type == ENV_VAL)
 		&& (lexer_branch(&tokens, &lexer, ' ')))
-		return (destory_lex_context(tokens, &lexer));
+		return (destory_lex_context(&tokens, &lexer));
 	return (tokens);
 }

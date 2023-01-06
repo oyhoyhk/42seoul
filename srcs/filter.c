@@ -26,7 +26,7 @@ static int	is_valid_pipe(t_list *cur)
 		|| cur->next == NULL)
 		return (0);
 	token = cur->next->content;
-	return (token->type == STRING);
+	return (token->type == STRING || token->type == REDIRECT);
 }
 
 t_list	*filter(t_list *tokens)
@@ -38,6 +38,11 @@ t_list	*filter(t_list *tokens)
 	if (tokens == NULL)
 		return (NULL);
 	cur = tokens;
+	if (cur && ((t_token *)cur->content)->type == PIPE)
+	{
+		ft_lstclear(&tokens, token_destory);
+		return (NULL);
+	}
 	while (cur)
 	{
 		token = (t_token *)cur->content;
