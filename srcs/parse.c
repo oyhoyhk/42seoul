@@ -1,9 +1,5 @@
 #include "minishell.h"
 
-// need to processing: [char], ['] ["] [>] [<] [|] [$]
-// flag(int), token_buffer(t_list), env_buffer(t_list), type
-// token list -> token
-
 static void	add_process(t_list **processes)
 {
 	t_process	*process;

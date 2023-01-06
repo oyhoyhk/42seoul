@@ -1,8 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_fsm.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/06 17:24:24 by dongglee          #+#    #+#             */
+/*   Updated: 2023/01/06 17:25:11 by dongglee         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// need to processing: [char], ['] ["] [>] [<] [|] [$]
-// flag(int), token_buffer(t_list), env_buffer(t_list), type
-// token list -> token
+#include "minishell.h"
 
 t_type	get_type(char c)
 {

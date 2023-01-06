@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 16:40:54 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 17:25:52 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_list	*parse(const char *line);
 void	process_destory(void *ptr);
 
 
-// filter.c
+// validator.c
 int		validate_token(t_list **tokens);
 
 // lexer.c
