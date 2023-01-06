@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 10:37:25 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 07:24:01 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 07:42:41 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,27 @@ static int	handle_file_open_error(void)
 	return (0);
 }
 
-
-void	read_from_stdin(char *word, t_global *global,  int status)
+static void	handle_read_stdin(t_global *global, char *word, int fd[2])
 {
-	char		*result;
+	char	*result;
+
+	signal(SIGINT, exit);
+	while (1)
+	{
+		ft_putstr_fd("> ", global->fds.stdout_fd);
+		result = get_next_line(global->fds.stdin_fd);
+		if (!result || (ft_strlen(result) != 1
+				&& ft_strncmp(result, word, ft_strlen(word)) == 0
+				&& result[ft_strlen(word)] == '\n'))
+			break ;
+		ft_putstr_fd(result, fd[0]);
+		free(result);
+	}
+	exit(0);
+}
+
+void	read_from_stdin(char *word, t_global *global, int status)
+{
 	pid_t		pid;
 	int			fd[2];
 	const char	*filename = new_file_name();
@@ -41,21 +58,7 @@ void	read_from_stdin(char *word, t_global *global,  int status)
 	fd[0] = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	pid = fork();
 	if (pid == 0)
-	{
-		signal(SIGINT, exit);
-		while (1)
-		{
-			ft_putstr_fd("> ", global->fds.stdout_fd);
-			result = get_next_line(global->fds.stdin_fd);
-			if (!result || (ft_strlen(result) != 1
-					&& ft_strncmp(result, word, ft_strlen(word)) == 0
-					&& result[ft_strlen(word)] == '\n'))
-				break ;
-			ft_putstr_fd(result, fd[0]);
-			free(result);
-		}
-		exit(0);
-	}
+		handle_read_stdin(global, word, fd);
 	waitpid(pid, &status, 0);
 	global->status = status;
 	if (status == 512)
@@ -69,34 +72,7 @@ void	read_from_stdin(char *word, t_global *global,  int status)
 		fd[1] = open(filename, O_RDWR, 0644);
 		dup2(fd[1], STDIN_FILENO);
 	}
-}
-
-static void	cal_info(int *sing, int *doub, char ch)
-{
-	if (ch == '\'')
-	{
-		if (*doub == 1)
-			return ;
-		else
-		{
-			if (*sing == 1)
-				*sing = 0;
-			else
-				*sing = 1;
-		}
-	}
-	if (ch == '\"')
-	{
-		if (*sing == 1)
-			return ;
-		else
-		{
-			if (*doub == 1)
-				*doub = 0;
-			else
-				*doub = 1;
-		}
-	}
+	free((void *)filename);
 }
 
 static int	input_valid_check(char *input)
@@ -118,7 +94,7 @@ static int	input_valid_check(char *input)
 	return (1);
 }
 
-static void	execute_readline(t_global *global, char *input)
+void	execute_readline(t_global *global, char *input)
 {
 	int		i;
 	int		pipe_count;
@@ -145,37 +121,4 @@ static void	execute_readline(t_global *global, char *input)
 	free(pid_list);
 	free_2d_arr(execution_list);
 	setsignal();
-}
-
-void	start_read(t_global *global)
-{
-	char	*input;
-
-	while (1)
-	{
-		input = readline("minishell > ");
-		if (input == NULL)
-			return ;
-		if (ft_strncmp(input, "$", -1) == 0)
-		{
-			ft_putstr_fd("minishell > $: command not found\n", 2);
-			global->status = 127;
-			free(input);
-			continue ;
-		}
-		if (ft_strncmp(input, "", -1) == 0)
-		{
-			free(input);
-			continue ;
-		}
-		if (ft_strncmp(ft_strtrim(input, " "), "", -1) == 0)
-		{
-			add_history(input);
-			free(input);
-			continue ;
-		}
-		add_history(input);
-		execute_readline(global, input);
-		free(input);
-	}
 }

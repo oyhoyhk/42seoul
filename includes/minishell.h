@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/05 16:45:45 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/06 07:40:27 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void		handle_redirect_stdout(t_token *token,
 
 // read.c
 void		read_from_stdin(char *word, t_global *global, int status);
-void		start_read(t_global *global);
+void		execute_readline(t_global *global, char *input);
 
 // tokenize.c
 t_token		*tokenize_input(char *input);
@@ -128,6 +128,8 @@ int			parse_input_into_token(t_tokenizing_info *info,
 void		print_logo(void);
 
 char		*new_file_name(void);
+int			handle_special_case(char *input, t_global *global);
+void		cal_info(int *sing, int *doub, char ch);
 
 // pipe.c
 void		run_pipelines(t_global *global, char **pipelines,
