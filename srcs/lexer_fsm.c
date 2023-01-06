@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 17:24:24 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 17:25:11 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/06 19:37:04 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,10 @@ int	redirect_state(t_list **tokens, t_lexer *lexer)
 	}
 	if (lexer->target == ' ')
 		lexer->type = NORMAL;
-	if (lexer->type == ENV_VAL)
+	else if (lexer->type == ENV_VAL)
 		lexer->env_prev = STRING;
-
+	else
+		ft_lstadd_back(&lexer->token_buffer, create_new_char(lexer->target));
 	return (0);
 }
 
