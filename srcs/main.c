@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/07 06:53:52 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 10:34:56 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,8 @@ int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 	t_list		*processes;
 	t_global	*global;
 
-	if (argc != 1)
-	{
-		printf("Too Many Arguments!\n");
+	if (argc != 1 && printf("Too Many Arguments!\n"))
 		exit(1);
-	}
 	print_logo();
 	global = init(envp);
 	while (1)
@@ -49,12 +46,13 @@ int	main(int argc, __attribute__((unused))char **argv, char *envp[])
 		input = readline("minishell > ");
 		if (input == NULL)
 			return (1);
-		if (ft_strlen(input) == 0)
-			continue ;
-		add_history(input);
-		processes = parse(global, input);
-		handle_pipes(global, processes);
-		ft_lstclear(&processes, process_destory);
+		if (ft_strlen(input) != 0)
+		{
+			add_history(input);
+			processes = parse(global, input);
+			handle_pipes(global, processes);
+			ft_lstclear(&processes, process_destory);
+		}
 		free(input);
 	}
 	return (0);
