@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 18:50:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 20:34:59 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 06:58:41 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list)
 	while (i < pipe_count)
 	{
 		waitpid(pid_list[i], &status, 0);
-		if (i == pipe_count - 1)
+		if (i == pipe_count - 1 && !global->flag)
 			global->status = status;
 		if (global->last_pid == pid_list[i])
 		{
@@ -80,6 +80,7 @@ void	kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list)
 				global->status = (status >> 8) & 0xff;
 		}
 		dup2(global->stdin_fd, STDIN_FILENO);
+		global->flag = 0;
 		i++;
 	}
 }

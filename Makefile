@@ -6,13 +6,13 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/19 17:36:25 by dongglee          #+#    #+#              #
-#    Updated: 2023/01/06 21:30:47 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/07 07:52:10 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -g # g옵션 나중에 빼야함ㅡㅁ
+CFLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = includes/
 SRC_DIR = srcs/
 CINCLUDE = -I$(HEADERS_DIR)
@@ -29,13 +29,11 @@ FT_DIR = libft/
 FT_INCLUDE = -I$(FT_DIR)
 FT_LIB = -L$(FT_DIR) -lft
 
-# wildcard 나중에 바꿔야함!
-#SRCS = $(wildcard $(SRC_DIR)*.c)
 SRCS =	srcs/builtin/builtin_1.c srcs/builtin/builtin_2.c srcs/builtin/builtin_3.c srcs/builtin/run_builtin.c \
 		srcs/env/env.c srcs/env/env_list.c srcs/env/env_pair.c \
 		srcs/etc/error.c srcs/etc/utils.c srcs/etc/utils2.c	\
 		srcs/gnl/gnl_utils.c srcs/gnl/gnl.c	\
-		srcs/parser/lexer.c srcs/parser/lexer_fsm.c srcs/parser/parse.c srcs/parser/token_util.c srcs/parser/validator.c	\
+		srcs/parser/lexer.c srcs/parser/lexer_fsm.c srcs/parser/parse.c srcs/parser/token_util.c srcs/parser/validator.c srcs/parser/token_util2.c srcs/parser/parse2.c	srcs/parser/lexer_fsm2.c srcs/parser/lexer_fsm3.c\
 		srcs/pipe/cmd.c srcs/pipe/pipe.c srcs/pipe/redirect.c \
 		srcs/signal/signal.c	\
 		srcs/main.c srcs/read.c
@@ -51,8 +49,7 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	$(MAKE) bonus -C $(FT_DIR)
-	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB) -g
-# -g 나중에 빼야함
+	$(CC) $(CFLAGS) -o $@ $^ $(RL_LIB) $(FT_LIB) 
 
 clean :
 	$(MAKE) -C $(FT_DIR) clean
@@ -63,14 +60,3 @@ fclean : clean
 	$(RM) $(NAME)
 
 re : fclean all
-
-# for test
-test: $(OBJS) test.c
-	$(CC) $(CFLAGS) $(CINCLUDE) $(RL_INCLUDE) $(FT_INCLUDE) -c test.c -o test.o
-	$(MAKE) -C $(FT_DIR) bonus
-	$(CC) $(CFLAGS) -o test $(filter-out %/main.o,$(OBJS)) test.o $(RL_LIB) $(FT_LIB)
-tclean: fclean
-	$(RM) test test.o
-
-tmpclean:
-	$(RM) *.tmp

@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:15:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 21:42:47 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 06:43:17 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,34 +101,43 @@ typedef struct s_global
 }	t_global;
 
 // parse.c
-t_list	*parse(t_global *global, const char *line);
-void	process_destory(void *ptr);
-
+t_list		*parse(t_global *global, const char *line);
+void		process_destory(void *ptr);
+void		add_process_token(t_list **processes, t_list *cur);
+void		add_redirect_token(t_list **processes, t_list *cur);
+int			get_type_redirect(const char *str);
+void		add_string_token(t_list **processes, t_list *cur);
+void		add_process(t_list **processes);
 
 // validator.c
-int		validate_token(t_list **tokens);
+int			validate_token(t_list **tokens);
 
 // lexer.c
-int		lexer_branch(t_global *global, t_list **tokens, t_lexer *lexer, char c);
-int		lex(t_global *global, const char *line, t_list **tokens);
+int			lexer_branch(t_global *global,
+				t_list **tokens, t_lexer *lexer, char c);
+int			lex(t_global *global, const char *line, t_list **tokens);
 
 // lexer_fsm.c
-int	normal_state(t_list **tokens, t_lexer *lexer);
-int	string_state(t_list **tokens, t_lexer *lexer);
-int	quote1_state(t_list **tokens, t_lexer *lexer);
-int	quote2_state(t_list **tokens, t_lexer *lexer);
-int	redirect_state(t_list **tokens, t_lexer *lexer);
-int	pipe_state(t_list **tokens, t_lexer *lexer);
-int	env_state(t_global *global, t_list **tokens, t_lexer *lexer);
+int			normal_state(t_list **tokens, t_lexer *lexer);
+int			string_state(t_list **tokens, t_lexer *lexer);
+int			quote1_state(t_list **tokens, t_lexer *lexer);
+int			quote2_state(t_list **tokens, t_lexer *lexer);
+int			redirect_state(t_list **tokens, t_lexer *lexer);
+int			pipe_state(t_list **tokens, t_lexer *lexer);
+int			env_state(t_global *global, t_list **tokens, t_lexer *lexer);
+t_type		get_type(char c);
+int			is_special_char_in_env(char c);
+int			special_state(t_list **tokens, t_lexer *lexer,
+				int status, int type);
 
 // token_util.c
-void	destory_buffer(t_list **buffer);
-t_list	*create_new_char(char c);
-t_list	*create_new_token(t_list *str_lst, t_type type);
-t_list	*ft_lstappend(t_list	*lst1, t_list *lst2);
-void	token_destory(void *ptr);
-t_list	*create_new_char_list(const char *str);
-char	*char_list_to_arr(t_list *char_list);
+void		destory_buffer(t_list **buffer);
+t_list		*create_new_char(char c);
+t_list		*create_new_token(t_list *str_lst, t_type type);
+t_list		*ft_lstappend(t_list	*lst1, t_list *lst2);
+void		token_destory(void *ptr);
+t_list		*create_new_char_list(const char *str);
+char		*char_list_to_arr(t_list *char_list);
 
 // signal.c
 void		setsignal(void);
@@ -176,14 +185,14 @@ int			is_printable_builtin(char **cmd);
 int			run_printable_builtin(t_global *global, char **cmd);
 
 // parse2.c
-
 char		**parse_list_to_arr2d(t_list *list);
 
 // utils.c
 void		print_logo(void);
 int			free_2d_arr(char **arr);
 int			is_path(const char *path);
-void		kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list);
+void		kill_zombie_process(int pipe_count,
+				t_global *global, pid_t *pid_list);
 void		read_from_stdin(char *word, t_global *global, int status);
 char		*new_file_name(void);
 

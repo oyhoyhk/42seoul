@@ -6,3 +6,4 @@ minishell
 test.c
 test
 .vscode
+print_process.c

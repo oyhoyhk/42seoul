@@ -6,29 +6,29 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/05 21:39:51 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/06 21:40:55 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 06:51:28 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		lexer_branch(t_global *global, t_list **tokens, t_lexer *lexer, char c)
+int	lexer_branch(t_global *global, t_list **tokens, t_lexer *lexer, char c)
 {
 	lexer->target = c;
 	if (lexer->type == NORMAL)
-		return(normal_state(tokens, lexer));
+		return (normal_state(tokens, lexer));
 	else if (lexer->type == STRING)
-		return(string_state(tokens, lexer));
+		return (string_state(tokens, lexer));
 	else if (lexer->type == QUOTE_1)
-		return(quote1_state(tokens, lexer));
+		return (quote1_state(tokens, lexer));
 	else if (lexer->type == QUOTE_2)
-		return(quote2_state(tokens, lexer));
+		return (quote2_state(tokens, lexer));
 	else if (lexer->type == REDIRECT)
-		return(redirect_state(tokens, lexer));
+		return (redirect_state(tokens, lexer));
 	else if (lexer->type == PIPE)
-		return(pipe_state(tokens, lexer));
+		return (pipe_state(tokens, lexer));
 	else if (lexer->type == ENV_VAL)
-		return(env_state(global, tokens, lexer));
+		return (env_state(global, tokens, lexer));
 	return (1);
 }
 

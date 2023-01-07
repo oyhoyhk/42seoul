@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 19:10:13 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 19:10:49 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 06:52:13 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	handle_read_stdin(t_global *global, char *word, int fd[2])
 	}
 	exit(0);
 }
- 
+
 void	read_from_stdin(char *word, t_global *global, int status)
 {
 	pid_t		pid;
