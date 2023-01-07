@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 16:01:01 by dongglee          #+#    #+#             */
-/*   Updated: 2022/12/31 14:01:19 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/07 11:41:48 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,5 @@ void	env_delete_one(t_global *global, const char *key)
 	if (tar == NULL)
 		return ;
 	env_list_delete_one(global->envl, tar);
+	free(tar);
 }
