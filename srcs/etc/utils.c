@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 18:50:46 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/07 06:58:41 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 11:05:22 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,13 @@ void	kill_zombie_process(int pipe_count, t_global *global, pid_t *pid_list)
 		waitpid(pid_list[i], &status, 0);
 		if (i == pipe_count - 1 && !global->flag)
 			global->status = status;
-		if (global->last_pid == pid_list[i])
+		if (global->last_pid == pid_list[i] && !global->flag)
 		{
 			if ((status & 0177) != 0 && (status & 0177) != 0177)
 			{
 				global->status = status & 0177;
+				if (global->status == 2 && printf("^C\n"))
+					global->status = 2 + 128;
 				if (global->status == SIGQUIT && printf("^\\Quit: 3\n"))
 					global->status = SIGQUIT + 128;
 			}

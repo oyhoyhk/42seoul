@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 16:56:50 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/06 21:51:41 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 10:29:29 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	execute_each_process(t_list *processes, t_global *global,
 		if (handle_builtin((t_process *)cur->content, global, cmd_info))
 		{
 			cur = cur->next;
+			free_2d_arr(cmd_info);
 			continue ;
 		}
 		pipe(global->fd);

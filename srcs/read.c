@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 19:10:13 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/07 06:52:13 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/07 11:04:52 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ void	read_from_stdin(char *word, t_global *global, int status)
 		handle_read_stdin(global, word, fd);
 	waitpid(pid, &status, 0);
 	global->status = status;
-	if (status == 512)
+	if (global->status == 512)
 	{
 		global->status = 1;
+		global->flag = 1;
 		handle_file_open_error();
 		printf("\n");
 	}
