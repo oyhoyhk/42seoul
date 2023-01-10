@@ -6,127 +6,110 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 06:59:08 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/08 10:08:12 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/10 11:04:40 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// 1 3 5 ... 먼저
-// 2 4 6 ... 나중에
-
-// 각 쓰레드가 갖고 있어야할 데이터
-// 자기 번호, 시작 시간, 
-// 뮤텍스는 포크 개수 만큼 있어야 함함
-
-int	cal_time(struct timeval start)
+void	drop_fork(t_ph *ph)
 {
-	int				result;
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	result = (now.tv_sec - start.tv_sec) * 1000000
-		+ (now.tv_usec - start.tv_usec);
-	return (result / 1000);
+	pthread_mutex_lock(&ph->mutex[ph->left]);
+	ph->fork[ph->left] = 0;
+	pthread_mutex_unlock(&ph->mutex[ph->left]);
+	pthread_mutex_lock(&ph->mutex[ph->right]);
+	ph->fork[ph->right] = 0;
+	pthread_mutex_unlock(&ph->mutex[ph->right]);
+	gettimeofday(&ph->last_eat, NULL);
 }
 
-int	is_dead(struct timeval last, int die)
+int	check_while_do_sleep(t_ph *ph, e_ACTION action, int *flag)
 {
-	struct timeval	now;
-	int				result;
+	int		target;
 
-	gettimeofday(&now, NULL);
-	result = ((now.tv_sec - last.tv_sec) * 1000000
-			+ (now.tv_usec - last.tv_usec)) / 1000;
-	if (result > die)
+	if (check_over(ph, flag))
 		return (1);
+	if (action == EAT)
+		target = ph->eat;
 	else
+		target = ph->sleep;
+	print_msg(ph, action, flag);
+	while (!death_check(ph->last_eat, ph->die) && target > 0)
+	{
+		usleep(50 * 1000);
+		target -= 50;
+	}
+	if (action == EAT)
+		drop_fork(ph);
+	if (target == 0)
+	{
+		if (action == SLEEP)
+			print_msg(ph, THINKING, flag);
 		return (0);
+	}
+	else
+	{
+		print_msg(ph, DIED, flag);
+		over_flag_on(ph, flag);
+		return (1);
+	}
 }
 
-void	*test(void *arg)
+int	check_while_wating_fork(t_ph *ph, e_ACTION action, int *flag)
+{
+	int	count;
+	int	target;
+
+	count = 250;
+	if (action == LEFT_FORK)
+		target = ph->left;
+	else
+		target= ph->right;
+	while (1)
+	{
+		if (check_over(ph, flag))
+			return (1);
+		if (death_check(ph->last_eat, ph->die))
+		{
+			print_msg(ph, DIED, flag);
+			over_flag_on(ph, flag);
+			return (1);
+		}
+		pthread_mutex_lock(&ph->mutex[target]);
+		if (ph->fork[target] == 0)
+		{
+			ph->fork[target] = 1;
+			print_msg(ph, action, flag);
+			pthread_mutex_unlock(&ph->mutex[target]);
+			return (0);
+		}
+		pthread_mutex_unlock(&ph->mutex[target]);
+		usleep(count);
+		if (count > 50)
+			count -= 50;
+	}
+	return (1);
+}
+
+void	*routine(void *arg)
 {
 	t_ph			*ph;
-	int				cur;
-	static int		is_over;
+	static int		flag;
 
-	ph = (t_ph *) arg;
+	ph = (t_ph *)arg;
 	if (ph->id % 2 == 1)
-		usleep(1000);
+		usleep (500);
 	gettimeofday(&ph->last_eat, NULL);
 	while (1)
 	{
-		if (is_over)
+		if (check_while_wating_fork(ph, LEFT_FORK, &flag))
 			break ;
-		if (is_dead(ph->last_eat, ph->die))
-		{
-			is_over = 1;
-			printf("%d %d died\n", cur, ph->id + 1);
+		if (check_while_wating_fork(ph, RIGHT_FORK, &flag))
 			break ;
-		}
-		pthread_mutex_lock(&ph->mutex[ph->left]);
-		//왼손에 쥐고
-		printf("%d %d has taken a fork\n", cur, ph->id + 1);
-		if (is_over)
+		if (check_while_do_sleep(ph, EAT, &flag))
 			break ;
-		if (is_dead(ph->last_eat, ph->die))
-		{
-			is_over = 1;
-			printf("%d %d died\n", cur, ph->id + 1);
-			pthread_mutex_unlock(&ph->mutex[ph->left]);
+		if (check_while_do_sleep(ph, SLEEP, &flag))
 			break ;
-		}
-		ph->fork[ph->left] = 1;
-		cur = cal_time(ph->start);
-		//오른손에 쥐고
-		pthread_mutex_lock(&ph->mutex[ph->right]);
-		if (is_over)
-			break ;
-		if (is_dead(ph->last_eat, ph->die))
-		{
-			is_over = 1;
-			printf("%d %d died\n", cur, ph->id + 1);
-			pthread_mutex_unlock(&ph->mutex[ph->left]);
-			pthread_mutex_unlock(&ph->mutex[ph->right]);
-			break ;
-		}
-		ph->fork[ph->right] = 1;
-		cur = cal_time(ph->start);
-		printf("%d %d has taken a fork\n", cur, ph->id + 1);
-		//먹기 시작
-		cur = cal_time(ph->start);
-		printf("%d %d is eating\n", cur, ph->id + 1);
-		usleep(ph->eat * 1000);
-		if (is_over)
-			break ;
-		if (is_dead(ph->last_eat, ph->die))
-		{
-			is_over = 1;
-			printf("%d %d died\n", cur + ph->eat, ph->id + 1);
-			pthread_mutex_unlock(&ph->mutex[ph->left]);
-			pthread_mutex_unlock(&ph->mutex[ph->right]);
-			break ;
-		}
-		gettimeofday(&ph->last_eat, NULL);
-		ph->fork[ph->left] = 0;
-		ph->fork[ph->right] = 0;
-		pthread_mutex_unlock(&ph->mutex[ph->left]);
-		pthread_mutex_unlock(&ph->mutex[ph->right]);
-		cur = cal_time(ph->start);
-		//잠자기 시작
-		printf("%d %d is sleeping\n", cur, ph->id + 1);
-		usleep(ph->sleep * 1000);
-		cur = cal_time(ph->start);
-		if (is_over)
-			break ;
-		if (is_dead(ph->last_eat, ph->die))
-		{
-			is_over = 1;
-			printf("%d %d died\n", cur + ph->sleep, ph->id + 1);
-			break ;
-		}
-		//생각하기 시작
-		printf("%d %d is thinking\n", cur, ph->id + 1);
 	}
 	return (NULL);
 }
@@ -143,41 +126,6 @@ void	handle_create_thread_error(int num, t_info *info)
 	}
 }
 
-int	*create_forks(int num)
-{
-	int		*result;
-	int		i;
-
-	result = (int *) malloc(sizeof(int) * num);
-	if (result == NULL)
-		return (NULL);
-	i = 0;
-	while (i < num)
-	{
-		result[i] = 0;
-		i++;
-	}
-	return (result);
-}
-
-pthread_mutex_t	*create_mutexs(int num)
-{
-	pthread_mutex_t	*list;
-	int				i;
-
-	i = 0;
-	list = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t) * num);
-	if (list == NULL)
-		return (NULL);
-	i = 0;
-	while (i < num)
-	{
-		pthread_mutex_init(&list[i], NULL);
-		i++;
-	}
-	return (list);
-}
-
 int	create_philos(t_info *info)
 {
 	int				i;
@@ -185,14 +133,24 @@ int	create_philos(t_info *info)
 	int				*fork;
 	struct timeval	time;
 	pthread_mutex_t	*mutex;
+	pthread_mutex_t *death_check;
+	pthread_mutex_t *print_mutex;
+	pthread_mutex_t *over_check;
 
 	i = 0;
 	ph = (t_ph *) malloc(sizeof(t_ph) * info->philos_numbers);
 	fork = create_forks(info->philos_numbers);
 	mutex = create_mutexs(info->philos_numbers);
-	if (ph == NULL || fork == NULL || mutex == NULL)
+	death_check = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
+	print_mutex = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
+	over_check = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
+	if (ph == NULL || fork == NULL || mutex == NULL || death_check == NULL
+		|| print_mutex == NULL || over_check == NULL)
 		return (0);
 	gettimeofday(&time, NULL);
+	pthread_mutex_init(death_check, NULL);
+	pthread_mutex_init(print_mutex, NULL);
+	pthread_mutex_init(over_check, NULL);
 	while (i < info->philos_numbers)
 	{
 		if (i == 0)
@@ -207,12 +165,15 @@ int	create_philos(t_info *info)
 		ph[i].start = time;
 		ph[i].fork = fork;
 		ph[i].mutex = mutex;
+		ph[i].death_check = death_check;
+		ph[i].print_mutex = print_mutex;
+		ph[i].over_check = over_check;
 		i++;
 	}
 	i = 0;
 	while (i < info->philos_numbers)
 	{
-		if (pthread_create(&info->philos[i], NULL, test, (void *)(&ph[i])) < 0)
+		if (pthread_create(&info->philos[i], NULL, routine, (void *)(&ph[i])) < 0)
 		{
 			perror("thread create error");
 			exit(0);
@@ -222,31 +183,6 @@ int	create_philos(t_info *info)
 	i = -1;
 	while (++i < info->philos_numbers)
 		pthread_join(info->philos[i], NULL);
-	return (1);
-}
-
-int	set_info(t_info *info, int argc, char **argv)
-{
-	struct timeval	time;
-
-	memset(info, 0, sizeof(t_info));
-	gettimeofday(&time, NULL);
-	info->philos_numbers = ft_atoi(argv[1]);
-	info->time_to_die = ft_atoi(argv[2]);
-	info->time_to_eat = ft_atoi(argv[3]);
-	info->time_to_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		info->times_must_eat = ft_atoi(argv[5]);
-	if (info->philos_numbers == -1 || info->time_to_die == -1
-		|| info->time_to_eat == -1 || info->time_to_sleep == -1
-		|| info->times_must_eat == -1)
-		return (0);
-	info->philos = (pthread_t *) malloc(sizeof(pthread_t)
-			* info->philos_numbers);
-	if (info == NULL)
-		return (0);
-	if (!create_philos(info))
-		return (0);
 	return (1);
 }
 
