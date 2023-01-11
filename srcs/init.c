@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 22:57:33 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/03 19:43:59 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/10 22:07:00 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	init(t_global *global, const char *map_file_name)
 {
-	if (parse_map(global, map_file_name))
+	init_mlx(global);
+	if (set_info(global, map_file_name))
 		return (1);
-	// init_mlx(global);
 	// init_hook(global);
 	return (0);
 }

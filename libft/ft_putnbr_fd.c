@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leedonggyu <leedonggyu@student.42.fr>      +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/01 19:06:22 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/03 13:36:41 by leedonggyu       ###   ########.fr       */
+/*   Created: 2022/11/10 15:56:07 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/10 16:07:44 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,24 @@
 
 void	ft_putnbr_fd(int n, int fd)
 {
-	char			buff[11];
-	int				i;
-	unsigned int	unsigned_n;
+	long long	num;
 
-	if (fd < 0)
+	if (n == 0)
+	{
+		ft_putchar_fd('0', fd);
 		return ;
-	i = 0;
-	if (n < 0)
-	{
-		write(fd, "-", 1);
-		unsigned_n = -n;
 	}
-	else
-		unsigned_n = n;
-	while (1)
+	num = (long long) n;
+	if (num < 0)
 	{
-		buff[i++] = unsigned_n % 10 + '0';
-		unsigned_n /= 10;
-		if (unsigned_n == 0)
-			break ;
+		ft_putchar_fd('-', fd);
+		num *= -1;
 	}
-	while (i > 0)
+	if (num / 10 == 0)
 	{
-		write(fd, &buff[--i], 1);
+		ft_putchar_fd(num + '0', fd);
+		return ;
 	}
+	ft_putnbr_fd(num / 10, fd);
+	ft_putchar_fd(num % 10 + '0', fd);
 }

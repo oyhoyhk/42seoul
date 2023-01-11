@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leedonggyu <leedonggyu@student.42.fr>      +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/03 11:41:23 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/03 11:55:43 by leedonggyu       ###   ########.fr       */
+/*   Created: 2022/11/10 15:43:03 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/14 10:39:16 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
-	if (!lst)
+	size_t	i;
+
+	if (!s)
 		return ;
-	del(lst->content);
-	free(lst);
+	i = 0;
+	while (s[i])
+	{
+		f(i, &s[i]);
+		i++;
+	}
+	return ;
 }

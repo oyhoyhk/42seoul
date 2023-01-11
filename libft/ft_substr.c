@@ -3,48 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/01 09:55:21 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/02 18:50:34 by dongglee         ###   ########.fr       */
+/*   Created: 2022/11/09 17:35:55 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/15 14:17:28 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*make_null(void)
+static	void	*get_empty_string(void)
 {
-	char *ret;
+	void	*result;
 
-	ret = malloc(sizeof(char));
-	if (!ret)
+	result = ft_calloc(1, 1);
+	if (!result)
 		return (NULL);
-	ret[0] = '\0';
-	return (ret);
+	return (result);
 }
 
-char		*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*ret;
 	size_t	i;
-	size_t	size;
+	size_t	count;
+	char	*result;
 
 	if (!s)
 		return (NULL);
-	size = ft_strlen(s);
-	if (start >= size)
-		return (make_null());
-	size -= start;
-	size = size > len ? len : size;
-	if (!(ret = malloc(sizeof(char) * (size + 1))))
-		return (NULL);
+	if (ft_strlen(s) <= start)
+		return (get_empty_string());
 	i = 0;
-	while (i < size)
+	count = 0;
+	while (s[start + count] && count < len)
+		count++;
+	result = (char *) malloc(sizeof(char) * (count + 1));
+	if (!result)
+		return (NULL);
+	while (i < count)
 	{
-		ret[i] = s[start];
-		++i;
-		++start;
+		result[i] = s[start + i];
+		i++;
 	}
-	ret[i] = '\0';
-	return (ret);
+	result[i] = '\0';
+	return (result);
 }

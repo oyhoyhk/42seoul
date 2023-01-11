@@ -14,68 +14,63 @@ static t_type	get_elemnt_type(const char *str)
 		return (FLOOR);
 	if(start_with(str,"C "))
 		return (CEILLING);
-	return (-1);
+	return (OTHER);
 }
 
 static int	validate_element(t_global *global)
 {
-	return (global->texture.flag == 0x111111);
-}
-
-int	load_image(t_global *global, int *dest, const char *path)
-{
-	t_img		img;
-	t_i_pair	pair;
-	int			index;
-
-	img.ptr = mlx_xpm_file_to_image(global->mlx, path, &img.size.width, &img.size.height);
-	if (img.ptr == NULL)
-		return (1);
-	img.data = mlx_get_data_addr(img.ptr, &img.bit_per_pixel, &img.size_line, &img.endian);
-	pair.y = 0;
-	while (pair.y < img.size.height)
-	{
-		pair.x = 0;
-		while (pair.x < img.size.width)
-		{
-			index = img.size.width * pair.y + pair.x;
-			dest[index] = img.data[index];
-			++pair.x;
-		}
-		++pair.y;
-	}
-	return (0);
+	return (global->texture.flag == 0x3f);
 }
 
 static int	process_element(t_global *global, int fd)
 {
 	char	*line;
-	char	*temp;
 	t_type	type;
 
-	while (get_next_line(fd, &line))
+	line = get_next_line(fd);
+	while (line)
 	{
-		if (line[0] == 0)
+		if (line[0] != 0 && line[0] != '\n')
 		{
-			free (line);
-			continue ;
-		}
-		type = get_elemnt_type(line);
-		if (type == -1 || set_texture(global, type, line));
-		{
+			type = get_elemnt_type(line);
+			if (type == OTHER || set_element(global, type, line))
+			{
+				free(line);
+				return (1);
+			}
 			free(line);
-			return (1);
 		}
-		free(line);
 		if (validate_element(global))
 			return (0);
+		line = get_next_line(fd);
 	}
 	return (1);
 }
 
-static int	proccess_map(t_global *global, int fd)
+static int	process_map(t_global *global, int fd)
 {
+	t_list	*lst;
+	char	*line;
 
+	lst = NULL;
+	line = get_next_line(fd);
+	while (line)
+	{
+		ft_lstadd_back(&lst, ft_lstnew(line));
+		line = get_next_line(fd);
+	}
+	if (set_map(global, lst))
+	{
+		ft_lstclear(&lst, free);
+		return (1);
+	}
+	ft_lstclear(&lst, free);
+	if (validate_map(global))
+	{
+		free_2d(global->map_ptr);
+		return (1);
+	}
+	return (0);
 }
 
 /**
@@ -88,10 +83,9 @@ static int	proccess_map(t_global *global, int fd)
  * 4. 엘리먼트들은 한줄 이상으로 나눠질 수 있다.
  * 5. 각 엘리먼트 정보는 하나 이상의 공백으로 나눠진다.
 */
-int	parse_map(t_global *global, const char *map_file_name)
+int	set_info(t_global *global, const char *map_file_name)
 {
 	int		fd;
-	char	*line;
 
 	fd = open_map_file(map_file_name);
 	if (fd == -1)

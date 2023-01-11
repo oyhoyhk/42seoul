@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/30 08:46:19 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/02 17:33:34 by dongglee         ###   ########.fr       */
+/*   Created: 2022/11/07 12:35:26 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/18 08:48:57 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,22 @@
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char		*dest_temp;
-	const char	*src_temp;
-	int			flag;
+	unsigned char	*temp;
+	unsigned char	*source;
 
+	temp = (unsigned char *) dest;
+	source = (unsigned char *) src;
 	if (!dest && !src)
 		return (NULL);
-	if (dest < src)
-	{
-		dest_temp = dest;
-		src_temp = src;
-		flag = 1;
-	}
+	if (dest <= src)
+		while (n--)
+			*temp++ = *source++;
 	else
 	{
-		dest_temp = dest + n - 1;
-		src_temp = src + n - 1;
-		flag = -1;
-	}
-	while (n--)
-	{
-		*dest_temp = *src_temp;
-		dest_temp += flag;
-		src_temp += flag;
+		temp += n;
+		source += n;
+		while (n--)
+			*(--temp) = *(--source);
 	}
 	return (dest);
 }

@@ -3,49 +3,74 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/01 14:21:45 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/02 18:15:55 by dongglee         ###   ########.fr       */
+/*   Created: 2022/11/10 11:47:16 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/15 14:15:35 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	cal_len(unsigned int n)
+static	size_t	count_digit_numbers(long long n)
 {
-	int cnt;
+	size_t	count;
 
-	cnt = 0;
-	if (n == 0)
-		return (1);
-	while (n)
+	count = 0;
+	while (n > 0)
 	{
+		count++;
 		n /= 10;
-		++cnt;
 	}
-	return (cnt);
+	return (count);
 }
 
-char		*ft_itoa(int n)
+static	char	*create_zero_string(void)
 {
-	char			*ret;
-	int				cnt;
-	unsigned int	temp;
+	char	*result;
 
-	temp = n < 0 ? -n : n;
-	cnt = cal_len(temp) + (n < 0);
-	if (!(ret = malloc(sizeof(char) * (cnt + 1))))
+	result = (char *) malloc(sizeof(char) + 1);
+	if (!result)
 		return (NULL);
-	if (n < 0)
-		ret[0] = '-';
-	ret[cnt--] = '\0';
-	if (temp == 0)
-		ret[cnt] = '0';
-	while (temp)
+	result[0] = '0';
+	result[1] = '\0';
+	return (result);
+}
+
+static	void	put_number_in_result(char *result, long long num, int count)
+{
+	result[count--] = '\0';
+	while (num > 0)
 	{
-		ret[cnt--] = (temp % 10) + '0';
-		temp /= 10;
+		result[count] = num % 10 + '0';
+		num /= 10;
+		count--;
 	}
-	return (ret);
+	return ;
+}
+
+char	*ft_itoa(int n)
+{
+	int			sign;
+	size_t		count;
+	char		*result;
+	long long	num;
+
+	sign = 0;
+	num = (long long) n;
+	if (num == 0)
+		return (create_zero_string());
+	if (num < 0)
+	{
+		sign = 1;
+		num *= -1;
+	}
+	count = count_digit_numbers(num) + sign;
+	result = (char *) malloc(sizeof(char) * count + 1);
+	if (!result)
+		return (NULL);
+	put_number_in_result(result, num, count);
+	if (sign)
+		result[0] = '-';
+	return (result);
 }

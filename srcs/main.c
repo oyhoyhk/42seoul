@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:39:05 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/03 19:44:30 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/11 11:34:07 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	print_error_return_code(const char *msg, int code)
 {
-	perror(msg);
+	ft_putstr_fd(msg, STDERR_FILENO);
 	return (code);
 }
 

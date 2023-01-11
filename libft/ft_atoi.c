@@ -3,60 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/01 08:35:05 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/02 18:12:08 by dongglee         ###   ########.fr       */
+/*   Created: 2022/11/09 11:58:13 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/15 14:14:32 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-static int	is_space(char c)
+static int	ft_isspace(char ch)
 {
-	if ((9 <= c && c <= 13) || c == 32)
+	if (ch == ' '
+		|| ch == '\t'
+		|| ch == '\n'
+		|| ch == '\v'
+		|| ch == '\f'
+		|| ch == '\r')
 		return (1);
 	return (0);
 }
 
-static int	len_of_num(char *str)
+int	ft_atoi(const char *nptr)
 {
-	int ret;
+	int			is_negative;
+	int			i;
+	long long	result;
 
-	ret = 0;
-	while ('0' <= *str && *str <= '9')
+	i = 0;
+	is_negative = 0;
+	result = 0;
+	while (ft_isspace(nptr[i]))
+		i++;
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		++ret;
-		++str;
+		if (nptr[i] == '-')
+			is_negative = 1;
+		i++;
 	}
-	return (ret);
-}
-
-int			ft_atoi(char *str)
-{
-	unsigned long long int	ret;
-	int						sign;
-
-	ret = 0;
-	sign = 0;
-	while (is_space(*str))
-		++str;
-	if (*str == '-')
+	while ('0' <= nptr[i] && nptr[i] <= '9')
 	{
-		++str;
-		sign = 1;
+		result *= 10;
+		result += nptr[i] - '0';
+		i++;
 	}
-	else if (*str == '+')
-		++str;
-	if (len_of_num(str) >= 20)
-		return (sign == 0 ? -1 : 0);
-	while ('0' <= *str && *str <= '9')
-	{
-		ret *= 10;
-		ret += *str - '0';
-		++str;
-	}
-	if (sign == 1)
-		return (-(unsigned int)ret);
-	return ((int)ret);
+	if (is_negative == 1)
+		result *= -1;
+	return ((int)(result));
 }

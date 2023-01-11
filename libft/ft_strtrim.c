@@ -3,46 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/01 11:08:35 by leedonggyu        #+#    #+#             */
-/*   Updated: 2020/07/02 18:15:00 by dongglee         ###   ########.fr       */
+/*   Created: 2022/11/10 07:28:04 by yooh              #+#    #+#             */
+/*   Updated: 2022/11/15 14:17:20 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_is_inter(char c, char const *s)
+static	size_t	has_char(char ch, char const *set)
 {
-	while (*s)
+	size_t	i;
+
+	i = 0;
+	while (set[i])
 	{
-		if (*s == c)
+		if (set[i] == ch)
 			return (1);
-		++s;
+		i++;
 	}
 	return (0);
 }
 
-char		*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*ret;
-	int		start;
-	int		end;
-	int		i;
+	size_t	left;
+	size_t	right;
 
 	if (!s1 || !set)
 		return (NULL);
-	start = 0;
-	while (s1[start] && ft_is_inter(s1[start], set))
-		++start;
-	end = ft_strlen(s1) - 1;
-	while (start < end && ft_is_inter(s1[end], set))
-		--end;
-	if (!(ret = (char *)malloc(sizeof(char) * (end - start + 2))))
-		return (NULL);
-	i = 0;
-	while (start <= end)
-		ret[i++] = s1[start++];
-	ret[i] = '\0';
-	return (ret);
+	if (!ft_strlen(s1))
+		return (ft_calloc(1, 1));
+	if (!ft_strlen(set))
+		return (ft_strdup(s1));
+	left = 0;
+	right = ft_strlen(s1) - 1;
+	while (has_char(s1[left], set))
+		left++;
+	while (right > 0 && has_char(s1[right], set))
+		right--;
+	if (left > right)
+		return (ft_calloc(1, 1));
+	return (ft_substr(s1, left, right - left + 1));
 }

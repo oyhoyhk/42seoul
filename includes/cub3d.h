@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:10:27 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/03 22:37:35 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/11 03:31:24 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "libft.h"
 # include "mlx.h"
-# include "get_next_line.h"
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdio.h>
@@ -34,15 +33,15 @@
 # define KEY_S 1
 # define KEY_D 2
 # define KEY_W 13
-#
 /* key events */
 
 # define BLOCK_SIZE 64
-# define BLOCK_AREA 4046
+# define BLOCK_AREA BLOCK_SIZE * BLOCK_SIZE
+# define FOV 0.66
 
 typedef enum e_type
 {
-	SOUTH, NORTH, EAST, WEST, FLOOR, CEILLING
+	SOUTH, NORTH, EAST, WEST, FLOOR, CEILLING, OTHER
 }	t_type;
 
 typedef struct s_d_pair
@@ -57,15 +56,21 @@ typedef struct s_i_pair
 	int	y;
 }	t_i_pair;
 
+typedef struct s_kv
+{
+	char	*key;
+	char	*value;
+}	t_kv;
+
 typedef struct s_size
 {
 	int	width;
 	int	height;
-}	t_size;;
+}	t_size;
 
 typedef struct	s_img
 {
-	char	*ptr;
+	void	*ptr;
 	int		*data;
 	int		bit_per_pixel;
 	int		size_line;
@@ -77,10 +82,16 @@ typedef struct s_texture
 {
 	int	flag;
 	int	floor;
-	int	celling;
+	int	ceilling;
 	int	textures[4][BLOCK_AREA];
 }	t_texture;
 
+typedef struct	s_player
+{
+	t_d_pair	pos;
+	t_d_pair	dir;
+	t_d_pair	plane;
+}	t_player;
 
 typedef struct s_global
 {
@@ -91,26 +102,45 @@ typedef struct s_global
 	char		**map_ptr;
 	t_size		map_size;
 	t_texture	texture;
+	t_player	player;
 }	t_global;
 
+// key_value.c
+t_kv	*key_value_create(const char *key, const char *value);
+void	key_value_destory(t_kv *pair);
+
+// setting_texture.c
+int	set_element(t_global *global, int type, const char *line);
+
+// setting_map.c
+int	set_map(t_global *global, t_list *lst);
+int	validate_map(t_global *global);
+
 // parse.c
-int	parse_map(t_global *global, const char *map_file_name);
+int	set_info(t_global *global, const char *map_file_name);
 
 // parse_util.c
 int	open_map_file(const char* map_file_name);
 int	start_with(const char *target, const char* start);
-int	get_value_index(char *line, int i);
+t_kv	*get_key_value(const char *line);
 
 // init.c
 int		init(t_global *global, const char *map_file_name);
 void	init_mlx(t_global *global);
 void	init_hook(t_global *global);
 
-//
 
 // update.c
 int		key_press(int key, t_global *global);
-int		exit_game(t_global global);
+int		exit_game(t_global *global);
 int		update(void *global);
+
+// gnl.c
+char	*get_next_line(int fd);
+
+// util.c
+int		is_all_num(const char *str);
+void	free_2d(char **strs);
+int		convert_rgb(int r, int g, int b);
 
 #endif
