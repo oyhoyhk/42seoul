@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 10:47:54 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/12 06:36:35 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/12 07:38:42 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,14 @@ int	get_time(t_time start)
 			+ now.tv_usec - start.tv_usec) / 1000);
 }
 
-void	print_dead_msg(t_ph *ph)
-{
-	pthread_mutex_lock(ph->print_mutex);
-	if (check_over(ph) == DEAD)
-		return ;
-	printf("%d %d died\n", get_time(ph->start), ph->id + 1);
-	pthread_mutex_unlock(ph->print_mutex);
-}
-
 void	print_msg(t_ph *ph, int action)
 {
 	pthread_mutex_lock(ph->print_mutex);
+	if (check_over(ph) == DEAD)
+	{
+		pthread_mutex_unlock(ph->print_mutex);
+		return ;
+	}
 	if (action == FORK)
 		printf("%d %d has taken a fork\n", get_time(ph->start), ph->id + 1);
 	else if (action == EAT)
@@ -41,6 +37,13 @@ void	print_msg(t_ph *ph, int action)
 		printf("%d %d is sleeping\n", get_time(ph->start), ph->id + 1);
 	else if (action == THINKING)
 		printf("%d %d is thinking\n", get_time(ph->start), ph->id + 1);
+	else if (action == DIED)
+	{
+		printf("%d %d died\n", get_time(ph->start), ph->id + 1);
+		pthread_mutex_lock(ph->check_mutex);
+		*(ph->over_flag) = 1;
+		pthread_mutex_unlock(ph->check_mutex);
+	}
 	else
 		printf("./philo error\n");
 	pthread_mutex_unlock(ph->print_mutex);

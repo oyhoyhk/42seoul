@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 06:59:23 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/11 20:39:37 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/12 07:43:01 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_info
 	pthread_mutex_t	*mutex;
 	pthread_mutex_t	check_mutex;
 	pthread_mutex_t	print_mutex;
+	int				over_flag;
 }	t_info;
 
 typedef struct s_fork
@@ -82,11 +83,11 @@ int				check_over(t_ph *ph);
 int				death_check(t_time last_eat, int die);
 int				get_time(t_time start);
 void			print_msg(t_ph *ph, int action);
-int				set_info(t_info *info, int argc, char **argv, int *over_flag);
-t_ph			*create_philos(t_info *info, int *over_flag);
+int				set_info(t_info *info, int argc, char **argv);
+t_ph			*create_philos(t_info *info);
 void			set_philo(t_info *info, t_ph *ph, int num);
 t_fork			*create_fork_mutexes(int num);
-int				init_philosophers(t_info *info, int *over_flag);
+int				init_philosophers(t_info *info);
 void			*routine(void *arg);
 t_fork			*create_fork_mutexes(int num);
 void			clean_philos(t_info *info);

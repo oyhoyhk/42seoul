@@ -6,13 +6,13 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 10:57:23 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/11 20:42:09 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/12 07:43:15 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	set_info(t_info *info, int argc, char **argv, int *over_flag)
+int	set_info(t_info *info, int argc, char **argv)
 {
 	struct timeval	time;
 
@@ -34,7 +34,7 @@ int	set_info(t_info *info, int argc, char **argv, int *over_flag)
 			* info->philos_numbers);
 	if (info == NULL)
 		return (0);
-	if (!init_philosophers(info, over_flag))
+	if (!init_philosophers(info))
 		return (0);
 	return (1);
 }
@@ -53,7 +53,7 @@ void	set_philo(t_info *info, t_ph *ph, int num)
 	ph->id = num;
 }
 
-t_ph	*create_philos(t_info *info, int *over_flag)
+t_ph	*create_philos(t_info *info)
 {
 	int				i;
 	t_ph			*ph;
@@ -72,7 +72,7 @@ t_ph	*create_philos(t_info *info, int *over_flag)
 		ph[i].check_mutex = &info->check_mutex;
 		ph[i].print_mutex = &info->print_mutex;
 		ph[i].forks = forks;
-		ph[i].over_flag = over_flag;
+		ph[i].over_flag = &info->over_flag;
 		set_philo(info, &ph[i], i);
 		i++;
 	}
@@ -85,13 +85,13 @@ void	free_philos(t_ph *ph)
 	free(ph);
 }
 
-int	init_philosophers(t_info *info, int *over_flag)
+int	init_philosophers(t_info *info)
 {
 	t_ph			*ph;
 	int				i;
 
 	i = 0;
-	ph = create_philos(info, over_flag);
+	ph = create_philos(info);
 	if (ph == NULL)
 		return (0);
 	i = 0;
