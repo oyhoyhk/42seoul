@@ -73,16 +73,6 @@ static int	process_map(t_global *global, int fd)
 	return (0);
 }
 
-/**
- * 1. map은 다음으로 이루어져있다.
- * - 0: empty space
- * - 1: wall
- * - N, S, E, W: start point와 보는 방향
- * 2. wall로 둘러쌓여 있어야 한다.
- * 3. map에 대한 정보는 항상 마지막에 나온다.
- * 4. 엘리먼트들은 한줄 이상으로 나눠질 수 있다.
- * 5. 각 엘리먼트 정보는 하나 이상의 공백으로 나눠진다.
-*/
 int	set_info(t_global *global, const char *map_file_name)
 {
 	int		fd;

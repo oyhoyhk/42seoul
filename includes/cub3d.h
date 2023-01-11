@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:10:27 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/11 03:31:24 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/11 19:21:24 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,22 @@
 # define EVENT_EXIT 17
 # define EVENT_KEY_PRESS 2
 # define EVENT_KEY_RELEASE 3
-# define MASK_PRESS 0
-# define MASK_RELEASE 0
-# define MASK_EXIT 0
 # define KEY_ESC 53
 # define KEY_A 0
 # define KEY_S 1
 # define KEY_D 2
 # define KEY_W 13
+# define KEY_LEFT 123
+# define KEY_RIGHT 124
 /* key events */
 
 # define BLOCK_SIZE 64
 # define BLOCK_AREA BLOCK_SIZE * BLOCK_SIZE
 # define FOV 0.66
+# define WIN_HEIGHT 480
+# define WIN_WIDTH 640
+# define ROTATION_SPEED 0.2
+# define MOVE_SPEED 0.2
 
 typedef enum e_type
 {
@@ -103,7 +106,24 @@ typedef struct s_global
 	t_size		map_size;
 	t_texture	texture;
 	t_player	player;
+	int			buf[WIN_HEIGHT][WIN_WIDTH];
 }	t_global;
+
+typedef struct s_ray
+{
+	double		camera_x;
+	t_d_pair	ray_dir;
+	t_d_pair	side_dist;
+	t_d_pair	delta_dist;
+	t_i_pair	map;
+	t_i_pair	step;
+	int			side;
+	double		prep_wall_dist;
+	int			line_height;
+	int			draw_start;
+	int			draw_end;
+
+}	t_ray;
 
 // key_value.c
 t_kv	*key_value_create(const char *key, const char *value);
@@ -132,8 +152,7 @@ void	init_hook(t_global *global);
 
 // update.c
 int		key_press(int key, t_global *global);
-int		exit_game(t_global *global);
-int		update(void *global);
+int		update(t_global *global);
 
 // gnl.c
 char	*get_next_line(int fd);
@@ -142,5 +161,19 @@ char	*get_next_line(int fd);
 int		is_all_num(const char *str);
 void	free_2d(char **strs);
 int		convert_rgb(int r, int g, int b);
+
+// draw.c
+void	draw_background(t_global *global);
+void	draw(t_global *global);
+
+//raycasting.c
+void	raycasting(t_global *global);
+
+// exit.c
+int exit_program(t_global *global);
+
+// player.c
+void move_position(t_global *global, int key);
+void rotate_viewpoint(t_global *global, int key);
 
 #endif
