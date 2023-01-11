@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 14:51:00 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/11 17:14:34 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/12 06:36:52 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int	handle_ph_death(t_ph *ph)
 {
 	pthread_mutex_lock(ph->check_mutex);
 	*(ph->over_flag) = 1;
+	print_dead_msg(ph);
 	pthread_mutex_unlock(ph->check_mutex);
-	print_msg(ph, DIED);
 	return (DEAD);
 }
 

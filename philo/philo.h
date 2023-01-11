@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 06:59:23 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/11 17:09:36 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/11 20:39:37 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_info
 	pthread_t		*philos;
 	int				*forks;
 	pthread_mutex_t	*mutex;
+	pthread_mutex_t	check_mutex;
+	pthread_mutex_t	print_mutex;
 }	t_info;
 
 typedef struct s_fork
@@ -65,6 +67,7 @@ typedef struct s_ph
 	int				die;
 	int				eat;
 	int				sleep;
+	int				total_eat;
 	struct timeval	start;
 	struct timeval	last_eat;
 	t_fork			*forks;
@@ -79,7 +82,6 @@ int				check_over(t_ph *ph);
 int				death_check(t_time last_eat, int die);
 int				get_time(t_time start);
 void			print_msg(t_ph *ph, int action);
-int				*create_forks(int num);
 int				set_info(t_info *info, int argc, char **argv, int *over_flag);
 t_ph			*create_philos(t_info *info, int *over_flag);
 void			set_philo(t_info *info, t_ph *ph, int num);

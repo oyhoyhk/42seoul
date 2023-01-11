@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 06:59:08 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/11 17:34:34 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/12 06:34:33 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	check_while_sleep(t_ph *ph)
 	time = get_time(ph->start);
 	while (get_time(ph->start) - time < ph->sleep)
 	{
-		usleep(400);
+		usleep(500);
 		if (check_over(ph) == DEAD)
 			return (DEAD);
 		if (death_check(ph->last_eat, ph->die) == DEAD)
@@ -92,7 +92,7 @@ void	*routine(void *arg)
 	if (ph->id % 2 == 1)
 		usleep(200);
 	gettimeofday(&ph->last_eat, NULL);
-	while (1)
+	while (ph->total_eat-- > 0)
 	{
 		if (check_while_waiting(ph, ph->left) == DEAD)
 			break ;
@@ -115,7 +115,7 @@ void	*routine(void *arg)
 
 int	main(int argc, char **argv)
 {
-	t_info	info;
+	t_info	info; 
 	int		over_flag;
 
 	over_flag = 0;

@@ -6,28 +6,11 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 10:57:23 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/11 16:36:24 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/11 20:42:09 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	*create_forks(int num)
-{
-	int		*result;
-	int		i;
-
-	result = (int *) malloc(sizeof(int) * num);
-	if (result == NULL)
-		return (NULL);
-	i = 0;
-	while (i < num)
-	{
-		result[i] = 0;
-		i++;
-	}
-	return (result);
-}
 
 int	set_info(t_info *info, int argc, char **argv, int *over_flag)
 {
@@ -41,6 +24,8 @@ int	set_info(t_info *info, int argc, char **argv, int *over_flag)
 	info->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		info->times_must_eat = ft_atoi(argv[5]);
+	else
+		info->times_must_eat = 2147483647;
 	if (info->philos_numbers == -1 || info->time_to_die == -1
 		|| info->time_to_eat == -1 || info->time_to_sleep == -1
 		|| info->times_must_eat == -1)
@@ -73,26 +58,31 @@ t_ph	*create_philos(t_info *info, int *over_flag)
 	int				i;
 	t_ph			*ph;
 	t_fork			*forks;
-	pthread_mutex_t	check_mutex;
-	pthread_mutex_t	print_mutex;
 
 	i = 0;
 	ph = (t_ph *) malloc(sizeof(t_ph) * (info->philos_numbers));
 	forks = create_fork_mutexes(info->philos_numbers);
 	if (ph == NULL || forks == NULL)
 		return (NULL);
-	pthread_mutex_init(&check_mutex, NULL);
-	pthread_mutex_init(&print_mutex, NULL);
+	pthread_mutex_init(&info->check_mutex, NULL);
+	pthread_mutex_init(&info->print_mutex, NULL);
 	while (i < info->philos_numbers)
 	{
-		ph[i].check_mutex = &check_mutex;
-		ph[i].print_mutex = &print_mutex;
+		ph[i].total_eat = info->times_must_eat;
+		ph[i].check_mutex = &info->check_mutex;
+		ph[i].print_mutex = &info->print_mutex;
 		ph[i].forks = forks;
 		ph[i].over_flag = over_flag;
 		set_philo(info, &ph[i], i);
 		i++;
 	}
 	return (ph);
+}
+
+void	free_philos(t_ph *ph)
+{
+	free(ph[0].forks);
+	free(ph);
 }
 
 int	init_philosophers(t_info *info, int *over_flag)
@@ -116,5 +106,6 @@ int	init_philosophers(t_info *info, int *over_flag)
 		i++;
 	}
 	clean_philos(info);
+	free_philos(ph);
 	return (1);
 }
