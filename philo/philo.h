@@ -6,33 +6,36 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 06:59:23 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/10 11:04:28 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/11 17:09:36 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <pthread.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
+# include <pthread.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/time.h>
+# include <stdio.h>
 
-#include <stdio.h>
+# define DEAD		0
+# define ALIVE		1
 
-# define OFF		0
 # define ON			1
+# define OFF		0
+
+# define INTERVAL	50
 
 typedef enum e_action
 {
-	LEFT_FORK,
-	RIGHT_FORK,
+	FORK,
 	EAT,
 	SLEEP,
 	THINKING,
 	DIED,
-}	e_ACTION;
+}	t_action;
 
 typedef struct timeval	t_time;
 
@@ -48,6 +51,12 @@ typedef struct s_info
 	pthread_mutex_t	*mutex;
 }	t_info;
 
+typedef struct s_fork
+{
+	int				state;
+	pthread_mutex_t	fork_mutex;
+}	t_fork;
+
 typedef struct s_ph
 {
 	int				id;
@@ -58,24 +67,29 @@ typedef struct s_ph
 	int				sleep;
 	struct timeval	start;
 	struct timeval	last_eat;
-	struct timeval	last_sleep;
-	pthread_mutex_t	*mutex;
-	int				*fork;
-	pthread_mutex_t	*death_check;
+	t_fork			*forks;
+	pthread_mutex_t	*check_mutex;
 	pthread_mutex_t	*print_mutex;
-	pthread_mutex_t	*over_check;
+	int				*over_flag;
 }	t_ph;
 
 int				ft_atoi(char *str);
 size_t			ft_strlen(char *str);
-void			over_flag_on(t_ph *ph, int *flag);
-int				check_over(t_ph *ph, int *flag);
+int				check_over(t_ph *ph);
 int				death_check(t_time last_eat, int die);
 int				get_time(t_time start);
-void			print_msg(t_ph *ph, e_ACTION action, int *flag);
-pthread_mutex_t	*create_mutexs(int num);
+void			print_msg(t_ph *ph, int action);
 int				*create_forks(int num);
-int				set_info(t_info *info, int argc, char **argv);
-int				create_philos(t_info *info);
-
+int				set_info(t_info *info, int argc, char **argv, int *over_flag);
+t_ph			*create_philos(t_info *info, int *over_flag);
+void			set_philo(t_info *info, t_ph *ph, int num);
+t_fork			*create_fork_mutexes(int num);
+int				init_philosophers(t_info *info, int *over_flag);
+void			*routine(void *arg);
+t_fork			*create_fork_mutexes(int num);
+void			clean_philos(t_info *info);
+int				handle_ph_death(t_ph *ph);
+int				check_over(t_ph *ph);
+int				death_check(t_time last_eat, int die);
+void			put_down_forks(t_ph *ph);
 #endif

@@ -6,11 +6,11 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/07 07:54:36 by yooh              #+#    #+#              #
-#    Updated: 2023/01/10 10:46:33 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/11 18:47:12 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			=	$(wildcard *.c)
+SRCS			=	check.c init.c main.c utils.c utils2.c
 
 OBJS			=	$(SRCS:.c=.o)
 
@@ -22,7 +22,6 @@ all				:	$(NAME)
 
 $(NAME)			:	$(OBJS)
 					$(CC) $(CFLAGS) $^ -o $@ 
-					./$(NAME) 2 410 200 100
 
 clean			:	$(OBJS)
 					$(RM) $(OBJS);
