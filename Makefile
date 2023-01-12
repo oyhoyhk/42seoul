@@ -19,13 +19,6 @@ RM = rm -f
 
 all : $(NAME)
 
-test: $(OBJS) test.c
-	$(CC) -I$(CINCLUDE) -I$(MLX_DIR) -I$(FT_DIR) -c test.c -o test.o
-	$(MAKE) -C $(FT_DIR) bonus
-	$(CC) -o test $(filter-out %/main.o,$(OBJS)) test.o $(FT_LIB) $(MLX_LIB)
-tclean: fclean
-	$(RM) test test.o
-
 %.o : %.c
 	$(CC) $(CFLAGS) -I$(MLX_DIR) -I$(FT_DIR) -I$(CINCLUDE) -c $< -o $@
 
