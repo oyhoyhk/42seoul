@@ -33,6 +33,7 @@ clean :
 	$(RM) $(OBJS)
 
 fclean : clean
+	make -C $(FT_DIR) fclean
 	$(RM) $(NAME)
 
 re : fclean all
