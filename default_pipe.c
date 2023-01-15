@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 14:57:24 by yooh              #+#    #+#             */
-/*   Updated: 2022/12/13 06:40:16 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/01 10:18:54 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,3 +82,11 @@ void	default_pipe(int argc, char **argv, char **env)
 		i++;
 	}
 }
+
+//   i =2  sleep 5
+//   i =3  sleep 7
+//   i =4  sleep 10
+
+//   infile "cat -e" wc outlfile
+//  i =2 "cat -e infile"  i=3이 되되기  전에 명명령령어  실실행행 끝끝남
+//  i =3  wc (pipe 안에 있는 내용)
