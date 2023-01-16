@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_util.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:50:10 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/10 14:26:15 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:19:27 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	open_map_file(const char* map_file_name)
+int	open_map_file(const char *map_file_name)
 {
 	int	fd;
 	int	len;
@@ -25,7 +25,7 @@ int	open_map_file(const char* map_file_name)
 	return (fd);
 }
 
-int	start_with(const char *target, const char* start)
+int	start_with(const char *target, const char *start)
 {
 	int	len;
 

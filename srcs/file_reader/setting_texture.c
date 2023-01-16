@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   setting.c                                          :+:      :+:    :+:   */
+/*   setting_texture.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 19:48:00 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/10 22:36:21 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:18:00 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,21 @@ int	load_image(t_global *global, int *dest, char *path)
 	len = ft_strlen(path);
 	ft_memset(&img, 0, sizeof(img));
 	if (!ft_strncmp(path + (len - 4), ".xpm", 4))
-		img.ptr = mlx_xpm_file_to_image(global->mlx, path, &img.size.width, &img.size.height);
+		img.ptr = mlx_xpm_file_to_image(global->mlx,
+				path, &img.size.width, &img.size.height);
 	if (img.ptr == NULL)
 		return (1);
-	img.data = (int *)mlx_get_data_addr(img.ptr, &img.bit_per_pixel, &img.size_line, &img.endian);
-	pair.y = 0;
-	while (pair.y < img.size.height)
+	img.data = (int *)mlx_get_data_addr(img.ptr,
+			&img.bit_per_pixel, &img.size_line, &img.endian);
+	pair.y = -1;
+	while (++pair.y < img.size.height)
 	{
-		pair.x = 0;
-		while (pair.x < img.size.width)
+		pair.x = -1;
+		while (++pair.x < img.size.width)
 		{
 			index = img.size.width * pair.y + pair.x;
 			dest[index] = img.data[index];
-			++pair.x;
 		}
-		++pair.y;
 	}
 	return (0);
 }
@@ -55,10 +55,10 @@ static int	set_background_color(t_global *global, int type, t_kv *kv)
 	int		i;
 
 	rgb = ft_split(kv->value, ',');
-	i = 0;
-	while (rgb[i])
+	i = -1;
+	while (rgb[++i])
 	{
-		if (i >=3 || !is_all_num(rgb[i]))
+		if (i >= 3 || !is_all_num(rgb[i]))
 		{
 			free_2d(rgb);
 			return (1);
@@ -69,7 +69,6 @@ static int	set_background_color(t_global *global, int type, t_kv *kv)
 			free_2d(rgb);
 			return (1);
 		}
-		++i;
 	}
 	free_2d(rgb);
 	if (type == FLOOR)

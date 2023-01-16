@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 13:27:54 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/11 13:47:48 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:20:09 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-
-int exit_program(t_global *global)
+int	exit_program(t_global *global)
 {
 	(void) global;
 	exit(0);

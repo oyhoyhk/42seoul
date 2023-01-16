@@ -6,7 +6,7 @@
 #    By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/09 12:35:52 by yooh              #+#    #+#              #
-#    Updated: 2022/12/25 07:10:02 by yooh             ###   ########.fr        #
+#    Updated: 2023/01/16 09:29:39 by yooh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,11 +71,7 @@ AR			= ar rcs
 
 INCLUDES	= ./libft.h
 
-ifeq		($(findstring bonus, $(MAKECMDGOALS)), bonus)
-			OBJ_SWITCH = $(OBJS) $(OBJS_B)
-else
-			OBJ_SWITCH = $(OBJS)
-endif
+OBJ_SWITCH = $(OBJS) $(OBJS_B)
 
 all		: $(NAME) bonus
 

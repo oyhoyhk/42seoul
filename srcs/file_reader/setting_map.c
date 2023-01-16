@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setting_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 22:58:29 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/11 18:49:04 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:19:15 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	set_map_size(t_global *global, t_list *lst)
 	{
 		temp = (char *)cur->content;
 		if (temp[0] == '\n')
-			break;
+			break ;
 		global->map_size.height++;
 		len = ft_strlen(temp) - 1;
 		if (len > global->map_size.width)
@@ -83,17 +83,18 @@ int	set_map_emt(t_global *global, t_list *lst)
 	{
 		temp = (char *) cur->content;
 		if (temp[0] == '\n')
-			break;
+			break ;
 		x = 0;
 		while (temp[x] && temp[x] != '\n')
 		{
 			if (temp[x] == ' ')
 				global->map_ptr[y][x] = ' ';
-			else if(temp[x] == '0')
+			else if (temp[x] == '0')
 				global->map_ptr[y][x] = '0';
 			else if (temp[x] == '1')
 				global->map_ptr[y][x] = '1';
-			else if (temp[x] == 'N' || temp[x] == 'S' || temp[x] == 'E' || temp[x] == 'W')
+			else if (temp[x] == 'N' || temp[x] == 'S'
+				|| temp[x] == 'E' || temp[x] == 'W')
 			{
 				if (flag)
 					return (1);
@@ -128,7 +129,7 @@ int	set_map(t_global *global, t_list *lst)
 	{
 		cur = cur->next;
 		if (cur == NULL)
-			break;
+			break ;
 		temp = (char *)cur->content;
 	}
 	if (cur == NULL)
@@ -159,11 +160,11 @@ int is_void_space(t_global *global, int y, int x)
 
 int	validate_map(t_global *global)
 {
-	const int dx[8] = {1, 0, -1, 0, 1, -1, -1, 1};
-	const int dy[8] = {0, -1, 0, 1, -1, -1, 1, 1};
-	int	y;
-	int	x;
-	int	i;
+	const int	dx[8] = {1, 0, -1, 0, 1, -1, -1, 1};
+	const int	dy[8] = {0, -1, 0, 1, -1, -1, 1, 1};
+	int			y;
+	int			x;
+	int			i;
 
 	y = 0;
 	while (y < global->map_size.height)

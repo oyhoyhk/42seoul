@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 13:51:12 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/12 13:13:03 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 14:15:58 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 void	init_ray(t_global *global, t_ray *ray, int x)
 {
 	ray->camera_x = 2 * x / (double)global->win_size.width - 1;
-	ray->ray_dir.x = global->player.dir.x + global->player.plane.x * ray->camera_x;
-	ray->ray_dir.y = global->player.dir.y + global->player.plane.y * ray->camera_x;
+	ray->ray_dir.x = global->player.dir.x
+		+ global->player.plane.x * ray->camera_x;
+	ray->ray_dir.y = global->player.dir.y
+		+ global->player.plane.y * ray->camera_x;
 	ray->map.x = (int)global->player.pos.x;
 	ray->map.y = (int)global->player.pos.y;
 	ray->delta_dist.x = fabs(1 / ray->ray_dir.x);
@@ -85,10 +87,10 @@ void	set_texture_val(t_global *global, t_ray *ray)
 {
 	if (ray->side == EAST || ray->side == WEST)
 		ray->prep_wall_dist = (ray->map.x - global->player.pos.x
-			+ (1 - ray->step.x) / 2) / ray->ray_dir.x;
+				+ (1 - ray->step.x) / 2) / ray->ray_dir.x;
 	else
 		ray->prep_wall_dist = (ray->map.y - global->player.pos.y
-			+ (1 - ray->step.y) / 2) / ray->ray_dir.y;
+				+ (1 - ray->step.y) / 2) / ray->ray_dir.y;
 	ray->line_height = (int)(global->win_size.height / ray->prep_wall_dist);
 	ray->draw_start = -ray->line_height / 2 + global->win_size.height / 2;
 	if (ray->draw_start < 0)
@@ -117,13 +119,14 @@ void	store_texture(t_global *global, t_ray *ray, int x)
 		tex.x = BLOCK_SIZE - tex.x - 1;
 	step = 1.0 * BLOCK_SIZE / ray->line_height;
 	tex_pos = (ray->draw_start - global->win_size.height
-		/ 2 + ray->line_height / 2) * step;
+			/ 2 + ray->line_height / 2) * step;
 	y = ray->draw_start;
 	while (y < ray->draw_end)
 	{
 		tex.y = (int)tex_pos & (BLOCK_SIZE - 1);
 		tex_pos += step;
-		global->buf[y][x] = global->texture.textures[ray->side][BLOCK_SIZE * tex.y + tex.x];
+		global->buf[y][x] = global->texture.textures[ray->side][BLOCK_SIZE
+			* tex.y + tex.x];
 		++y;
 	}
 }
