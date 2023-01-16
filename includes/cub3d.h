@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:10:27 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 21:11:00 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 21:29:10 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ int		set_element(t_global *global, int type, const char *line);
 int		set_map(t_global *global, t_list *lst);
 int		validate_map(t_global *global);
 void	set_player(t_global *global, char type, t_i_pair pair);
+int		set_map_emt(t_global *global, t_list *lst);
 
 // parse.c
 int		set_info(t_global *global, const char *map_file_name);
