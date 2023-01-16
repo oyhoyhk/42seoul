@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 22:58:29 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 21:05:24 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 21:10:25 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,49 +34,48 @@ void	set_map_size(t_global *global, t_list *lst)
 
 int	set_map_emt(t_global *global, t_list *lst)
 {
-	t_list	*cur;
-	char	*temp;
-	int		x;
-	int		y;
-	int		flag;
+	t_list		*cur;
+	t_i_pair	pair;
+	char		*temp;
+	int			flag;
 
 	cur = lst;
 	flag = 0;
-	y = 0;
+	pair.y = 0;
 	while (cur)
 	{
 		temp = (char *) cur->content;
 		if (temp[0] == '\n')
 			break ;
-		x = 0;
-		while (temp[x] && temp[x] != '\n')
+		pair.x = 0;
+		while (temp[pair.x] && temp[pair.x] != '\n')
 		{
-			if (temp[x] == ' ')
-				global->map_ptr[y][x] = ' ';
-			else if (temp[x] == '0')
-				global->map_ptr[y][x] = '0';
-			else if (temp[x] == '1')
-				global->map_ptr[y][x] = '1';
-			else if (temp[x] == 'N' || temp[x] == 'S'
-				|| temp[x] == 'E' || temp[x] == 'W')
+			if (temp[pair.x] == ' ')
+				global->map_ptr[pair.y][pair.x] = ' ';
+			else if (temp[pair.x] == '0')
+				global->map_ptr[pair.y][pair.x] = '0';
+			else if (temp[pair.x] == '1')
+				global->map_ptr[pair.y][pair.x] = '1';
+			else if (temp[pair.x] == 'N' || temp[pair.x] == 'S'
+				|| temp[pair.x] == 'E' || temp[pair.x] == 'W')
 			{
 				if (flag)
 					return (1);
 				flag = 1;
-				global->map_ptr[y][x] = '0';
-				set_player(global, temp[x], y, x);
+				global->map_ptr[pair.y][pair.x] = '0';
+				set_player(global, temp[pair.x], pair);
 			}
 			else
 				return (1);
-			++x;
+			++pair.x;
 		}
-		while (x < global->map_size.width)
+		while (pair.x < global->map_size.width)
 		{
-			global->map_ptr[y][x] = ' ';
-			++x;
+			global->map_ptr[pair.y][pair.x] = ' ';
+			++pair.x;
 		}
 		cur = cur->next;
-		++y;
+		++pair.y;
 	}
 	return (!flag);
 }

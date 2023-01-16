@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   setting_map2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 15:08:53 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/16 17:38:56 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/16 21:12:40 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	handle_y_axis(t_global *global, char type)
+static void	ps_y_axis(t_global *global, char type)
 {
 	global->player.plane.x = 0;
 	global->player.dir.y = 0;
@@ -28,7 +28,7 @@ static void	handle_y_axis(t_global *global, char type)
 	}
 }
 
-static void	handle_x_axis(t_global *global, char type)
+static void	ps_x_axis(t_global *global, char type)
 {
 	global->player.plane.y = 0;
 	global->player.dir.x = 0;
@@ -44,12 +44,12 @@ static void	handle_x_axis(t_global *global, char type)
 	}
 }
 
-void	set_player(t_global *global, char type, int y, int x)
+void	set_player(t_global *global, char type, t_i_pair pair)
 {
-	global->player.pos.y = y;
-	global->player.pos.x = x;
+	global->player.pos.y = pair.y;
+	global->player.pos.x = pair.x;
 	if (type == 'N' || type == 'S')
-		handle_y_axis(global, type);
+		ps_y_axis(global, type);
 	else if (type == 'E' || type == 'W')
-		handle_x_axis(global, type);
+		ps_x_axis(global, type);
 }
