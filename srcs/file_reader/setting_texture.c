@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 19:48:00 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 15:04:07 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/17 07:00:20 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int	set_element(t_global *global, int type, const char *line)
 		key_value_destory(key_value);
 		return (1);
 	}
+	key_value_destory(key_value);
 	global->texture.flag |= (1 << type);
 	return (0);
 }

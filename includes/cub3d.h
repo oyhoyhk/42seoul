@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:10:27 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 21:29:10 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/17 06:59:50 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,12 @@ int		set_info(t_global *global, const char *map_file_name);
 int		open_map_file(const char *map_file_name);
 int		start_with(const char *target, const char *start);
 t_kv	*get_key_value(const char *line);
+int		handle_empty_line(char *line, int fd);
 
 // init.c
 int		init(t_global *global, const char *map_file_name);
 void	init_mlx(t_global *global);
 void	init_hook(t_global *global);
-
 
 // update.c
 int		key_press(int key, t_global *global);

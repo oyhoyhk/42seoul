@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:50:10 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 14:19:27 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/17 06:59:52 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,11 @@ t_kv	*get_key_value(const char *line)
 	free(key);
 	free(value);
 	return (ret);
+}
+
+int	handle_empty_line(char *line, int fd)
+{
+	free(line);
+	line = get_next_line(fd);
+	return (1);
 }

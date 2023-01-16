@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:18:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/16 15:04:26 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/17 06:59:19 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ static int	process_element(t_global *global, int fd)
 	line = get_next_line(fd);
 	while (line)
 	{
+		if (ft_strncmp(line, "\n", -1) == 0 && handle_empty_line(line, fd))
+			continue ;
 		if (line[0] != 0 && line[0] != '\n')
 		{
 			type = get_elemnt_type(line);
