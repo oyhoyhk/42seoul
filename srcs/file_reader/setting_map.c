@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 22:58:29 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 21:10:25 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 21:16:19 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,15 @@ void	set_map_size(t_global *global, t_list *lst)
 	}
 }
 
+void	fill_map_emt(t_global *global, t_i_pair pair)
+{
+	while (pair.x < global->map_size.width)
+	{
+		global->map_ptr[pair.y][pair.x] = ' ';
+		++pair.x;
+	}
+}
+
 int	set_map_emt(t_global *global, t_list *lst)
 {
 	t_list		*cur;
@@ -50,12 +59,9 @@ int	set_map_emt(t_global *global, t_list *lst)
 		pair.x = 0;
 		while (temp[pair.x] && temp[pair.x] != '\n')
 		{
-			if (temp[pair.x] == ' ')
-				global->map_ptr[pair.y][pair.x] = ' ';
-			else if (temp[pair.x] == '0')
-				global->map_ptr[pair.y][pair.x] = '0';
-			else if (temp[pair.x] == '1')
-				global->map_ptr[pair.y][pair.x] = '1';
+			if (temp[pair.x] == ' ' || temp[pair.x] == '0'
+				|| temp[pair.x] == '1')
+				global->map_ptr[pair.y][pair.x] = temp[pair.x];
 			else if (temp[pair.x] == 'N' || temp[pair.x] == 'S'
 				|| temp[pair.x] == 'E' || temp[pair.x] == 'W')
 			{
@@ -69,11 +75,7 @@ int	set_map_emt(t_global *global, t_list *lst)
 				return (1);
 			++pair.x;
 		}
-		while (pair.x < global->map_size.width)
-		{
-			global->map_ptr[pair.y][pair.x] = ' ';
-			++pair.x;
-		}
+		fill_map_emt(global, pair);
 		cur = cur->next;
 		++pair.y;
 	}
