@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:39:05 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 15:04:43 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/16 21:13:22 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@ int	start(t_global *global)
 	(void)global;
 	mlx_loop(global->mlx);
 	return (0);
-}
-
-void	destory(t_global *global)
-{
-	(void) global;
-	/* TODO: free global */
 }
 
 int	main(int argc, char *argv[])
