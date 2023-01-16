@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 19:48:00 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 14:18:00 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/16 15:04:07 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,14 @@ static int	set_wall_texture(t_global *global, int type, t_kv *kv)
 	return (0);
 }
 
+static void	seperate_type(t_global *global, int type, int irgb[3])
+{
+	if (type == FLOOR)
+		global->texture.floor = convert_rgb(irgb[0], irgb[1], irgb[2]);
+	else if (type == CEILLING)
+		global->texture.ceilling = convert_rgb(irgb[0], irgb[1], irgb[2]);
+}
+
 static int	set_background_color(t_global *global, int type, t_kv *kv)
 {
 	char	**rgb;
@@ -71,10 +79,7 @@ static int	set_background_color(t_global *global, int type, t_kv *kv)
 		}
 	}
 	free_2d(rgb);
-	if (type == FLOOR)
-		global->texture.floor = convert_rgb(irgb[0], irgb[1], irgb[2]);
-	else if (type == CEILLING)
-		global->texture.ceilling = convert_rgb(irgb[0], irgb[1], irgb[2]);
+	seperate_type(global, type, irgb);
 	return (0);
 }
 

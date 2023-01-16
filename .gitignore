@@ -5,3 +5,4 @@ cub3D
 tmp/
 .vscode
 test.c
+.DS_Store

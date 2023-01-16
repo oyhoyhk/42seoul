@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 14:18:24 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/16 14:18:24 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/16 15:04:26 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static t_type	get_elemnt_type(const char *str)
 		return (EAST);
 	if (start_with(str, "F "))
 		return (FLOOR);
-	if(start_with(str, "C "))
+	if (start_with(str, "C "))
 		return (CEILLING);
 	return (OTHER);
 }

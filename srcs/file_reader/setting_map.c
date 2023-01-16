@@ -6,7 +6,7 @@
 /*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 22:58:29 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 14:19:15 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/16 17:53:18 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,42 +29,6 @@ void	set_map_size(t_global *global, t_list *lst)
 		if (len > global->map_size.width)
 			global->map_size.width = len;
 		cur = cur->next;
-	}
-}
-
-void	set_player(t_global *global, char type, int y, int x)
-{
-	global->player.pos.y = y;
-	global->player.pos.x = x;
-	if (type == 'N' || type == 'S')
-	{
-		global->player.plane.x = 0;
-		global->player.dir.y = 0;
-		if (type == 'N')
-		{
-			global->player.plane.y = FOV;
-			global->player.dir.x = -1;
-		}
-		else
-		{
-			global->player.plane.y = -FOV;
-			global->player.dir.x = 1;
-		}
-	}
-	else if (type == 'E' || type == 'W')
-	{
-		global->player.plane.y = 0;
-		global->player.dir.x = 0;
-		if (type == 'E')
-		{
-			global->player.plane.x = FOV;
-			global->player.dir.y = 1;
-		}
-		else
-		{
-			global->player.plane.x = -FOV;
-			global->player.dir.y = -1;
-		}
 	}
 }
 
@@ -137,12 +101,9 @@ int	set_map(t_global *global, t_list *lst)
 	set_map_size(global, cur);
 	global->map_ptr = malloc(sizeof(char *) * (global->map_size.height + 1));
 	global->map_ptr[global->map_size.height] = NULL;
-	i = 0;
-	while (i < global->map_size.height)
-	{
+	i = -1;
+	while (++i < global->map_size.height)
 		global->map_ptr[i] = malloc(sizeof(char) * global->map_size.width);
-		++i;
-	}
 	if (set_map_emt(global, cur))
 	{
 		free_2d(global->map_ptr);
@@ -151,7 +112,7 @@ int	set_map(t_global *global, t_list *lst)
 	return (0);
 }
 
-int is_void_space(t_global *global, int y, int x)
+int	is_void_space(t_global *global, int y, int x)
 {
 	return (y < 0 || y >= global->map_size.height
 		|| x < 0 || x >= global->map_size.width
@@ -166,25 +127,22 @@ int	validate_map(t_global *global)
 	int			x;
 	int			i;
 
-	y = 0;
-	while (y < global->map_size.height)
+	y = -1;
+	while (++y < global->map_size.height)
 	{
-		x = 0;
-		while (x < global->map_size.width)
+		x = -1;
+		while (++x < global->map_size.width)
 		{
 			if (global->map_ptr[y][x] == '0')
 			{
-				i = 0;
-				while (i < 8)
+				i = -1;
+				while (++i < 8)
 				{
 					if (is_void_space(global, y + dy[i], x + dx[i]))
 						return (1);
-					++i;
 				}
 			}
-			++x;
 		}
-		++y;
 	}
 	return (0);
 }

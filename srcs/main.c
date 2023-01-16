@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dongglee <dongglee@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:39:05 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/11 13:48:28 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/16 15:04:43 by yooh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	start(t_global *global)
 	return (0);
 }
 
-void destory(t_global *global)
+void	destory(t_global *global)
 {
 	(void) global;
 	/* TODO: free global */
