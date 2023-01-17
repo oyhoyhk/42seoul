@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooh <yooh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 13:51:12 by dongglee          #+#    #+#             */
-/*   Updated: 2023/01/16 15:00:31 by yooh             ###   ########.fr       */
+/*   Updated: 2023/01/17 17:22:18 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ static void	dda_loop(t_global *global, t_ray *ray, int *hit)
 		ray->side_dist.x += ray->delta_dist.x;
 		ray->map.x += ray->step.x;
 		if (ray->step.x == -1)
-			ray->side = EAST;
-		else
 			ray->side = WEST;
+		else
+			ray->side = EAST;
 	}
 	else
 	{
