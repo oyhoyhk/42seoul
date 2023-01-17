@@ -6,7 +6,7 @@
 /*   By: dongglee <dongglee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 15:08:53 by yooh              #+#    #+#             */
-/*   Updated: 2023/01/16 21:12:40 by dongglee         ###   ########.fr       */
+/*   Updated: 2023/01/17 17:28:30 by dongglee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@ static void	ps_y_axis(t_global *global, char type)
 	global->player.dir.y = 0;
 	if (type == 'N')
 	{
-		global->player.plane.y = FOV;
-		global->player.dir.x = -1;
+
+		global->player.plane.x = FOV;
+		global->player.dir.y = 1;
 	}
 	else
 	{
-		global->player.plane.y = -FOV;
-		global->player.dir.x = 1;
+
+		global->player.plane.x = -FOV;
+		global->player.dir.y = -1;
 	}
 }
 
@@ -34,13 +36,15 @@ static void	ps_x_axis(t_global *global, char type)
 	global->player.dir.x = 0;
 	if (type == 'E')
 	{
-		global->player.plane.x = FOV;
-		global->player.dir.y = 1;
+
+		global->player.plane.y = FOV;
+		global->player.dir.x = -1;
 	}
 	else
 	{
-		global->player.plane.x = -FOV;
-		global->player.dir.y = -1;
+
+		global->player.plane.y = -FOV;
+		global->player.dir.x = 1;
 	}
 }
 
