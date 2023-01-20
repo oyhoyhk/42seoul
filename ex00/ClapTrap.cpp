@@ -21,9 +21,21 @@ ClapTrap::~ClapTrap()
 
 ClapTrap&	ClapTrap::operator=(const ClapTrap& ref)
 {
-    *this=ref;
+    _name = ref._name;
+    _hitPoints = ref._hitPoints;
+    _energyPoints = ref._energyPoints;
+    _attackDamage = ref._attackDamage;
     std::cout << std::setw(15) << "[ClapTrap] " << "operator=!!" << std::endl;
     return (*this);
+}
+
+ClapTrap::ClapTrap(std::string name)
+{
+    _name = name;
+    _attackDamage = 0;
+    _hitPoints = 10;
+    _energyPoints = 10;
+    std::cout<<_name<<" is created!"<<std::endl;
 }
 
 void    ClapTrap::attack(const std::string& target)
@@ -39,9 +51,10 @@ void    ClapTrap::attack(const std::string& target)
 
 void    ClapTrap::takeDamage(unsigned int amount)
 {
-    if (_hitPoints <= amount)
+    if (_hitPoints <= (int)amount)
     {
-        std::cout<<_name<<" is broken..."<std::endl;
+        std::cout<<_name<<" is broken..."<<std::endl;
+        _hitPoints = 0;
         return ;
     }
     _hitPoints -= amount;
@@ -50,11 +63,17 @@ void    ClapTrap::takeDamage(unsigned int amount)
 
 void    ClapTrap::beRepaired(unsigned int amount)
 {
+    if (_hitPoints == 0)
+    {
+        std::cout<<_name<<" is broken..."<<std::endl;
+        return ;
+    }
     if (_energyPoints == 0)
     {
         std::cout<<"Not enough energy..."<<std::endl;
         return ; 
     }
     _energyPoints--;
+    _hitPoints += amount;
     std::cout<<_name<<" repaired "<<amount<<" hitPoints!"<<std::endl;
 }
