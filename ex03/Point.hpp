@@ -18,8 +18,15 @@ public:
 	Point(const float x, const float y);
 
 	Point&	operator=(const Point& ref);
-	Fixed	getX(void);
-	Fixed	getY(void);
+	const Fixed&	getX(void) const;
+	const Fixed&	getY(void) const;
+
 };
+
+Point operator-(const Point& p1, const Point& p2);
+Fixed operator*(const Point& v1, const Point& v2);
+bool bsp(Point const a, Point const b, Point const c, Point const point);
+bool operator~(const Fixed& f);
+std::ostream& operator<<(std::ostream& o, const Point& p);
 
 #endif

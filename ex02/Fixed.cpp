@@ -5,25 +5,21 @@
 Fixed::Fixed()
 {
 	_number = 0;
-	std::cout << std::setw(15) << "[Fixed] " << "create!!" << std::endl;
 }
 
 Fixed::Fixed(const Fixed& ref)
 {
 	(*this) = ref;
-	std::cout << std::setw(15) << "[Fixed] " << "copy!!" << std::endl;
 }
 
 Fixed::~Fixed()
 {
-	std::cout << std::setw(15) << "[Fixed] " << "delete!!" << std::endl;
 
 }
 
 Fixed&	Fixed::operator=(const Fixed& ref)
 {
 	_number = ref._number;
-	std::cout << std::setw(15) << "[Fixed] " << "operator=!!" << std::endl;
 	return *this;
 }
 
@@ -106,7 +102,7 @@ Fixed& operator++(Fixed &fixed)
 
 Fixed operator++(Fixed &fixed, int)
 {
-	Fixed temp(fixed._number);
+	Fixed temp(fixed.toFloat());
 	fixed._number += 1;
 	return temp;
 }

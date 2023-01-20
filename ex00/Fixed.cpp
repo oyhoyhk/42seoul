@@ -30,6 +30,7 @@ Fixed&	Fixed::operator=(const Fixed& ref)
 
 int		Fixed::getRawBits(void) const
 {
+	std::cout<<std::setw(15)<<"getRawBits member function called"<<std::endl;
 	return (_number);
 }
 

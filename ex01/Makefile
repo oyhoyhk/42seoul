@@ -6,7 +6,7 @@ SRCS		=	$(wildcard *.cpp)
 
 OBJS		=	$(SRCS:.cpp=.o)
 
-NAME		=	main
+NAME		=	a.out
 
 all			:	$(NAME)
 
