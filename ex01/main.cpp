@@ -2,17 +2,15 @@
 
 int main()
 {
-    ScavTrap a("Yooh");
-    ScavTrap b("Cabi");
+	ScavTrap a("Hello");
+	ScavTrap b("World");
 
-    a.attack("Alpha");
-    b.attack("Beta");
+	a.attack("Test");
+	b.attack("Great");
 
-    a.takeDamage(30);
-    b.takeDamage(150);
-    a.beRepaired(50);
-    b.beRepaired(100);
+	a.guardGate();
+	b.guardGate();
 
-    a.guardGate();
-    b.guardGate();
+	a.beRepaired(100);
+	return 0;
 }

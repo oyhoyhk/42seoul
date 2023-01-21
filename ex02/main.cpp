@@ -1,28 +1,18 @@
-#include "ScavTrap.hpp"
 #include "FragTrap.hpp"
 
 int main()
 {
-    ScavTrap a("Yooh");
-    ScavTrap b("Cabi");
+	FragTrap a("Hello");
+	FragTrap b("World");
 
-    FragTrap c("Frag");
-    FragTrap d("Good");
+	a.attack("Test");
+	b.attack("Great");
 
-    a.attack("Alpha");
-    b.attack("Beta");
-
-    a.takeDamage(30);
-    b.takeDamage(150);
-    a.beRepaired(50);
-    b.beRepaired(100);
-
-    a.guardGate();
-    b.guardGate();
-
-    c.highFivesGuys();
-    c.attack("Bad");
-    d.beRepaired(150);
-    c.takeDamage(100);
-    return 0;
+	a.beRepaired(150);
+	a.takeDamage(80);
+	a.beRepaired(100);
+	
+	a.highFivesGuys();
+	b.highFivesGuys();
+	return 0;
 }

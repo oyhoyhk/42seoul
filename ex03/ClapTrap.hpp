@@ -12,6 +12,7 @@ protected:
     int         _attackDamage;
 public:
     ClapTrap();
+    ClapTrap(std::string name);
     ClapTrap(const ClapTrap& ref);
     ~ClapTrap();
 
@@ -20,8 +21,6 @@ public:
     void    attack(const std::string& target);
     void    takeDamage(unsigned int amount);
     void    beRepaired(unsigned int amount);
-
-    ClapTrap(std::string name);
 };
 
 #endif

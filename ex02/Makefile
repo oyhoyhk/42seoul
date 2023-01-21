@@ -11,7 +11,7 @@ NAME		=	main
 all			:	$(NAME)
 
 $(NAME)		:	$(OBJS)
-				$(CXX) $(CFLAGS) $^ -o $@
+				$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean		:
 				rm -rf $(OBJS)

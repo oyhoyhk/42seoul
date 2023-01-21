@@ -3,17 +3,22 @@
 
 #include "ClapTrap.hpp"
 
+#include <iostream>
+
 class FragTrap : public ClapTrap
 {
- public:
+private:
+	/* data */
+
+public:
 	FragTrap();
+	FragTrap(std::string name);
 	FragTrap(const FragTrap& ref);
 	~FragTrap();
 
 	FragTrap&	operator=(const FragTrap& ref);
 
-	FragTrap(std::string name);
-	void		highFivesGuys(void);
+	void highFivesGuys(void);
 };
 
 #endif

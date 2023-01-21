@@ -21,17 +21,18 @@ FragTrap::~FragTrap()
 
 FragTrap&	FragTrap::operator=(const FragTrap& ref)
 {
-	_name = ref._name;
-    _hitPoints = ref._hitPoints;
-    _energyPoints = ref._energyPoints;
-    _attackDamage = ref._attackDamage;
+	this->_name = ref._name;
+	this->_attackDamage = ref._attackDamage;
+	this->_energyPoints = ref._energyPoints;
+	this->_hitPoints = ref._hitPoints;
+	std::cout << std::setw(15) << "[ScavTrap] " << "operator=!!" << std::endl;
 	std::cout << std::setw(15) << "[FragTrap] " << "operator=!!" << std::endl;
 	return (*this);
 }
 
 FragTrap::FragTrap(std::string name)
 {
-	ClapTrap::_name = name;
+	_name = name;
 	_hitPoints = 100;
 	_energyPoints = 100;
 	_attackDamage = 30;
@@ -40,6 +41,5 @@ FragTrap::FragTrap(std::string name)
 
 void	FragTrap::highFivesGuys(void)
 {
-	std::cout << std::setw(15) << _name << "'s HiFiveGuys!"<<std::endl;
-	std::cout << std::setw(15) << "Hi Five ~!"<<std::endl;
+	std::cout<<std::setw(15)<< _name << " request high fives!" << std::endl;
 }
