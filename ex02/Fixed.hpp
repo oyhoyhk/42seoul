@@ -23,27 +23,29 @@ public:
 	float	toFloat(void) const;
 	int		toInt(void) const;
 
-	friend bool	operator == (const Fixed &a, const Fixed &b);
-	friend bool operator > (const Fixed &a, const Fixed &b);
-	friend bool operator < (const Fixed &a, const Fixed &b);
-	friend bool operator >= (const Fixed &a, const Fixed &b);
-	friend bool operator != (const Fixed &a, const Fixed &b);
 
-	friend Fixed operator + (const Fixed &a, const Fixed &b);
-	friend Fixed operator - (const Fixed &a, const Fixed &b);
-	friend Fixed operator * (const Fixed &a, const Fixed &b);
-	friend Fixed operator / (const Fixed &a, const Fixed &b);
+	Fixed& operator++(void);
+	Fixed operator++(int);
 
-	friend Fixed& operator++(Fixed &fixed);
-	friend Fixed operator++(Fixed &fixed, int);
-	
-	friend Fixed& operator--(Fixed &fixed);
-	friend Fixed operator--(Fixed &fixed, int);
-	
-
+	Fixed& operator--(void);
+	Fixed operator--(int);
 	static	Fixed& min(const Fixed &a, const Fixed &b);
 	static	Fixed& max(const Fixed &a, const Fixed &b);
+	static	Fixed& min(Fixed &a, Fixed &b);
+	static	Fixed& max(Fixed &a, Fixed &b);
 };
+
+
+bool operator == (const Fixed &a, const Fixed &b);
+bool operator > (const Fixed &a, const Fixed &b);
+bool operator < (const Fixed &a, const Fixed &b);
+bool operator >= (const Fixed &a, const Fixed &b);
+bool operator != (const Fixed &a, const Fixed &b);
+
+Fixed operator + (const Fixed &a, const Fixed &b);
+Fixed operator - (const Fixed &a, const Fixed &b);
+Fixed operator * (const Fixed &a, const Fixed &b);
+Fixed operator / (const Fixed &a, const Fixed &b);
 
 std::ostream& operator<<(std::ostream &os, const Fixed &ref);
 

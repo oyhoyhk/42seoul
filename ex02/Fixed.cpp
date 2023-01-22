@@ -94,29 +94,29 @@ Fixed operator / (const Fixed &a, const Fixed &b)
 }
 
 
-Fixed& operator++(Fixed &fixed)
+Fixed& Fixed::operator++(void)
 {
-	fixed._number += 1;
-	return fixed;
+	(*this)._number += 1;
+	return (*this);
 }
 
-Fixed operator++(Fixed &fixed, int)
+Fixed Fixed::operator++(int)
 {
-	Fixed temp(fixed.toFloat());
-	fixed._number += 1;
+	Fixed temp((*this).toFloat());
+	(*this)._number += 1;
 	return temp;
 }
 
-Fixed& operator--(Fixed &fixed)
+Fixed& Fixed::operator--(void)
 {
-	fixed._number -= 1;
-	return fixed;
+	(*this)._number -= 1;
+	return (*this);
 }
 
-Fixed operator--(Fixed &fixed, int)
+Fixed Fixed::operator--(int)
 {
-	Fixed temp(fixed._number);
-	fixed._number -= 1;
+	Fixed temp((*this)._number);
+	(*this)._number -= 1;
 	return temp;
 }
 
@@ -127,4 +127,13 @@ Fixed& Fixed::min(const Fixed &a, const Fixed &b)
 Fixed& Fixed::max(const Fixed &a, const Fixed &b)
 {
 	return (*const_cast<Fixed *>(&(a.toFloat() > b.toFloat() ? a : b)));
+}
+
+Fixed& Fixed::min(Fixed &a, Fixed &b)
+{
+	return (a.toFloat() > b.toFloat() ? b : a);
+}
+Fixed& Fixed::max(Fixed &a, Fixed &b)
+{
+	return (a.toFloat() > b.toFloat() ? a : b);
 }
