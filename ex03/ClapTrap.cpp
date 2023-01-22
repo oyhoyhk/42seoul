@@ -14,7 +14,7 @@ ClapTrap::ClapTrap(std::string name)
     _attackDamage = 0;
     _hitPoints = 10;
     _energyPoints = 10;
-    std::cout <<_name<<" is created!"<<std::endl;
+    std::cout <<"[ClapTrap] " << _name<<" is created!"<<std::endl;
 }
 
 ClapTrap::ClapTrap(const ClapTrap& ref)
