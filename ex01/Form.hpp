@@ -1,6 +1,7 @@
 #ifndef FORM_HPP
 # define FORM_HPP
 
+#include "Bureaucrat.hpp"
 #include <iostream>
 
 class Form
@@ -17,6 +18,9 @@ public:
 	~Form();
 	Form&	operator=(const Form& ref);
 
+	void	beSigned(Bureaucrat &staff);
+	
+	
 	class GradeTooHighException : public std::exception {
 		public :
 			const char *what(void) const throw();
