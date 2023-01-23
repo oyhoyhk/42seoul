@@ -22,6 +22,6 @@ int main()
 	delete bob;
 	delete me;
 	delete src;
-	system("leaks a.out");
+	system("leaks a.out | grep 'total leaked'");
 	return 0;
 }
