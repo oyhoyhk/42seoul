@@ -16,6 +16,7 @@ public:
 	Point(const Point& ref);
 	~Point();
 	Point(const float x, const float y);
+	Point(const Fixed x, const Fixed y);
 
 	Point&	operator=(const Point& ref);
 	const Fixed&	getX(void) const;

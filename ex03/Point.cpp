@@ -4,24 +4,19 @@
 #include "Point.hpp"
 
 Point::Point() : _x(0), _y(0)
-{
-	//std::cout << std::setw(15) << "[Point] " << "create!!" << std::endl;
-}
+{}
 
 Point::Point(const Point& ref) : _x(ref.getX()), _y(ref.getY())
-{
-	//std::cout << std::setw(15) << "[Point] " << "copy!!" << std::endl;
-}
+{}
 
 Point::Point(const float x, const float y) : _x(Fixed(x)), _y(Fixed(y))
-{
- 	//std::cout << std::setw(15) << "[Point] " << "create!!" << std::endl;
-}
+{}
+
+Point::Point(const Fixed x, const Fixed y) : _x(x), _y(y)
+{}
 
 Point::~Point()
-{
-	//std::cout << std::setw(15) << "[Point] " << "delete!!" << std::endl;
-}
+{}
 
 Point&	Point::operator=(const Point& ref)
 {
@@ -37,12 +32,11 @@ const Fixed&	Point::getX(void) const
 }
 const Fixed&	Point::getY(void) const
 {
-	return _y;
+	return _y; 
 }
 
 Point operator-(const Point& p1, const Point& p2) {
-  return Point(((p1.getX()) - (p2.getX())).toFloat(),
-              (p1.getY() - p2.getY()).toFloat());
+  return Point(p1.getX() - p2.getX(), p1.getY() - p2.getY());
 }
 
 Fixed operator*(const Point& v1, const Point& v2) {
@@ -50,7 +44,7 @@ Fixed operator*(const Point& v1, const Point& v2) {
 }
 
 bool operator~(const Fixed& f) {
-  return f > Fixed(0);
+  return *const_cast<Fixed *>(&f) > Fixed(0);
 }
 
 std::ostream& operator<<(std::ostream& o, const Point& p) {
