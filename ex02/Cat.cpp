@@ -23,6 +23,8 @@ Cat::~Cat()
 Cat&	Cat::operator=(const Cat& ref)
 {
 	this->_type = ref._type;
+	for(int i=0;i<100;i++)
+		this->_brain[i] = ref._brain[i];
 	std::cout << "[Cat] " << "operator=!!" << std::endl;
 	return (*this);
 }

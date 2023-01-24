@@ -4,6 +4,8 @@
 
 Brain::Brain()
 {
+	for (int i = 0; i < 100; i++)
+		_ideas[i] = "brain" + std::to_string(i);
 	std::cout << "[Brain] " << "create!!" << std::endl;
 }
 

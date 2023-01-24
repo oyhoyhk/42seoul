@@ -21,5 +21,5 @@ int main()
 	std::cout<<std::endl;
 	//delete animal;
 
-	system("leaks main");
+	system("leaks main | grep 'total leaked bytes.'");
 }

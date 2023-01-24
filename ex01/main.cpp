@@ -16,10 +16,15 @@ int main()
 		std::cout<<std::endl;
 	}
 
+	Dog a;
+	Dog b;
+
+	a = b;
+
 	for(int i=0;i<num;i++) {
 		std::cout << i + 1<< "th Animal will be destroyed" << std::endl;
 		delete arr[i];
 	}
 
-	system("leaks main");
+	system("leaks main | grep 'total leaked bytes'");
 }
