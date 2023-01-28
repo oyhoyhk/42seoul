@@ -1,0 +1,8 @@
+*.o
+ircserv
+*.a
+*.tmp
+*.out
+test
+test.c
+.vscode
