@@ -26,10 +26,10 @@ int main(int argc, char **argv) {
 		char sendBuffer[BUFFER_SIZE];
 		char receiveBuffer[BUFFER_SIZE];
 		while (true) {
-			printf("input :: ");
-			fgets(sendBuffer, BUFFER_SIZE, stdin);
-			printf("sendBuffer : [%s], length : [%zu]\n", sendBuffer, strlen(sendBuffer));
-			write(connectFD, sendBuffer, strlen(sendBuffer));
+			//printf("input :: ");
+			//fgets(sendBuffer, BUFFER_SIZE, stdin);
+			//printf("sendBuffer : [%s], length : [%zu]\n", sendBuffer, strlen(sendBuffer));
+			//write(connectFD, sendBuffer, strlen(sendBuffer));
 			readBytes = read(connectFD, receiveBuffer, BUFFER_SIZE);
 			receiveBuffer[readBytes] = '\0';
 			printf("%d bytes read\n", readBytes);

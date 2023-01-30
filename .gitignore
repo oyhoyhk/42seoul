@@ -6,3 +6,4 @@ ircserv
 test
 test.c
 .vscode
+poll.cpp
