@@ -1,27 +1,16 @@
-#include "../includes/header.hpp"
+#include "header.hpp"
 #include "Server/Server.hpp"
 #include <exception>
 
-int main() {
-	Server server;
-
+int main(int argc, char *argv[]) {
 	try {
-		server.setSocket();
-	} catch (std::exception &e) {
-		std::cerr<<e.what()<<std::endl;
-		return 1;
+			if (argc != 3) throw std::runtime_error("arguments error");
+			Server server(argv[1], argv[2]);
+			server.prepare();
+			server.start();
+			return 0;
+	} catch (std::exception& e) {
+		std::cerr << e.what() << std::endl;
+		return (1);
 	}
-	while (true) {
-		int result = poll(server.getPollFDs(), MAX_FD_SIZE, -1); // -1 : 무한 대기
-		//if (result == -1) {
-		//	std::cerr << "Poll Error Occured..." <<std::endl;
-		//	return 1;
-		//}
-		if (result > 0) {
-			server.addPollFD();
-			server.sendResponse();
-		}
-	}
-	server.closeListenFD();
-	return 0;
 }
