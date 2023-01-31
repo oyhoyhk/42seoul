@@ -5,7 +5,7 @@ SRC_DIR		=	srcs/
 HEADERS_DIR	=	includes/ includes/Server/
 CINCLUDE	=	-I$(HEADERS_DIR)
 
-SRCS		=	$(wildcard srcs/*.cpp) srcs/Server/Server.cpp
+SRCS		=	$(wildcard srcs/*.cpp) $(wildcard src/**/*.cpp)
 OBJS		=	$(SRCS:.cpp=.o)
 
 all			:	$(NAME)
