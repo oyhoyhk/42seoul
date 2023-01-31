@@ -1,9 +1,8 @@
+.vscode
 *.o
-ircserv
 *.a
 *.tmp
 *.out
+ircserv
 test
-test.c
-.vscode
-poll.cpp
+test.cpp
