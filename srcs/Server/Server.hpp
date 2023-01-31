@@ -16,43 +16,37 @@ private :
 
 public :
 	void			setSocket() {
-		_listenFD = socket(PF_INET, SOCK_STREAM, 0);
 		// 기존에 열려 있던 소켓 덮어쓰기
 		int option = 1;
-		setsockopt(_listenFD, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 		memset(&_listenSocket, 0, sizeof(_listenSocket));
-
 		_listenSocket.sin_family = AF_INET;
 		_listenSocket.sin_addr.s_addr = htonl(INADDR_ANY);
 		_listenSocket.sin_port = htons(PORT);
-
-		if (bind(_listenFD, (struct sockaddr *) &_listenSocket, sizeof(_listenSocket)) == -1
+		if ((_listenFD = socket(PF_INET, SOCK_STREAM, 0)) == -1
+			|| setsockopt(_listenFD, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option))
+			|| bind(_listenFD, (struct sockaddr *) &_listenSocket, sizeof(_listenSocket)) == -1
 			|| listen(_listenFD, LISTEN_QUEUE_SIZE) == -1)
 			throw InitServerException();
-
 		_pollFDs[0].fd = _listenFD;
 		_pollFDs[0].events = POLLIN;
 		_pollFDs[0].revents = 0;
 
-		for (int i=1; i<MAX_FD_SIZE;i++) {
+		for (int i=1; i<MAX_FD_SIZE; i++)
 			_pollFDs[i].fd = -1;
-		}
 	}
 
-	struct pollfd	*getPollFDs() {
-		return _pollFDs;
-	}
+	struct pollfd	*getPollFDs() { return _pollFDs; }
 
 	void			addPollFD() {
-		if (_pollFDs[0].revents == POLLIN) {
-			int	connectFD = accept(_listenFD, (struct sockaddr *)&_connectSocket, &_addrSize);
-			for (int i=1; i<MAX_FD_SIZE; ++i) {
-				if (_pollFDs[i].fd == -1) {
-					_pollFDs[i].fd = connectFD;
-					_pollFDs[i].events = POLLIN;
-					_pollFDs[i].revents = 0;
-					break ;
-				}
+		if (_pollFDs[0].revents != POLLIN)
+			return ;
+		int	connectFD = accept(_listenFD, (struct sockaddr *)&_connectSocket, &_addrSize);
+		for (int i=1; i<MAX_FD_SIZE; ++i) {
+			if (_pollFDs[i].fd == -1) {
+				_pollFDs[i].fd = connectFD;
+				_pollFDs[i].events = POLLIN;
+				_pollFDs[i].revents = 0;
+				break ;
 			}
 		}
 	}
@@ -84,15 +78,11 @@ public :
 		}
 	}
 
-	void			closeListenFD() {
-		close(_listenFD);
-	}
+	void			closeListenFD() { close(_listenFD); }
 
 	class InitServerException : public std::exception {
 	public :
-		const char *what(void) const throw() {
-		return "Initiating Server Failed...";
-		}
+		const char *what(void) const throw() { return "Initiating Server Failed..."; }
 	};
 };
 
