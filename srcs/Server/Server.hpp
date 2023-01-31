@@ -9,7 +9,7 @@
 
 class Server {
 private :
-	std::string			_port;
+	int					_port;
 	std::string			_password;
 	int					_socket;
 	struct sockaddr_in	_sockaddr;

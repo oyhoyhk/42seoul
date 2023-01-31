@@ -1,7 +1,15 @@
 #include "Server/Server.hpp"
 
+static bool isAllNumber(const std::string& str) {
+	for (size_t i = 0; i < str.length(); ++i)
+		if (!std::isdigit(str[i])) return false;
+	return true;
+}
+
 Server::Server(const std::string& port, const std::string& password) {
-	_port = port;
+	if (port.length() > 5 || !isAllNumber(port)
+		|| (_port = std::atoi(port.c_str())) > 65535)
+		throw InitServerException();
 	_password = password;
 }
 
@@ -11,11 +19,12 @@ Server::~Server() {
 
 void	Server::prepare(void) {
 	int opt = 1;
+	memset(&_sockaddr, 0, sizeof(_sockaddr));
 	_sockaddr.sin_family = AF_INET;
 	_sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	_sockaddr.sin_port = htons(PORT);
+	_sockaddr.sin_port = htons(_port);
 
-	if ((_socket = socket(PF_INET, SOCK_STREAM, 0) == -1)
+	if ((_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1
 		|| setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1
 		|| bind(_socket, (struct sockaddr*)&_sockaddr, sizeof(_sockaddr)) == -1
 		|| listen(_socket, LISTEN_QUEUE_SIZE) == -1) {
