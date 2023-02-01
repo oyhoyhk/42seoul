@@ -1,16 +1,18 @@
 NAME		=	ircserv
 CXX			=	c++
 RM			=	rm -rf
-CXXFLAGS	=	-std=c++98 -MMD #-Wall -Werror -Wextra
+CXXFLAGS	=	-std=c++98 -MMD -Wall -Werror -Wextra
 SRC_DIR		=	srcs/
-HEADERS_DIR	=	includes/ includes/Server/
-CINCLUDE	=	-I$(HEADERS_DIR)
+CINCLUDE	=	-Isrcs/ -Iincludes/
 
-SRCS		=	$(wildcard srcs/*.cpp) $(wildcard srcs/**/*.cpp)
+SRCS		=	$(wildcard $(SRC_DIR)*.cpp) $(wildcard $(SRC_DIR)**/*.cpp)
 OBJS		=	$(SRCS:.cpp=.o)
 DEPS		=	$(SRCS:.cpp=.d)
 
 all			:	$(NAME)
+
+%.o			:	%.cpp
+				$(CXX) $(CXXFLAGS) $(CINCLUDE) -c $< -o $@
 
 $(NAME)		:	$(OBJS)
 				$(CXX) $(CXXFLAGS) $^ -o $@
