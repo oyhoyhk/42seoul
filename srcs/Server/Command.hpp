@@ -3,6 +3,7 @@
 
 #include "header.hpp"
 #include "Server/Server.hpp"
+#include "Response.hpp"
 
 class Server;
 

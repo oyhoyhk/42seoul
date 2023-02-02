@@ -12,6 +12,8 @@
 
 class Command;
 
+#define SERVER_PREFIX "irc.local"
+
 class Server {
 typedef void (Server::*pfunc) (int, std::string);
 private :

@@ -20,3 +20,7 @@ void	UserManager::addUser(const std::string& name, const int& fd) {
 void	UserManager::deleteUser(const std::string& name) {
 	_users.erase(_users.find(name));
 }
+
+const std::map<std::string, User>& UserManager::getUsers(void) const {
+	return _users;
+}
