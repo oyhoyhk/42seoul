@@ -11,24 +11,27 @@ Server::Server(const std::string& port, const std::string& password) {
 	if (port.length() > 5 || !isAllNumber(port)
 		|| (_port = std::atoi(port.c_str())) > 65535)
 		throw InitServerException();
+	for (int i = 0; i < MAX_FD_SIZE; ++i) _pollFDs[i].fd = -1;
+	_command = new Command();
 	_password = password;
-	_setFunctions();
 }
 
 Server::~Server() {
+	delete _command;
 	close(_socket);
 }
 
 void	Server::prepare(void) {
 	int opt = 1;
-	memset(&_sockaddr, 0, sizeof(_sockaddr));
-	_sockaddr.sin_family = AF_INET;
-	_sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	_sockaddr.sin_port = htons(_port);
+	struct sockaddr_in	sockaddr;
 
+	memset(&sockaddr, 0, sizeof(sockaddr));
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	sockaddr.sin_port = htons(_port);
 	if ((_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1
 		|| setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1
-		|| bind(_socket, (struct sockaddr*)&_sockaddr, sizeof(_sockaddr)) == -1
+		|| bind(_socket, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) == -1
 		|| listen(_socket, LISTEN_QUEUE_SIZE) == -1) {
 		close(_socket);
 		throw InitServerException();
@@ -36,7 +39,6 @@ void	Server::prepare(void) {
 	_pollFDs[0].fd = _socket;
 	_pollFDs[0].events = POLLIN;
 	_pollFDs[0].revents = 0;
-	for (int i = 1; i < MAX_FD_SIZE; ++i) _pollFDs[i].fd = -1;
 }
 
 void	Server::start(void) {
@@ -83,20 +85,17 @@ void	Server::_sendResponse(void) {
 				length = recv(_pollFDs[i].fd, buf, BUFFER_SIZE, 0);
 				buf[length] = '\0';
  				list = split(buf, "\n");
-
 				for(iter = list.begin(); iter != list.end(); ++iter) {
 					std::cout << "input : [" << *iter <<"]"<<std::endl;
-					words = split(*iter, " ");
-					if (_funcMap.count(*words.begin()) == 1)
-						(this->*(_funcMap[*words.begin()]))(i, *iter);
-					else {
-						std::cout << buf <<std::endl;
+					try{
+						_command->execute(*this, _pollFDs[i].fd, *iter);
+					} catch(std::exception& e) {
+						std::cerr << e.what() << std::endl;
 					}
 				}
 				for (int j = 1; j < MAX_FD_SIZE; ++j) {
-					if (_pollFDs[j].fd != -1 && _pollFDs[i].fd != _pollFDs[j].fd) {
+					if (_pollFDs[j].fd != -1 && _pollFDs[i].fd != _pollFDs[j].fd)
 						write(_pollFDs[j].fd, msg.c_str(), strlen(msg.c_str()));
-					}
 				}
 				break ;
 			default :
@@ -107,22 +106,10 @@ void	Server::_sendResponse(void) {
 	}
 }
 
-const char* Server::InitServerException::what(void) const throw() {
-	return "Initiating Server Failed...";
+UserManager& Server::getUserManager(void) {
+	return _userManager;
 }
 
-void Server::_setFunctions(void) {
-	_funcMap["CAP"]			= &Server::handleCAP;
-	_funcMap["NICK"] 		= &Server::handleNICK;
-	_funcMap["PRIVMSG"]		= &Server::handlePRIVMSG;
-	_funcMap["LIST"]		= &Server::handleLIST;
-	_funcMap["INVITE"]		= &Server::handleINVITE;
-	_funcMap["KICK"]		= &Server::handleKICK;
-	_funcMap["PING"]		= &Server::handlePING;
-	_funcMap["JOIN"]		= &Server::handleJOIN;
-	_funcMap["QUIT"]		= &Server::handleQUIT;
-	_funcMap["PART"]		= &Server::handlePART;
-	_funcMap["NOTICE"]		= &Server::handleNOTICE;
-	_funcMap["PASS"]		= &Server::handlePASS;
-	_funcMap["USER"]		= &Server::handleUSER;
+const char* Server::InitServerException::what(void) const throw() {
+	return "Initiating Server Failed...";
 }
