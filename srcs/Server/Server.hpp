@@ -6,8 +6,7 @@
 #include "User/User.hpp"
 #include "User/UserManager.hpp"
 #include "Channel/Channel.hpp"
-#include <sys/_types/_socklen_t.h>
-#include <sys/_types/_ssize_t.h>
+#include <sys/socket.h>
 #include <sys/poll.h>
 #include <string>
 
