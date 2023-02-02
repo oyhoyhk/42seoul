@@ -33,10 +33,69 @@ void	Command::_handleCAP(Server& server, int fd, const std::string& msg) {
 void	Command::_handleNICK(Server& server, int fd, const std::string& msg) {
 	(void) fd;
 	(void) server;
+	std::cout << msg;
+	// void	Server::handleNICK(int i, std::string msg) {
+	// (void) i;	// TEST??
+	// std::string serverPrefix;
+	// std::string newNickname;
+	// std::string oldNickname = _nicknameList[i];
+	// std::vector<std::string> tmp;
+	
+	// std::cout << msg << std::endl;	// TEST
+	// std::vector<std::string> result = split(msg, " ");
 
-	std::cout << msg << std::endl;
-	std::vector<std::string> result = split(msg, " ");
-	server.getUserManager().addUser(result.at(1), fd);
+	// // TODO: getServerPrefix
+	// serverPrefix = "irc.local";	// TODO: delete (DUMMY)
+	// // serverPrefix = getServerPrefix();
+
+	// // "/nick"
+	// if (result.size() <= 1) {
+	// 	// ERR_NONICKNAMEGIVEN, 431,  :No nickname given
+	// 	tmp.clear();
+	// 	tmp.push_back(serverPrefix);
+	// 	tmp.push_back("431");
+	// 	tmp.push_back(ERR_NONICKNAMEGIVEN());
+	// 	//ㅇㅣ거 괄호 맞나요?? 아아랫줄    {}   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 	std::cout << join(tmp) << std::endl;
+	// 	return;
+	// }
+
+	// newNickname = result.at(1);
+	// // "/nick morethan9letters"
+	// if (newNickname.length() > 9) {
+	// 	// :irc.local 432 <nickname> <nickname> :Erroneus nickname
+	// 	tmp.clear();
+	// 	tmp.push_back(serverPrefix);
+	// 	tmp.push_back("432");
+	// 	tmp.push_back(oldNickname);
+	// 	tmp.push_back(newNickname);
+	// 	tmp.push_back(ERR_ERRONEUSNICKNAME());
+	// 	std::cout << join(tmp) << std::endl;
+	// 	return;
+	// }
+
+	// // "/nick existingnickname"
+	// if (std::find(_nicknameList, _nicknameList + MAX_FD_SIZE, _nicknameList[i]) != _nicknameList + MAX_FD_SIZE) {
+	// 	// :irc.local 433 <nickname> <nickname> :Nickname is already in use
+	// 	tmp.clear();
+	// 	tmp.push_back(serverPrefix);
+	// 	tmp.push_back("433");
+	// 	tmp.push_back(oldNickname);
+	// 	tmp.push_back(newNickname);
+	// 	tmp.push_back(ERR_NICKNAMEINUSE());
+	// 	std::cout << join(tmp) << std::endl;
+	// 	return;
+	// }
+
+	// // "/nick newnickname"
+	// _nicknameList[i] = newNickname;
+	// // TODO: setNickname
+	// // getUser
+	// std::string user;
+	// user = "oldNick!root@127.0.0.1 NICK newNick";	// TODO: delete (DUMMY)
+	// // user = getUser();
+	// // 001
+	// // std::cout << join({serverPrefix, "001", newNickname, "Welcome to the Internet Relay Network " + newNickname + "!"}) << std::endl;
 }
 
 void	Command::_handlePRIVMSG(Server& server, int fd, const std::string& msg) {

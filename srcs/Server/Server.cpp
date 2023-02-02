@@ -1,5 +1,6 @@
 #include "Server/Server.hpp"
 #include "header.hpp"
+#include "Utils.hpp"
 
 static bool isAllNumber(const std::string& str) {
 	for (size_t i = 0; i < str.length(); ++i)
