@@ -1,4 +1,5 @@
 #include "Server/Server.hpp"
+#include "header.hpp"
 
 static bool isAllNumber(const std::string& str) {
 	for (size_t i = 0; i < str.length(); ++i)
@@ -11,6 +12,7 @@ Server::Server(const std::string& port, const std::string& password) {
 		|| (_port = std::atoi(port.c_str())) > 65535)
 		throw InitServerException();
 	_password = password;
+	_setFunctions();
 }
 
 Server::~Server() {
@@ -67,7 +69,12 @@ void	Server::_acceptConnections(void) {
 void	Server::_sendResponse(void) {
 	ssize_t	length;
 	char	buf[BUFFER_SIZE+ 1];
+	std::vector<std::string> list;
+	std::vector<std::string>::iterator iter;
 
+	std::vector<std::string> words;
+	std::vector<std::string>::iterator iter2;
+	std::string msg(":irc.local PRIVMSG ace :*** Raw I/O logging is enabled on this server. All messages, passwords, and commands are being recorded.");
 	for (int i = 1; i < MAX_FD_SIZE; ++i) {
 		switch (_pollFDs[i].revents) {
 			case 0 : //no events
@@ -75,11 +82,20 @@ void	Server::_sendResponse(void) {
 			case POLLIN : //data is ready
 				length = recv(_pollFDs[i].fd, buf, BUFFER_SIZE, 0);
 				buf[length] = '\0';
-				printf("%lu bytes read\n", length);
-				printf("[%s]", buf);
+ 				list = split(buf, "\n");
+
+				for(iter = list.begin(); iter != list.end(); ++iter) {
+					std::cout << "input : [" << *iter <<"]"<<std::endl;
+					words = split(*iter, " ");
+					if (_funcMap.count(*words.begin()) == 1)
+						(this->*(_funcMap[*words.begin()]))(i, *iter);
+					else {
+						std::cout << buf <<std::endl;
+					}
+				}
 				for (int j = 1; j < MAX_FD_SIZE; ++j) {
 					if (_pollFDs[j].fd != -1 && _pollFDs[i].fd != _pollFDs[j].fd) {
-						write(_pollFDs[j].fd, buf, strlen(buf));
+						write(_pollFDs[j].fd, msg.c_str(), strlen(msg.c_str()));
 					}
 				}
 				break ;
@@ -93,4 +109,20 @@ void	Server::_sendResponse(void) {
 
 const char* Server::InitServerException::what(void) const throw() {
 	return "Initiating Server Failed...";
+}
+
+void Server::_setFunctions(void) {
+	_funcMap["CAP"]			= &Server::handleCAP;
+	_funcMap["NICK"] 		= &Server::handleNICK;
+	_funcMap["PRIVMSG"]		= &Server::handlePRIVMSG;
+	_funcMap["LIST"]		= &Server::handleLIST;
+	_funcMap["INVITE"]		= &Server::handleINVITE;
+	_funcMap["KICK"]		= &Server::handleKICK;
+	_funcMap["PING"]		= &Server::handlePING;
+	_funcMap["JOIN"]		= &Server::handleJOIN;
+	_funcMap["QUIT"]		= &Server::handleQUIT;
+	_funcMap["PART"]		= &Server::handlePART;
+	_funcMap["NOTICE"]		= &Server::handleNOTICE;
+	_funcMap["PASS"]		= &Server::handlePASS;
+	_funcMap["USER"]		= &Server::handleUSER;
 }

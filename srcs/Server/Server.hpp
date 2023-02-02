@@ -8,15 +8,21 @@
 #include <string>
 
 class Server {
+typedef void (Server::*pfunc) (int, std::string);
 private :
-	int					_port;
-	std::string			_password;
-	int					_socket;
-	struct sockaddr_in	_sockaddr;
-	struct pollfd		_pollFDs[MAX_FD_SIZE];
+	int								_port;
+	std::string						_password;
+	int								_socket;
+	struct sockaddr_in				_sockaddr;
+	struct pollfd					_pollFDs[MAX_FD_SIZE];
+	std::map<std::string, pfunc> 	_funcMap;
+	std::string		_nicknameList[MAX_FD_SIZE];
 
+	void	_setFunctions(void);
 	void	_acceptConnections(void);
 	void	_sendResponse(void);
+
+	
 public :
 	Server(const std::string& port, const std::string& password);
 	~Server();
@@ -35,6 +41,23 @@ public :
 	public :
 		const char *what(void) const throw();
 	};
+
+
+	// handler.cpp 
+
+	void	handleNICK(int i, std::string);
+	void	handleCAP(int i, std::string);
+	void	handlePRIVMSG(int i, std::string);
+	void	handleLIST(int i, std::string);
+	void	handleINVITE(int i, std::string);
+	void	handleKICK(int i, std::string);
+	void	handlePING(int i, std::string);
+	void	handleJOIN(int i, std::string);
+	void	handleQUIT(int i, std::string);
+	void	handlePART(int i, std::string);
+	void	handleNOTICE(int i, std::string);
+	void	handlePASS(int i, std::string);
+	void	handleUSER(int i, std::string);
 };
 
 #endif
