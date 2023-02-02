@@ -13,15 +13,16 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <stdexcept>
 
- 
+
 #define PORT 20162
 #define BUFFER_SIZE 512
 #define LISTEN_QUEUE_SIZE 5
 #define MAX_FD_SIZE 5
- 
+#define MAX_USER_SIZE MAX_FD_SIZE
+#define MAX_CHANNEL_SIZE 5
 
-std::vector<std::string>	split(char *input, std::string delimiter);
-std::vector<std::string>	split(std::string str, std::string delimiter);
 
+std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
 #endif
