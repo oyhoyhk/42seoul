@@ -2,55 +2,18 @@
 #include <sstream>
 #include <vector>
 
-
-std::vector<std::string>	split(char *input, std::string delimiter) {
- 	std::vector<std::string> ret;
-	std::string str(input);
-
-    size_t pos = 0;
+std::vector<std::string>	split(const std::string& str, const std::string& delimiter) {
+    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
     std::string token;
-	while (pos != std::string::npos)
-    {
-        pos = str.find(delimiter);
+    std::vector<std::string> res;
 
-        // delimiter를 못찾으면 텍스트 끝까지 token으로 취급
-        if (pos == std::string::npos)
-            token = str;
-        else
-            token = str.substr(0, pos);
-
-        if (token[token.size() -1] == '\r')
-            token = token.substr(0, token.size() -1);
-		if (token.length() == 0)
-			break ;
-        ret.push_back(token);
-        str.erase(0, pos + delimiter.length());
-    } 
-    return ret;
-}
-
-std::vector<std::string>	split(std::string str, std::string delimiter) {
- 	std::vector<std::string> ret;
-
-    size_t pos = 0;
-    std::string token;
-	while (pos != std::string::npos)
-    {
-        pos = str.find(delimiter);
-
-        // delimiter를 못찾으면 텍스트 끝까지 token으로 취급
-        if (pos == std::string::npos)
-            token = str;
-        else
-            token = str.substr(0, pos);
-
-        if (token[token.size() -1] == '\r')
-            token = token.substr(0, token.size() -1);
-		if (token.length() == 0)
-			break ;
-        ret.push_back(token);
-        str.erase(0, pos + delimiter.length());
-    } 
-
-    return ret;
+    while ((pos_end = str.find(delimiter, pos_start)) != std::string::npos) {
+        token = str.substr(pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        if (token[token.size() -1] == '\r') token.pop_back();
+        if (token.length() != 0) res.push_back(token);
+    }
+    token = str.substr(pos_start);
+    if (token.length() != 0) res.push_back(token);
+    return res;
 }
