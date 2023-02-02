@@ -74,6 +74,7 @@ void	Server::_sendResponse(void) {
 
 	std::vector<std::string> words;
 	std::vector<std::string>::iterator iter2;
+	std::string msg(":irc.local PRIVMSG ace :*** Raw I/O logging is enabled on this server. All messages, passwords, and commands are being recorded.");
 	for (int i = 1; i < MAX_FD_SIZE; ++i) {
 		switch (_pollFDs[i].revents) {
 			case 0 : //no events
@@ -86,16 +87,15 @@ void	Server::_sendResponse(void) {
 				for(iter = list.begin(); iter != list.end(); ++iter) {
 					std::cout << "input : [" << *iter <<"]"<<std::endl;
 					words = split(*iter, " ");
-					for (iter2 = words.begin(); iter2 != words.end(); ++iter2) {
-						std::cout << "word : [" << *iter2 << "]" <<std::endl;
+					if (_funcMap.count(*words.begin()) == 1)
+						(this->*(_funcMap[*words.begin()]))(i, *iter);
+					else {
+						std::cout << buf <<std::endl;
 					}
 				}
-
-				printf("%lu bytes read\n", length);
-				printf("[%s]", buf);
 				for (int j = 1; j < MAX_FD_SIZE; ++j) {
 					if (_pollFDs[j].fd != -1 && _pollFDs[i].fd != _pollFDs[j].fd) {
-						write(_pollFDs[j].fd, buf, strlen(buf));
+						write(_pollFDs[j].fd, msg.c_str(), strlen(msg.c_str()));
 					}
 				}
 				break ;

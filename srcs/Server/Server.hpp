@@ -8,7 +8,7 @@
 #include <string>
 
 class Server {
-typedef void (Server::*pfunc) (int);
+typedef void (Server::*pfunc) (int, std::string);
 private :
 	int								_port;
 	std::string						_password;
@@ -16,6 +16,7 @@ private :
 	struct sockaddr_in				_sockaddr;
 	struct pollfd					_pollFDs[MAX_FD_SIZE];
 	std::map<std::string, pfunc> 	_funcMap;
+	std::string		_nicknameList[MAX_FD_SIZE];
 
 	void	_setFunctions(void);
 	void	_acceptConnections(void);
@@ -44,19 +45,19 @@ public :
 
 	// handler.cpp 
 
-	void	handleNICK(int i);
-	void	handleCAP(int i);
-	void	handlePRIVMSG(int i);
-	void	handleLIST(int i);
-	void	handleINVITE(int i);
-	void	handleKICK(int i);
-	void	handlePING(int i);
-	void	handleJOIN(int i);
-	void	handleQUIT(int i);
-	void	handlePART(int i);
-	void	handleNOTICE(int i);
-	void	handlePASS(int i);
-	void	handleUSER(int i);
+	void	handleNICK(int i, std::string);
+	void	handleCAP(int i, std::string);
+	void	handlePRIVMSG(int i, std::string);
+	void	handleLIST(int i, std::string);
+	void	handleINVITE(int i, std::string);
+	void	handleKICK(int i, std::string);
+	void	handlePING(int i, std::string);
+	void	handleJOIN(int i, std::string);
+	void	handleQUIT(int i, std::string);
+	void	handlePART(int i, std::string);
+	void	handleNOTICE(int i, std::string);
+	void	handlePASS(int i, std::string);
+	void	handleUSER(int i, std::string);
 };
 
 #endif
