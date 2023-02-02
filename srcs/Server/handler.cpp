@@ -57,8 +57,24 @@ void	Server::handleJOIN(int i, std::string msg) {
 
 void	Server::handleQUIT(int i, std::string msg) {
 	(void) i;
-	std::cout << "QUIT!!!" <<std::endl;
-	std::cout << msg << std::endl;
+
+	std::string Qmsg = msg.assign(msg.begin() - 6, msg.end());
+
+	std::string message;
+	for(int j=1;j<MAX_FD_SIZE;++j) {
+		if(_pollFDs[j].fd != -1 && _pollFDs[i].fd == _pollFDs[j].fd) {
+			message = "ERROR :Closing link: (root@127.0.0.1) [Quit: " + Qmsg + "]";
+			write(_pollFDs[j].fd, message.c_str(), strlen(message.c_str()));
+			
+			std::vector<member> roomMem = getRoomMember();
+			if (roomMem.memSize() != 0) {
+				std::string sendMsg = msg.substr(msg.find(":") + 1, msg.size());
+				for (member mem : room) {
+					write(mem.getFd(), sendMsg.c_str(), strlen(sendMsg.c_str()));
+				}
+			}
+		}
+	}
 }
 
 
@@ -67,11 +83,42 @@ void	Server::handlePART(int i, std::string msg) {
 	std::cout << "PART!!!" <<std::endl;
 	std::cout << msg << std::endl;
 }
-
+// 필요한 함수, 방이름 있는지 찾아주는 함수, 개인이름 있는지 확인하는 함수, 방에 있는 멤버 보내주는 함수
 void	Server::handleNOTICE(int i, std::string msg) {
 	(void) i;
-	std::cout << "NOTICE!!!" <<std::endl;
-	std::cout << msg << std::endl;
+
+	bool						isRoom;
+	std::vector<std::string>	taker = split(msg, " ");
+	std::string 				noticeMsg;
+
+	isRoom = (taker[1][0] == '#');
+	for(int j=1;j<MAX_FD_SIZE;++j) {
+		if(_pollFDs[j].fd != -1 && _pollFDs[i].fd == _pollFDs[j].fd) {
+			if (isRoom) {
+				// 방이름은 무조건 앞에 #가 붙어있는 채로 저장. 이렇게 하면 보내고 받을 때 편함.
+				if (isRoomThere(taker[1])) {
+					std::vector<member> roomMem = getRoomMember(taker[1]);
+					noticeMsg = ":" + 보낸사람이름 + "!root@127.0.0.1" + msg;
+					for (member mem : roomMem) {
+						if (mem.getFd() == _pollFDs[j].fd)
+							continue ;
+						write(mem.getFd(), noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+					}
+				} else {
+					noticeMsg = ":irc.local 401 " + 보낸사람이름 + " " + 룸이름 + " :No such nick/channel";
+					write(_pollFDs[j].fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+				}
+			} else {
+				if (isMemberThere(taker[1])) {
+					noticeMsg = ":" + 보내는사람이름 + "!root@127.0.0.1" + msg;
+					write(받는사람.getFd(), noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+				} else {
+					noticeMsg = ":irc.local 401 " + 보낸사람이름 + " " + 룸이름 + " :No such nick/channel";
+					write(_pollFDs[j].fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+				}
+			}
+		}
+	}
 }
 
 
