@@ -13,6 +13,7 @@ public:
 	User	getUserWithName(const std::string& name) const;
 	void	addUser(const std::string& name, const int& fd);
 	void	deleteUser(const std::string& name);
+	const std::map<std::string, User>& getUsers(void) const;
 };
 
 #endif
