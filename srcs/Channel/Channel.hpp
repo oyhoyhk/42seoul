@@ -5,17 +5,19 @@
 #include <iostream>
 #include <map>
 
+using namespace std;
+
 class Channel {
 	private :
-		std::string 				_name;
-		std::map<std::string, User>	_users;
-		typedef std::map<std::string, User>::const_iterator users_const_iter;
+		string 				_name;
+		map<string, User>	_users;
+		typedef map<string, User>::const_iterator users_const_iter;
 
 	public :
 		User	getUserWithFD(const int& fd) const;
-		User	getUserWithName(const std::string& name) const;
-		void	addUser(const std::string& name, const int& fd);
-		void	deleteUser(const std::string& name);
+		User	getUserWithName(const string& name) const;
+		void	addUser(const string& name, const int& fd);
+		void	deleteUser(const string& name);
 };
 
 #endif

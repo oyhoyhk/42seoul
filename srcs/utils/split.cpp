@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string>	split(const std::string& str, const std::string& delimiter) {
+vector<string>	split(const string& str, const string& delimiter) {
     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
-    std::string token;
-    std::vector<std::string> res;
+    string token;
+    vector<string> res;
 
-    while ((pos_end = str.find(delimiter, pos_start)) != std::string::npos) {
+    while ((pos_end = str.find(delimiter, pos_start)) != string::npos) {
         token = str.substr(pos_start, pos_end - pos_start);
         pos_start = pos_end + delim_len;
         if (token[token.size() -1] == '\r') token.erase(token.size() - 1);

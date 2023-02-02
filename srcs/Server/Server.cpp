@@ -2,15 +2,15 @@
 #include "header.hpp"
 #include "Utils.hpp"
 
-static bool isAllNumber(const std::string& str) {
+static bool isAllNumber(const string& str) {
 	for (size_t i = 0; i < str.length(); ++i)
-		if (!std::isdigit(str[i])) return false;
+		if (!isdigit(str[i])) return false;
 	return true;
 }
 
-Server::Server(const std::string& port, const std::string& password) {
+Server::Server(const string& port, const string& password) {
 	if (port.length() > 5 || !isAllNumber(port)
-		|| (_port = std::atoi(port.c_str())) > 65535)
+		|| (_port = atoi(port.c_str())) > 65535)
 		throw InitServerException();
 	for (int i = 0; i < MAX_FD_SIZE; ++i) _pollFDs[i].fd = -1;
 	_command = new Command();
@@ -72,12 +72,12 @@ void	Server::_acceptConnections(void) {
 void	Server::_sendResponse(void) {
 	ssize_t	length;
 	char	buf[BUFFER_SIZE+ 1];
-	std::vector<std::string> list;
-	std::vector<std::string>::iterator iter;
+	vector<string> list;
+	vector<string>::iterator iter;
 
-	std::vector<std::string> words;
-	std::vector<std::string>::iterator iter2;
-	std::string msg(":irc.local PRIVMSG ace :*** Raw I/O logging is enabled on this server. All messages, passwords, and commands are being recorded.");
+	vector<string> words;
+	vector<string>::iterator iter2;
+	string msg(":irc.local PRIVMSG ace :*** Raw I/O logging is enabled on this server. All messages, passwords, and commands are being recorded.");
 	for (int i = 1; i < MAX_FD_SIZE; ++i) {
 		switch (_pollFDs[i].revents) {
 			case 0 : //no events
@@ -87,11 +87,11 @@ void	Server::_sendResponse(void) {
 				buf[length] = '\0';
  				list = split(buf, "\n");
 				for(iter = list.begin(); iter != list.end(); ++iter) {
-					std::cout << "input : [" << *iter <<"]"<<std::endl;
+					cout << "input : [" << *iter <<"]"<<endl;
 					try{
 						_command->execute(*this, _pollFDs[i].fd, *iter);
-					} catch(std::exception& e) {
-						std::cerr << e.what() << std::endl;
+					} catch(exception& e) {
+						cerr << e.what() << endl;
 					}
 				}
 				for (int j = 1; j < MAX_FD_SIZE; ++j) {
