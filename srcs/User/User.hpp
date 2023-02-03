@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sys/poll.h>
 #include <vector>
+#include "Channel/Channel.hpp"
+#include <map>
 
 using namespace std;
 
@@ -14,13 +16,15 @@ enum USER_MODE {
 
 #define HOST_NAME "root@127.0.0.1"
 
+class Channel;
+
 class User {
 private :
-	string 				_name;
-	int					_fd;
-	USER_MODE			_mode;
-	string 				_password;
-	vector<string>		_channels;
+	string 					_name;
+	int						_fd;
+	USER_MODE				_mode;
+	string 					_password;
+	map<string, Channel>	_channels;
 
 public:
 	User(void);
@@ -32,7 +36,7 @@ public:
 	void joinChannel(const string &channel);
 	void partChannel(void);
 	int	getFD(void) const;
-	const vector<string>& getChannel(void) const;
+	const map<string, Channel>& getChannels(void) const;
 };
 
 #endif

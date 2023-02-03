@@ -121,6 +121,18 @@ UserManager& Server::getUserManager(void) {
 	return _userManager;
 }
 
+const string &Server::getPassword() const {
+	return this->_password;
+}
+
+const struct pollfd *Server::getPollFDs() const {
+	return this->_pollFDs;
+}
+
 const char* Server::InitServerException::what(void) const throw() {
 	return "Initiating Server Failed...";
+}
+
+const map<string, Channel> &Server::getChannels(void) const {
+	return _channels;
 }

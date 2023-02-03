@@ -19,22 +19,32 @@ int	User::getFD(void) const {
 }
 
 void User::joinChannel(const string &channel) {
-	vector<string>::iterator iter;
-	iter = find(this->_channels.begin(), this->_channels.end(), channel);
-	if (iter != this->_channels.end())
-		this->_channels.erase(iter);
-	_channels.push_back(channel);
+	//(void channel);
+
+	map<string, Channel>& userChannel = getChannel();
+	
+	// 유저가 가입한 채널에 속하지 않으면
+	if (userChannel.find(channel) == userChannel.end()) {
+		userChannel[channel] = Channel(channel);
+	} else {
+		// 유저가 가입한 채널에 속할 때
+	}
+	//map<string, Channel>::iterator iter;
+	//iter = find(this->_channels.begin(), this->_channels.end(), channel);
+	////if (iter != this->_channels.end())
+	//	//this->_channels.erase(iter);
+	
 }
 
 void User::partChannel(void) {
-	_channels.pop_back();
+	//
 }
 
 void User::setName(string name) {
 	this->_name = name;
 }
 
-const vector<string>& User::getChannel(void) const {
+const map<string, Channel>& User::getChannel(void) const {
 	return this->_channels;
 }
 

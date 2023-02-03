@@ -24,6 +24,7 @@ private :
 	UserManager						_userManager;
 	map<string, Channel>			_channels;
 	Command*						_command;
+	typedef map<string, Channel>::const_iterator	channels_const_iter;
 
 	void	_acceptConnections(void);
 	void	_sendResponse(void);
@@ -33,6 +34,9 @@ private :
 public :
 	Server(const string& port, const string& password);
 	~Server();
+	const string &getPassword() const;
+	const struct pollfd	*getPollFDs() const;
+	const map<string, Channel> &getChannels(void) const;
 
 	/*
 	** @brief server 소켓 liten까지 실행
