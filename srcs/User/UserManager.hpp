@@ -13,7 +13,8 @@ public:
 	User	getUserWithName(const string& name) const;
 	void	addUser(const string& name, const int& fd);
 	void	deleteUser(const string& name);
-	const map<string, User>& getUsers(void) const;
+	const	map<string, User>& getUsers(void) const;
+	bool	nameDupCheck(const string& name) const;
 };
 
 #endif

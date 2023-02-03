@@ -107,6 +107,16 @@ void	Server::_sendResponse(void) {
 	}
 }
 
+void	Server::_joinChannel(const string &channel, const string &name, const int &fd) {
+	if (_channels.count(channel) == 0)
+		_channels[channel] = Channel(channel);
+	_channels[channel].addUser(name, fd);
+}
+
+void	Server::_partChannel(const string &channel, const string &name) {
+	_channels[channel].deleteUser(name);
+}
+
 UserManager& Server::getUserManager(void) {
 	return _userManager;
 }
