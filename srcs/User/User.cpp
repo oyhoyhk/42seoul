@@ -48,10 +48,18 @@ const map<string, Channel>& User::getChannel(void) const {
 	return this->_channels;
 }
 
-USER_MODE User::getMode(void) const {
+USER_STATUS User::getStatus(void) const {
+	return this->_status;
+}
+
+void User::setStatus(USER_STATUS status) {
+	this->_status = status;
+}
+
+int *User::getMode(void) {
 	return this->_mode;
 }
 
-void User::setMode(USER_MODE mode) {
-	this->_mode = mode;
+void User::setMode(int mode) {
+	this->_mode[mode] = 1;
 }

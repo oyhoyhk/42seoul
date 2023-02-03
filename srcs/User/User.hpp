@@ -9,7 +9,7 @@
 
 using namespace std;
 
-enum USER_MODE {
+enum USER_STATUS {
 	NEED_NICKNAME = 0,
 	NEED_USERREGISTER,
 };
@@ -22,7 +22,8 @@ class User {
 private :
 	string 					_name;
 	int						_fd;
-	USER_MODE				_mode;
+	USER_STATUS				_status;
+	int						_mode[4];
 	string 					_password;
 	map<string, Channel>	_channels;
 
@@ -31,12 +32,14 @@ public:
 	User(const string& name, const int& fd);
 	const string& getName(void) const;
 	void setName(string name);
-	USER_MODE getMode(void) const;
-	void setMode(USER_MODE mode);
+	USER_STATUS getMode(void) const;
+	void setMode(USER_STATUS mode);
 	void joinChannel(const string &channel);
 	void partChannel(void);
 	int	getFD(void) const;
 	const map<string, Channel>& getChannels(void) const;
+	int *getMode(void);
+	void setMode(int mode);
 };
 
 #endif

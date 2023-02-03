@@ -157,7 +157,7 @@ void Command::_handleQUIT(Server &server, int fd, const string &msg) {
     string 			              message;
     map<string, User>      		sended;
 	string			              endMsg      =	 msg.substr(msg.find(":") + 1, msg.size());
-    map<string, Channel>       userChannels    = server.getUserManager().getUserWithFD(fd).getChannel();
+    map<string, Channel>       userChannels    = server.getUserManager().getUserWithFD(fd).getChannels();
 
 	message = "ERROR :Closing link: (" + string(HOST_NAME) + ") [Quit: " + endMsg + "]";
     write(fd, message.c_str(), strlen(message.c_str()));
@@ -182,6 +182,7 @@ void Command::_handlePART(Server &server, int fd, const string &msg) {
 
     cout << "PART!!!" << endl;
     cout << msg << endl;
+    
 }
 
 void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
@@ -203,7 +204,7 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
             }
         } else {
             noticeMsg = ":irc.local 401 " + server.getUserManager().getUserWithFD(fd).getName() + " " + taker[1] + " :No such nick/channel";
-            write(fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+            (fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
         }
     } else {
         // 개인에게 보내면 개인에게 문자 보내기
@@ -246,7 +247,77 @@ void Command::_handleUSER(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handleMode(Server &server, int fd, const string &msg) {
-    
+    // user, channel 구분: 시작 '#'
+    vector<string> words = split(msg, " ");
+    string nickname;
+
+    if (words[1][0] != '#') {
+        // user MODE: _handleUserMode()
+        User user = server.getUserManager().getUserWithFD(fd);
+        try {
+            User target = server.getUserManager().getUserWithName(words[1]);
+        } catch (const exception& e) {
+            // :irc.local 401 yubchoi2 noname :No such nick/channel
+            string res(SERVER_PREFIX + string(" 401 ") + user.getName() + " " + words[1] + string(" :No such nick/channel\n"));
+            _sendMessage(fd, RES_SELF, res, server);
+            return ;
+        }
+        
+        nickname = user.getName();
+        // user nickname과 명령어를 보낸 nickname 같은지 확인
+        if (nickname != words[1]) {
+            // :irc.local 502 nickname_ :Can't change mode for other users
+            string res(SERVER_PREFIX + string(" 502 ") + nickname + string(" :Can't change mode for other users\n"));
+            _sendMessage(fd, RES_SELF, res, server);
+            return ;
+        }
+
+        // mode 검사
+        for (int i = 0; i < words[2].length(); i++) {
+            if (words[2][i] != 'i' && words[2][i] != 'w' && words[2][i] != 'o' && words[2][i] != 's' && words[2][i] != '+' && words[2][i] != '-') {
+                // :irc.local 501 nickname_ :Unknown MODE flag
+                string res(SERVER_PREFIX + string(" 501 ") + nickname + string(" :Unknown MODE flag\n"));
+                _sendMessage(fd, RES_SELF, res, server);
+                continue;
+            }
+            // find i
+            else if (words[2][i] == 'i') {
+                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_I]) {
+                    user.setInvisible(false);
+                    // :nickname_!root@127.0.0.1 MODE nickname_ -i
+                    _sendMessage(fd, RES_SELF, string(user.), server);
+                } else if (user.mode[USER_MODE_I] == 0) {                    
+                    user.setInvisible(true);
+                }
+            } else if (words[2][i] == 'w') {
+                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_W]) {
+                    user.setReceiveWallops(false);
+                } else if (user.mode[USER_MODE_W] == 0) {
+                    user.setReceiveWallops(true);
+                }
+            } else if (words[2][i] == 'o') {
+                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_O]) {
+                    user.setOperator(false);
+                } else if (user.mode[USER_MODE_O] == 0) {
+                    user.setOperator(true);
+                }
+            } else if (words[2][i] == 's') {
+                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_S]) {
+                    user.setInvisible(false);
+                } else if (user.mode[USER_MODE_S] == 0) {
+                    user.setInvisible(true);
+                }
+            }
+        }
+        
+        
+    } else {
+        // channel MODE: _handleChannelMode()
+
+    }
+    // user MODE
+
+    // 
 }
 
 void Command::_sendMessage(int fd, int type, const string &msg, const Server &server) {
