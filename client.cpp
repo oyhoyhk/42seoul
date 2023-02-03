@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
-		std::cerr << "Usage : " << argv[0] << " IPv4-address" << std::endl;
+		cerr << "Usage : " << argv[0] << " IPv4-address" << endl;
 		return -1;
 	}
 	struct sockaddr_in connectSocket;

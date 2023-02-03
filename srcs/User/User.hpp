@@ -5,6 +5,8 @@
 #include <sys/poll.h>
 #include <vector>
 
+using namespace std;
+
 enum USER_MODE {
 	NEED_NICKNAME = 0,
 	NEED_USERREGISTER,
@@ -14,22 +16,22 @@ enum USER_MODE {
 
 class User {
 private :
-	std::string 				_name;
-	int							_fd;
-	std::vector<std::string>	_channels;
-	USER_MODE					_mode;
-	std::string 				_password;
+	string 				_name;
+	int					_fd;
+	USER_MODE			_mode;
+	string 				_password;
+	vector<string>		_channels;
 
 public:
 	User(void);
-	User(const std::string& name, const int& fd);
-	const std::string& getName(void) const;
-	void setName(std::string name);
+	User(const string& name, const int& fd);
+	const string& getName(void) const;
+	void setName(string name);
 	USER_MODE getMode(void) const;
 	void setMode(USER_MODE mode);
-	void joinNewChannel(std::string channel);
+	void joinNewChannel(string channel);
 	int	getFD(void) const;
-	const std::vector<std::string>& getChannel(void) const;
+	const vector<string>& getChannel(void) const;
 };
 
 #endif

@@ -15,6 +15,7 @@
 #include <map>
 #include <stdexcept>
 
+using namespace std;
 
 #define PORT 20162
 #define BUFFER_SIZE 512
@@ -24,6 +25,6 @@
 #define MAX_CHANNEL_SIZE 5
 
 
-// std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
+// vector<string>	split(const string& str, const string& delimiter);
 
 #endif

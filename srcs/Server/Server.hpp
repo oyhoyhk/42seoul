@@ -15,14 +15,14 @@ class Command;
 #define SERVER_PREFIX "irc.local"
 
 class Server {
-typedef void (Server::*pfunc) (int, std::string);
+typedef void (Server::*pfunc) (int, string);
 private :
 	int								_port;
-	std::string						_password;
+	string						_password;
 	int								_socket;
 	struct pollfd					_pollFDs[MAX_FD_SIZE];
 	UserManager						_userManager;
-	std::map<std::string, Channel>	_channels;
+	map<string, Channel>	_channels;
 	Command*						_command;
 
 	void	_acceptConnections(void);
@@ -30,7 +30,7 @@ private :
 
 
 public :
-	Server(const std::string& port, const std::string& password);
+	Server(const string& port, const string& password);
 	~Server();
 
 	/*
@@ -47,7 +47,7 @@ public :
 	UserManager& getUserManager(void);
 
 
-	class InitServerException : public std::exception {
+	class InitServerException : public exception {
 	public :
 		const char *what(void) const throw();
 	};

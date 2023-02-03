@@ -5,10 +5,12 @@
 #include <vector>
 #include "Reply.hpp"
 
+using namespace std;
+
 // // join
-// std::string	join(std::vector<std::string> vec);
+// string	join(vector<string> vec);
 
 // split
-std::vector<std::string>	split(const std::string& str, const std::string& delimiter);
+vector<string>	split(const string& str, const string& delimiter);
 
 #endif
