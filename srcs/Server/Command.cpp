@@ -15,6 +15,7 @@ Command::Command() {
     _cmds["NOTICE"] = &Command::_handleNOTICE;
     _cmds["PASS"] = &Command::_handlePASS;
     _cmds["USER"] = &Command::_handleUSER;
+    _cmds["MODE"] = &Command::_handleMODE;
 }
 
 void Command::execute(Server &server, int fd, const string &msg) {
@@ -36,25 +37,13 @@ void Command::_handleCAP(Server &server, int fd, const string &msg) {
 void Command::_handleNICK(Server &server, int fd, const string &msg) {
 	UserManager userManager = server.getUserManager();
     vector<string> result = split(msg, " ");
-    //User user = userManager.getUserWithFD(fd);
+    // TODO: 유저가 없을 경우 try catch를 써야하나?
+    User user = userManager.getUserWithFD(fd);
 	cout<<"can reach here?"<<endl;
-    string newNickname;
-    string oldNickname = "*";
-    // 기존 아이디가 있으면 *을 기존 아이디로 대체
-    //if (user.getName()) {
-    //    oldNickname = user.getName();
-    //}
+    string newNickname = result.at(1);
+    string oldNickname = user.getName();
     string response;
 	(void) fd;
-	// 
-	if (userManager.nameDupCheck(result.at(1))) {
-        response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
-                 " :Nickname is already in use";
-        cout << response << endl;
-		return;		
-	}
-
-    // TODO: getServerPrefix
 
     // "/nick"
     if (result.size() <= 1) {
@@ -63,6 +52,13 @@ void Command::_handleNICK(Server &server, int fd, const string &msg) {
         cout << response << endl;
         return;
     }
+
+	if (userManager.nameDupCheck(result.at(1))) {
+        response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
+                 " :Nickname is already in use";
+        cout << response << endl;
+		return;		
+	}
 
     newNickname = result.at(1);
     // "/nick morethan9letters"
@@ -74,25 +70,25 @@ void Command::_handleNICK(Server &server, int fd, const string &msg) {
         return;
     }
 
-    //// "/nick existingnickname"
-    //try {
-    //    userManager.getUserWithName(oldNickname);
-    //    // :irc.local 433 <nickname> <nickname> :Nickname is already in use
-    //    response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
-    //             " :Nickname is already in use";
-    //    cout << response << endl;
-	//	return;
-    //} catch (exception &e) {
-    //    // "/nick newnickname"
-	//	// TODO: string userInfo = user.getUserInfo();
-	//	if (user.getMode() == NEED_NICKNAME) {
-	//		response = "NICK " + newNickname;
-	//		user.setMode(NEED_USERREGISTER);
-	//	} else {
-	//		response = ":" + string(HOST_NAME) + " NICK " + newNickname;
-	//	}
-	//	cout << response << endl;
-    //}
+    // "/nick existingnickname"
+    try {
+       userManager.getUserWithName(oldNickname);
+       // :irc.local 433 <nickname> <nickname> :Nickname is already in use
+       response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
+                " :Nickname is already in use";
+       cout << response << endl;
+		return;
+    } catch (exception &e) {
+       // "/nick newnickname"
+		// TODO: string userInfo = user.getUserInfo();
+		if (user.getMode() == NEED_NICKNAME) {
+			response = "NICK " + newNickname;
+			user.setMode(NEED_USERREGISTER);
+		} else {
+			response = ":" + string(HOST_NAME) + " NICK " + newNickname;
+		}
+		cout << response << endl;
+    }
 }
 
 void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {
@@ -136,33 +132,47 @@ void Command::_handlePING(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handleJOIN(Server &server, int fd, const string &msg) {
-    (void)fd;
-    (void)server;
+    map<string, Channel>& allChannel = server.getChannels();
+    vector<string>        msgChannel = split(msg, " ");
 
-    cout << "JOIN!!!" << endl;
-    cout << msg << endl;
+    // 모든 채널에서 이름으로 조회해서 없으면
+    if (allChannel.find(msgChannel[1]) == allChannel.end()) {
+        /*
+        1. 채널이 invite-only인 경우 초대를 꼭 받아야함.
+        2. active-bans에 유저의 /nick/username/hostname이 없어야한다.
+        3. 비밀번호가 설정되어 있는 채널이면 올바른 비밀번호를 입력해야한다.
+        */
+
+        // 채널배열에 새로운 채널 넣음.
+        allChannel[msgChannel[1]] = Channel(msgChannel[1]);
+        // JOIN하려는 유저객체에 joinChannel()
+        server.getUserManager().getUserWithFD(fd).joinChannel(msgChannel[1]);
+    } else {
+        // JOIN하려는 유저객체에 joinChannel()
+        server.getUserManager().getUserWithFD(fd).joinChannel(msgChannel[1]);
+    }
 }
 
 void Command::_handleQUIT(Server &server, int fd, const string &msg) {
-    (void)fd;
-    (void)server;
-	cout << msg <<  endl;
+    string 			              message;
+    map<string, User>      		sended;
+	string			              endMsg      =	 msg.substr(msg.find(":") + 1, msg.size());
+    map<string, Channel>       userChannels    = server.getUserManager().getUserWithFD(fd).getChannel();
 
-    // string 				Qmsg 		= msg.substr(6, msg.size() - 6);
-	// vector<string> 	userChannel = server.getUserManager().getUserWithFD(fd).getChannel();
-    // string 				message;
-	// map<string>		sended;
-	// string					endMsg =	 msg.substr(msg.find(":") + 1, msg.size());
+	message = "ERROR :Closing link: (" + string(HOST_NAME) + ") [Quit: " + endMsg + "]";
+    write(fd, message.c_str(), strlen(message.c_str()));
 
-
-	/* TODO */
-	// message = "ERROR :Closing link: (" + string(HOST_NAME) + ") [Quit: " + Qmsg + "]";
-    // write(fd, message.c_str(), strlen(message.c_str()));
+    sended[server.getUserManager().getUserWithFD(fd).getName()] = server.getUserManager().getUserWithFD(fd);
 	// quit하는 유저가 속하는 채널을 돌면서, 채널에 있는 유저를 중복허용하지 않고 write();
-	// for (vector<string>::iterator UCit = userChannel.begin(); UCit != userChannel.end(); ++UCit) {
-	// 	for (map<string, User>::iterator userIt = UCit.begin(); userIt != UCit.end(); ++userIt) {
-			
-	// 	}
+	for (map<string, Channel>::const_iterator cIt = userChannels.begin(); cIt != userChannels.end(); ++cIt) {
+        for (map<string, User>::const_iterator uIt = cIt->second.getUsers().begin(); uIt != cIt->second.getUsers().end(); ++uIt) {
+            if (sended.find(uIt->first) == sended.end()) {
+                message = ":" + server.getUserManager().getUserWithFD(fd).getName() + "!" + string(HOST_NAME) + "QUIT :Quit: " + endMsg;
+                sended[uIt->first] = uIt->second;
+                write(uIt->second.getFD(), message.c_str(), strlen(message.c_str()));
+            }
+        }
+    }
 }
 
 
@@ -175,77 +185,57 @@ void Command::_handlePART(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
-    (void)fd;
-    (void)server;
+	bool			isChannel;
+	vector<string>	taker = split(msg, " ");
+	string 			noticeMsg;
 
-    cout << "NOTICE!!!" << endl;
-    cout << msg << endl;
+	isChannel = (taker[1][0] == '#');
+    if (isChannel) {
+        // 채널이 존재하면, 채널 멤버 받고, 모두에게 뿌리기.
+        if (server.getChannels().find(taker[1]) != server.getChannels().end()) {
+            map<string, User> channelToSend = server.getChannels().find(taker[1])->second.getUsers();
+            noticeMsg = ":" + server.getUserManager().getUserWithFD(fd).getName() + "!" + HOST_NAME + msg;
+
+            for (map<string, User>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it) {
+                if (it->second.getFD() == fd)
+                    continue ;
+                write(it->second.getFD(), noticeMsg.c_str(),strlen(noticeMsg.c_str()));
+            }
+        } else {
+            noticeMsg = ":irc.local 401 " + server.getUserManager().getUserWithFD(fd).getName() + " " + taker[1] + " :No such nick/channel";
+            write(fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+        }
+    } else {
+        // 개인에게 보내면 개인에게 문자 보내기
+        if (server.getUserManager().getUsers().find(taker[1]) != server.getUserManager().getUsers().end()) {
+            noticeMsg = ":" + server.getUserManager().getUserWithFD(fd).getName() + "!" + HOST_NAME + msg;
+            write(server.getUserManager().getUsers().find(taker[1])->second.getFD(), noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+        } else {
+            noticeMsg = ":irc.local 401 " + server.getUserManager().getUserWithFD(fd).getName() + " " + taker[1] + " :No suchnick/channel";
+            write(fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+        }
+    }
 }
-
-// 필요한 함수, 방이름 있는지 찾아주는 함수, 개인이름 있는지 확인하는 함수,
-// 방에 있는 멤버 보내주는 함수 void	Server::handleNOTICE(int i,
-// string msg) { 	(void) i;
-
-// 	bool						isRoom;
-// 	vector<string>	taker = split(msg, " ");
-// 	string 				noticeMsg;
-
-// 	isRoom = (taker[1][0] == '#');
-// 	for(int j=1;j<MAX_FD_SIZE;++j) {
-// 		if(_pollFDs[j].fd != -1 && _pollFDs[i].fd == _pollFDs[j].fd) {
-// 			if (isRoom) {
-// 				// 방이름은 무조건 앞에 #가 붙어있는 채로 저장.
-// 이렇게 하면 보내고 받을 때 편함. 				if
-// (isRoomThere(taker[1])) { vector<member> roomMem =
-// getRoomMember(taker[1]); 					noticeMsg =
-// ":"
-// + 보낸사람이름 +
-// "!root@127.0.0.1" + msg; 					for (member
-// mem : roomMem) { 						if
-// (mem.getFd()
-// == _pollFDs[j].fd)
-// continue ; write(mem.getFd(), noticeMsg.c_str(),
-// strlen(noticeMsg.c_str()));
-// 					}
-// 				} else {
-// 					noticeMsg = ":irc.local 401 " +
-// 보낸사람이름
-// +
-// "
-// "
-// +
-// 룸이름 + " :No such nick/channel";
-// write(_pollFDs[j].fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
-// 				}
-// 			} else {
-// 				if (isMemberThere(taker[1])) {
-// 					noticeMsg = ":" + 보내는사람이름 +
-// "!root@127.0.0.1"
-// + msg; 					write(받는사람.getFd(),
-// noticeMsg.c_str(),
-// strlen(noticeMsg.c_str())); 				} else {
-// noticeMsg = ":irc.local 401 " + 보낸사람이름 + " " + 룸이름 + " :No such
-// nick/channel"; write(_pollFDs[j].fd, noticeMsg.c_str(),
-// strlen(noticeMsg.c_str()));
-// 				}
-// 			}
-// 		}
-// 	}
-// }
 
 void Command::_handlePASS(Server &server, int fd, const string &msg) {
     (void)fd;
     (void)server;
+    vector<string> result = split(msg, " ");
+    const string &inputPassword = result.at(1);
 
+    if (server.getPassword() != inputPassword) {
+        string res("Password Wrong\r\n");
+        _sendMessage(fd, RES_SELF, res, server);
+        return;
+    }
     cout << "PASS!!!" << endl;
-    cout << msg << endl;
 }
 
 void Command::_handleUSER(Server &server, int fd, const string &msg) {
     cout << msg << endl;
     vector<string> list;
-    const string &userName =
-        server.getUserManager().getUserWithFD(fd).getName();
+    // const string &userName =
+    server.getUserManager().getUserWithFD(fd).getName();
     list.push_back((":irc.local 001 " + userName +
                     " :Welcome to the Localnet IRC Network " + userName +
                     "!root@127.0.0.1\n"));
@@ -253,4 +243,21 @@ void Command::_handleUSER(Server &server, int fd, const string &msg) {
     for (it = list.begin(); it != list.end(); ++it)
         write(fd, (*it).c_str(), strlen((*it).c_str()));
     cout << "USER!!!" << endl;
+}
+
+void Command::_handleMode(Server &server, int fd, const string &msg) {
+    
+}
+
+void Command::_sendMessage(int fd, int type, const string &msg, const Server &server) {
+    if (type == RES_SELF) {
+        write(fd, msg.c_str(), strlen(msg.c_str()));
+        return ;
+    }
+    const struct pollfd *pollFDs = server.getPollFDs();
+    for (int i=1;i<MAX_FD_SIZE;i++) {
+        if (pollFDs[i].fd != -1 && pollFDs[i].fd != fd) {
+            write(i, msg.c_str(), strlen(msg.c_str()));
+        }
+    }
 }

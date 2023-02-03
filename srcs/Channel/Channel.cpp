@@ -25,3 +25,7 @@ void	Channel::deleteUser(const string& name) {
 Channel Channel::operator= (const Channel &ref) {
 	return ref;
 }
+
+const map<string, User> &Channel::getUsers() const {
+	return _users;
+}

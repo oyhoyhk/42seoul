@@ -4,6 +4,10 @@
 #include "header.hpp"
 #include "Server/Server.hpp"
 #include "Response.hpp"
+#include "poll.h"
+
+#define RES_SELF 0
+#define RES_OTHER 1
 
 class Server;
 
@@ -27,6 +31,8 @@ private:
 	void	_handleNOTICE(Server& server, int fd, const string&);
 	void	_handlePASS(Server& server, int fd, const string&);
 	void	_handleUSER(Server& server, int fd, const string&);
+
+	void	_sendMessage(int fd, int type, const string &msg, const Server &server);
 
 public:
 	Command();
