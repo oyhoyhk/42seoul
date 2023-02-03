@@ -29,7 +29,8 @@ public:
 	void setName(string name);
 	USER_MODE getMode(void) const;
 	void setMode(USER_MODE mode);
-	void joinNewChannel(string channel);
+	void joinChannel(const string &channel);
+	void partChannel(void);
 	int	getFD(void) const;
 	const vector<string>& getChannel(void) const;
 };

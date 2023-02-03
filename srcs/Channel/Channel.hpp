@@ -14,10 +14,14 @@ class Channel {
 		typedef map<string, User>::const_iterator users_const_iter;
 
 	public :
+		Channel() {};
+		Channel(const string &name);
 		User	getUserWithFD(const int& fd) const;
 		User	getUserWithName(const string& name) const;
 		void	addUser(const string& name, const int& fd);
 		void	deleteUser(const string& name);
-};
+
+		Channel operator= (const Channel &ref);
+}; 
 
 #endif

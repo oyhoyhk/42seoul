@@ -18,8 +18,16 @@ int	User::getFD(void) const {
 	return _fd;
 }
 
-void User::joinNewChannel(string channel) {
-	this->_channels.push_back(channel);
+void User::joinChannel(const string &channel) {
+	vector<string>::iterator iter;
+	iter = find(this->_channels.begin(), this->_channels.end(), channel);
+	if (iter != this->_channels.end())
+		this->_channels.erase(iter);
+	_channels.push_back(channel);
+}
+
+void User::partChannel(void) {
+	_channels.pop_back();
 }
 
 void User::setName(string name) {

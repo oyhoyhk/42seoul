@@ -1,5 +1,7 @@
 #include "Channel.hpp"
 
+Channel::Channel(const string &name) : _name(name) {}
+
 User	Channel::getUserWithFD(const int& fd) const {
 	for(users_const_iter iter = _users.begin(); iter != _users.end(); ++iter) {
 		if (iter->second.getFD() == fd)
@@ -18,4 +20,8 @@ void	Channel::addUser(const string& name, const int& fd) {
 
 void	Channel::deleteUser(const string& name) {
 	_users.erase(_users.find(name));
+}
+
+Channel Channel::operator= (const Channel &ref) {
+	return ref;
 }

@@ -35,12 +35,24 @@ void Command::_handleCAP(Server &server, int fd, const string &msg) {
 
 void Command::_handleNICK(Server &server, int fd, const string &msg) {
 	UserManager userManager = server.getUserManager();
-    User user = userManager.getUserWithFD(fd);
-    string newNickname;
-    string oldNickname = user.getName();
-    string response;
-
     vector<string> result = split(msg, " ");
+    //User user = userManager.getUserWithFD(fd);
+	cout<<"can reach here?"<<endl;
+    string newNickname;
+    string oldNickname = "*";
+    // 기존 아이디가 있으면 *을 기존 아이디로 대체
+    //if (user.getName()) {
+    //    oldNickname = user.getName();
+    //}
+    string response;
+	(void) fd;
+	// 
+	if (userManager.nameDupCheck(result.at(1))) {
+        response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
+                 " :Nickname is already in use";
+        cout << response << endl;
+		return;		
+	}
 
     // TODO: getServerPrefix
 
@@ -62,25 +74,25 @@ void Command::_handleNICK(Server &server, int fd, const string &msg) {
         return;
     }
 
-    // "/nick existingnickname"
-    try {
-        userManager.getUserWithName(oldNickname);
-        // :irc.local 433 <nickname> <nickname> :Nickname is already in use
-        response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
-                 " :Nickname is already in use";
-        cout << response << endl;
-		return;
-    } catch (exception &e) {
-        // "/nick newnickname"
-		// TODO: string userInfo = user.getUserInfo();
-		if (user.getMode() == NEED_NICKNAME) {
-			response = "NICK " + newNickname;
-			user.setMode(NEED_USERREGISTER);
-		} else {
-			response = ":" + string(HOST_NAME) + " NICK " + newNickname;
-		}
-		cout << response << endl;
-    }
+    //// "/nick existingnickname"
+    //try {
+    //    userManager.getUserWithName(oldNickname);
+    //    // :irc.local 433 <nickname> <nickname> :Nickname is already in use
+    //    response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
+    //             " :Nickname is already in use";
+    //    cout << response << endl;
+	//	return;
+    //} catch (exception &e) {
+    //    // "/nick newnickname"
+	//	// TODO: string userInfo = user.getUserInfo();
+	//	if (user.getMode() == NEED_NICKNAME) {
+	//		response = "NICK " + newNickname;
+	//		user.setMode(NEED_USERREGISTER);
+	//	} else {
+	//		response = ":" + string(HOST_NAME) + " NICK " + newNickname;
+	//	}
+	//	cout << response << endl;
+    //}
 }
 
 void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {

@@ -18,16 +18,17 @@ class Server {
 typedef void (Server::*pfunc) (int, string);
 private :
 	int								_port;
-	string						_password;
+	string							_password;
 	int								_socket;
 	struct pollfd					_pollFDs[MAX_FD_SIZE];
 	UserManager						_userManager;
-	map<string, Channel>	_channels;
+	map<string, Channel>			_channels;
 	Command*						_command;
 
 	void	_acceptConnections(void);
 	void	_sendResponse(void);
-
+	void	_joinChannel(const string &channel, const string &name, const int &fd);
+	void	_partChannel(const string &channel, const string &name);
 
 public :
 	Server(const string& port, const string& password);
