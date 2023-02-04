@@ -11,6 +11,12 @@ User* ServerService::getUserWithName(const string& user_name) const {
     return user;
 }
 
+User* ServerService::getUserWithFD(const int& fd) const {
+    User* user = _userManager.getUserWithFD(fd);
+    if (user == NULL) throw UserNotExist();
+    return user;
+}
+
 Channel* ServerService::getChannelWithName(const string& channel_name) const {
     Channel* channel = _channelManager.getChannelWithName(channel_name);
     if (channel == NULL) throw ChannelNotExist();

@@ -18,6 +18,11 @@ Command::Command() {
     _cmds["MODE"] = &Command::_handleMODE;
 }
 
+static void sendMessage(const int& fd, const string& msg) {
+    const char *temp = msg.c_str();
+    write(fd, temp, strlen(temp));
+}
+
 void Command::execute(Server &server, int fd, const string &msg) {
     vector<string> words = split(msg, " ");
     iter_cmd cmd = _cmds.find(*words.begin());
@@ -153,25 +158,25 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
     }
 }
 
+/* 유저가 없으면 throw함 나중에 처리할 필요가 있음 */ 
 void Command::_handleQUIT(Server &server, int fd, const string &msg) {
-    string 			              message;
-    map<string, User>      		sended;
-	string			              endMsg      =	 msg.substr(msg.find(":") + 1, msg.size());
-    map<string, Channel>       userChannels    = server.getUserManager().getUserWithFD(fd).getChannels();
+	string              endMsg      = msg.substr(msg.find(":") + 1, msg.size());
+	string              message     = "ERROR :Closing link: (" + string(HOST_NAME) + ") [Quit: " + endMsg + "]";
+    User*               reqUser     = _service.getUserWithFD(fd);
+    string              reqUserName = reqUser->getName(); 
+    vector<Channel*>    channels    = reqUser->getChannels();
+    vector<User*>       tempUsers;
+    set<User*>          targetUsers;
 
-	message = "ERROR :Closing link: (" + string(HOST_NAME) + ") [Quit: " + endMsg + "]";
-    write(fd, message.c_str(), strlen(message.c_str()));
-
-    sended[server.getUserManager().getUserWithFD(fd).getName()] = server.getUserManager().getUserWithFD(fd);
-	// quit하는 유저가 속하는 채널을 돌면서, 채널에 있는 유저를 중복허용하지 않고 write();
-	for (map<string, Channel>::const_iterator cIt = userChannels.begin(); cIt != userChannels.end(); ++cIt) {
-        for (map<string, User>::const_iterator uIt = cIt->second.getUsers().begin(); uIt != cIt->second.getUsers().end(); ++uIt) {
-            if (sended.find(uIt->first) == sended.end()) {
-                message = ":" + server.getUserManager().getUserWithFD(fd).getName() + "!" + string(HOST_NAME) + "QUIT :Quit: " + endMsg;
-                sended[uIt->first] = uIt->second;
-                write(uIt->second.getFD(), message.c_str(), strlen(message.c_str()));
-            }
-        }
+    _service.deleteUserWithName(reqUserName);
+    sendMessage(fd, message);
+    for (vector<Channel*>::iterator iter = channels.begin(); iter != channels.end(); ++iter) {
+        tempUsers = (*iter)->getUsers();
+        targetUsers.insert(tempUsers.begin(), tempUsers.end());
+    }
+    for (set<User*>::iterator iter = targetUsers.begin(); iter != targetUsers.end(); ++iter) {
+        message = ":" + reqUserName + "!" + string(HOST_NAME) + "QUIT :Quit: " + endMsg;
+        sendMessage((*iter)->getFD(), message);
     }
 }
 
@@ -189,31 +194,33 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
 	bool			isChannel;
 	vector<string>	taker = split(msg, " ");
 	string 			noticeMsg;
+    User*           sender = _service.getUserWithFD(fd);
+    const string&   target = taker[1];
 
+    /* 두가지로 나뉘는데 그 안에 두가지가 또 있어 그 두가지 형태가 같아요 그래서 함수로 만들까 하다다가 안했다*/
+    /* Notice 받는사람 메시지 */
 	isChannel = (taker[1][0] == '#');
     if (isChannel) {
         // 채널이 존재하면, 채널 멤버 받고, 모두에게 뿌리기.
-        if (server.getChannels().find(taker[1]) != server.getChannels().end()) {
-            map<string, User> channelToSend = server.getChannels().find(taker[1])->second.getUsers();
-            noticeMsg = ":" + server.getUserManager().getUserWithFD(fd).getName() + "!" + HOST_NAME + msg;
-
-            for (map<string, User>::iterator it = channelToSend.begin(); it != channelToSend.end(); ++it) {
-                if (it->second.getFD() == fd)
-                    continue ;
-                write(it->second.getFD(), noticeMsg.c_str(),strlen(noticeMsg.c_str()));
-            }
-        } else {
-            noticeMsg = ":irc.local 401 " + server.getUserManager().getUserWithFD(fd).getName() + " " + taker[1] + " :No such nick/channel";
-            (fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+        try {
+            Channel* channel = _service.getChannelWithName(target);
+            vector<User*> users = channel->getUsers();
+            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + msg;
+            for (vector<User*>::iterator iter = users.begin(); iter != users.end(); iter++)
+                if ((*iter) != sender) sendMessage((*iter)->getFD(), noticeMsg);
+        } catch (const exception& e) {
+            noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No such nick/channel";
+            sendMessage(fd, noticeMsg);
         }
     } else {
         // 개인에게 보내면 개인에게 문자 보내기
-        if (server.getUserManager().getUsers().find(taker[1]) != server.getUserManager().getUsers().end()) {
-            noticeMsg = ":" + server.getUserManager().getUserWithFD(fd).getName() + "!" + HOST_NAME + msg;
-            write(server.getUserManager().getUsers().find(taker[1])->second.getFD(), noticeMsg.c_str(), strlen(noticeMsg.c_str()));
-        } else {
-            noticeMsg = ":irc.local 401 " + server.getUserManager().getUserWithFD(fd).getName() + " " + taker[1] + " :No suchnick/channel";
-            write(fd, noticeMsg.c_str(), strlen(noticeMsg.c_str()));
+        try {
+            User* user = _service.getUserWithName(target);
+            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + msg;
+            sendMessage(user->getFD(), noticeMsg);
+        } catch (const exception& e) {
+            noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No suchnick/channel";
+            sendMessage(fd, noticeMsg);
         }
     }
 }
@@ -246,34 +253,50 @@ void Command::_handleUSER(Server &server, int fd, const string &msg) {
     cout << "USER!!!" << endl;
 }
 
-void Command::_handleMode(Server &server, int fd, const string &msg) {
+void Command::_handleMODE(Server &server, int fd, const string &msg) {
     // user, channel 구분: 시작 '#'
     vector<string> words = split(msg, " ");
-    string nickname;
+    const string& targetName = words[1];
+    const string& targetMode = words[2];
+    User* user = NULL;
+    User* target = NULL;
 
-    if (words[1][0] != '#') {
+    if (targetName[0] != '#') {
         // user MODE: _handleUserMode()
-        User user = server.getUserManager().getUserWithFD(fd);
+        user = _service.getUserWithFD(fd);
         try {
-            User target = server.getUserManager().getUserWithName(words[1]);
+            target = _service.getUserWithName(targetName);
         } catch (const exception& e) {
-            // :irc.local 401 yubchoi2 noname :No such nick/channel
-            string res(SERVER_PREFIX + string(" 401 ") + user.getName() + " " + words[1] + string(" :No such nick/channel\n"));
-            _sendMessage(fd, RES_SELF, res, server);
+            string res = SERVER_PREFIX + string(" 401 ") + user->getName() + " " + targetName + " :No such nick/channel\n";
+            sendMessage(fd, res);
             return ;
         }
         
-        nickname = user.getName();
         // user nickname과 명령어를 보낸 nickname 같은지 확인
-        if (nickname != words[1]) {
+        if (user->getName() != targetName) {
             // :irc.local 502 nickname_ :Can't change mode for other users
-            string res(SERVER_PREFIX + string(" 502 ") + nickname + string(" :Can't change mode for other users\n"));
-            _sendMessage(fd, RES_SELF, res, server);
+            string res(SERVER_PREFIX + string(" 502 ") + user->getName() + " :Can't change mode for other users\n");
+            sendMessage(fd, res);
             return ;
         }
 
         // mode 검사
-        for (int i = 0; i < words[2].length(); i++) {
+        for (int i = 0; i < targetMode.length(); i++) {
+            switch (targetMode[i]) {
+            case 'i':
+                -iows -i-o+s  ios
+                break;
+            case 'w':
+                break;
+            case 'o':
+                break;
+            case 's':
+                break;
+            case '-':
+            case '+':
+                break;
+            default:
+            }
             if (words[2][i] != 'i' && words[2][i] != 'w' && words[2][i] != 'o' && words[2][i] != 's' && words[2][i] != '+' && words[2][i] != '-') {
                 // :irc.local 501 nickname_ :Unknown MODE flag
                 string res(SERVER_PREFIX + string(" 501 ") + nickname + string(" :Unknown MODE flag\n"));
