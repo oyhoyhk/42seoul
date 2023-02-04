@@ -43,10 +43,13 @@ public :
 	bool	hasUser(const User* user) const;
 	void	addUser(User* user);
 	void	deleteUser(const User* user);
+	void	deleteUser(const string& user_name);
 
 	void	setMode(const ChannelMode& mode);
 	void	unsetMode(const ChannelMode& mode);
 	bool	isSetMode(const ChannelMode& mode) const;
+
+	vector<User*> getUsers(void) const;
 }; 
 
 #endif

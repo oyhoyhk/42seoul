@@ -14,6 +14,7 @@ public:
 	Channel*	getChannelWithName(const string& name) const;
 	void		addChannel(const string& name);
 	void		deleteChannel(const string& name);
+	void		partUserFromChannels(const string& user_name, const vector<string>& channels);
 };
 
 #endif

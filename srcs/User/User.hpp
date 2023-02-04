@@ -47,9 +47,11 @@ public:
 	int	getFD(void) const;
 	const string& getPassword(void) const;
 
-	bool	hasChannel(const Channel* channel) const;
-	void	joinChannel(Channel* channel);
-	void	partChannel(const Channel* channel);
+	bool				hasChannel(const Channel* channel) const;
+	void				joinChannel(Channel* channel);
+	void				partChannel(const Channel* channel);
+	vector<string>		getChannelNames(void) const;
+	vector<Channel*>	getChannels(void) const;
 
 	void	setMode(const UserMode& mode);
 	void	unsetMode(const UserMode& mode);

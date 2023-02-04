@@ -22,10 +22,14 @@ void	Channel::addUser(User* user) {
 	_users[user->getName()] = user;
 }
 
-void	Channel::deleteUser(const User* user) {
-	users_iter iter = _users.find(user->getName());
+void	Channel::deleteUser(const string& user_name) {
+	users_iter iter = _users.find(user_name);
 	if (iter == _users.end()) return;
 	_users.erase(iter);
+}
+
+void	Channel::deleteUser(const User* user) {
+	deleteUser(user->getName());
 }
 
 void	Channel::setMode(const ChannelMode& mode) {
@@ -38,4 +42,11 @@ void	Channel::unsetMode(const ChannelMode& mode) {
 
 bool	Channel::isSetMode(const ChannelMode& mode) const {
 	return _mode_bit & (1 << mode);
+}
+
+vector<User*> Channel::getUsers(void) const {
+	vector<User*> ret;
+	for(users_const_iter iter = _users.begin(); iter != _users.end(); ++iter)
+		ret.push_back(iter->second);
+	return ret;
 }

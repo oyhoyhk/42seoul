@@ -1,5 +1,8 @@
 #include "User/User.hpp"
 
+User User::operator= (const User& ref) {}
+User::User (const User& ref) {}
+
 User::User(void): _name("*"), _fd(-1), _mode_bit(0) {}
 
 User::User(const string& name, const int& fd): _name(name), _fd(fd), _mode_bit(0) { }
@@ -25,6 +28,20 @@ void User::partChannel(const Channel* channel) {
 	channels_const_iter iter = _channels.find(channel->getName());
 	if (iter == _channels.end()) return;
 	_channels.erase(iter);
+}
+
+vector<Channel*>	User::getChannels(void) const {
+	vector<Channel*> ret;
+	for (channels_const_iter iter = _channels.begin(); iter != _channels.end(); ++iter)
+		ret.push_back(iter->second);
+	return ret;
+}
+
+vector<string>	User::getChannelNames(void) const {
+	vector<string> ret;
+	for (channels_const_iter iter = _channels.begin(); iter != _channels.end(); ++iter)
+		ret.push_back(iter->first);
+	return ret;
 }
 
 void	User::setMode(const UserMode& mode) {

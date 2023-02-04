@@ -31,3 +31,7 @@ void	UserManager::deleteUser(const string& name) {
 	delete temp->second;
 	_users.erase(temp);
 }
+
+void	UserManager::deleteUser(User* user) {
+	deleteUser(user->getName());
+}
