@@ -1,31 +1,41 @@
 #include "Channel.hpp"
 
-Channel::Channel(const string &name) : _name(name) {}
+Channel Channel::operator= (const Channel& ref) { }
+Channel::Channel (const Channel& ref) { }
 
-User	Channel::getUserWithFD(const int& fd) const {
-	for(users_const_iter iter = _users.begin(); iter != _users.end(); ++iter) {
-		if (iter->second.getFD() == fd)
-			return (*iter).second;
-	}
-	throw runtime_error("Can't find user with fd");
+Channel::Channel(void):_mode_bit(0) { }
+
+Channel::Channel(const string &name) : _name(name), _mode_bit(0) { }
+
+bool	Channel::hasUser(const User* user) const {
+	users_const_iter iter = _users.find(user->getName());
+	if (iter == _users.end()) return false;
+	return true;
 }
 
-User	Channel::getUserWithName(const string& name) const {
-	return _users.at(name);
+const string& Channel::getName(void) const {
+	return _name;
 }
 
-void	Channel::addUser(const string& name, const int& fd) {
-	_users[name] = User(name, fd);
+void	Channel::addUser(User* user) {
+	if (hasUser(user)) return;
+	_users[user->getName()] = user;
 }
 
-void	Channel::deleteUser(const string& name) {
-	_users.erase(_users.find(name));
+void	Channel::deleteUser(const User* user) {
+	users_iter iter = _users.find(user->getName());
+	if (iter == _users.end()) return;
+	_users.erase(iter);
 }
 
-Channel Channel::operator= (const Channel &ref) {
-	return ref;
+void	Channel::setMode(const ChannelMode& mode) {
+	_mode_bit &=  1 << mode;
 }
 
-const map<string, User> &Channel::getUsers() const {
-	return _users;
+void	Channel::unsetMode(const ChannelMode& mode) {
+	_mode_bit &= ~(1 << mode);
+}
+
+bool	Channel::isSetMode(const ChannelMode& mode) const {
+	return _mode_bit & (1 << mode);
 }
