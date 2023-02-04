@@ -27,6 +27,7 @@ public:
     void partChannelWithUserName(const string& channel_name, const string& user_name);
     vector<User*> getUsersInChannel(const string& channel_name) const;
     vector<Channel*> getChannelsFromUser(const string& user_name) const;
+      
 
     class UserNotExist: public exception {
     public:

@@ -137,25 +137,20 @@ void Command::_handlePING(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handleJOIN(Server &server, int fd, const string &msg) {
-    map<string, Channel>& allChannel = server.getChannels();
-    vector<string>        msgChannel = split(msg, " ");
+    vector<string>  msgChannel = split(msg, " ");
+    const string&   channelName = msgChannel[1];
+    Channel*        channel = NULL;
+    User*           user = NULL;
 
     // 모든 채널에서 이름으로 조회해서 없으면
-    if (allChannel.find(msgChannel[1]) == allChannel.end()) {
+    user = _service.getUserWithFD(fd);
+    _service.joinChannelWithUserName(user->getName(), channelName);
         /*
+        TODO:
         1. 채널이 invite-only인 경우 초대를 꼭 받아야함.
         2. active-bans에 유저의 /nick/username/hostname이 없어야한다.
         3. 비밀번호가 설정되어 있는 채널이면 올바른 비밀번호를 입력해야한다.
         */
-
-        // 채널배열에 새로운 채널 넣음.
-        allChannel[msgChannel[1]] = Channel(msgChannel[1]);
-        // JOIN하려는 유저객체에 joinChannel()
-        server.getUserManager().getUserWithFD(fd).joinChannel(msgChannel[1]);
-    } else {
-        // JOIN하려는 유저객체에 joinChannel()
-        server.getUserManager().getUserWithFD(fd).joinChannel(msgChannel[1]);
-    }
 }
 
 /* 유저가 없으면 throw함 나중에 처리할 필요가 있음 */ 
@@ -341,17 +336,4 @@ void Command::_handleMODE(Server &server, int fd, const string &msg) {
     // user MODE
 
     // 
-}
-
-void Command::_sendMessage(int fd, int type, const string &msg, const Server &server) {
-    if (type == RES_SELF) {
-        write(fd, msg.c_str(), strlen(msg.c_str()));
-        return ;
-    }
-    const struct pollfd *pollFDs = server.getPollFDs();
-    for (int i=1;i<MAX_FD_SIZE;i++) {
-        if (pollFDs[i].fd != -1 && pollFDs[i].fd != fd) {
-            write(i, msg.c_str(), strlen(msg.c_str()));
-        }
-    }
 }

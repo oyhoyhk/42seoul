@@ -35,7 +35,12 @@ void ServerService::deleteUserWithName(const string& name) {
 }
 
 void ServerService::joinChannelWithUserName(const string& channel_name, const string& user_name) {
-    Channel* channel = getChannelWithName(channel_name);
+    Channel* channel = NULL;
+    try {
+        channel = getChannelWithName(channel_name);
+    } catch (const ChannelNotExist& e) {
+        _channelManager.addChannel(channel_name);
+    }
     User* user = getUserWithName(user_name);
     user->joinChannel(channel);
     channel->addUser(user);
