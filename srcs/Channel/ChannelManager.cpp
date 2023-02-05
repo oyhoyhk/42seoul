@@ -23,7 +23,7 @@ void		ChannelManager::deleteChannel(const string& name) {
     _channels.erase(temp);
 }
 
-void		ChannelManager::partUserFromChannels(const string& user_name, const vector<string>& channels) {
+void		ChannelManager::partUserFromChannels(User* user, const vector<string>& channels) {
     for (vector<string>::const_iterator iter = channels.begin(); iter != channels.end(); ++iter)
-        getChannelWithName(*iter)->deleteUser(user_name);
+        getChannelWithName(*iter)->deleteUser(user);
 }

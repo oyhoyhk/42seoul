@@ -6,16 +6,30 @@
 
 class UserManager {
 private:
-	typedef map<string, User*>::const_iterator users_const_iter;
-	typedef map<string, User*>::iterator users_iter;
-	map<string, User*>		_users;
+	map<int, User*>		_users;
 public:
+	typedef map<int, User*>::const_iterator users_const_iter;
+	typedef map<int, User*>::iterator users_iter;
 	~UserManager();
-	User*	getUserWithFD(const int& fd) const;
-	User*	getUserWithName(const string& name) const;
-	bool	addUser(const string& name, const int& fd);
-	void	deleteUser(const string& name);
-	void	deleteUser(User* user);
+
+    /************************
+    read
+    ************************/
+	User*		getUserWithFD(const int& fd) const;
+	User*		getUserWithName(const string& name) const;
+
+    /************************
+    create
+    ************************/
+	void		addUser(const string& name, const int& fd);
+
+    /************************
+	delete
+    ************************/
+	void		deleteUser(const string& name);
+	void		deleteUser(const int& fd);
+	void		deleteUser(User* user);
+
 };
 
 #endif

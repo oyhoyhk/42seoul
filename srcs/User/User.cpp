@@ -1,6 +1,6 @@
 #include "User/User.hpp"
 
-User User::operator= (const User& ref) {}
+User User::operator= (const User& ref) { return *this; }
 User::User (const User& ref) {}
 
 User::User(void): _name("*"), _fd(-1), _mode_bit(0) {}
@@ -8,24 +8,24 @@ User::User(void): _name("*"), _fd(-1), _mode_bit(0) {}
 User::User(const string& name, const int& fd): _name(name), _fd(fd), _mode_bit(0) { }
 
 const string& User::getName(void) const { return _name; }
-
+void User::setName(const string& name) { _name = name; }
+const string& User::getHostname(void) const { return _hostname; }
+void User::setHostname(const string& hostname) { _hostname = hostname; }
 int	User::getFD(void) const { return _fd; }
 
-const string& User::getPassword(void) const { return _password; }
 
-
-bool User::hasChannel(const Channel* channel) const {
-	channels_const_iter iter = _channels.find(channel->getName());
+bool User::hasChannel(Channel* const channel) const {
+	channels_const_iter iter = _channels.find(channel);
 	return iter != _channels.end();
 }
 
 void User::joinChannel(Channel* channel) {
 	if (hasChannel(channel)) return ;
-	_channels[channel->getName()] = channel;
+	_channels.insert(channel);
 }
 
-void User::partChannel(const Channel* channel) {
-	channels_const_iter iter = _channels.find(channel->getName());
+void User::partChannel(Channel* const channel) {
+	channels_const_iter iter = _channels.find(channel);
 	if (iter == _channels.end()) return;
 	_channels.erase(iter);
 }
@@ -33,14 +33,14 @@ void User::partChannel(const Channel* channel) {
 vector<Channel*>	User::getChannels(void) const {
 	vector<Channel*> ret;
 	for (channels_const_iter iter = _channels.begin(); iter != _channels.end(); ++iter)
-		ret.push_back(iter->second);
+		ret.push_back(*iter);
 	return ret;
 }
 
 vector<string>	User::getChannelNames(void) const {
 	vector<string> ret;
 	for (channels_const_iter iter = _channels.begin(); iter != _channels.end(); ++iter)
-		ret.push_back(iter->first);
+		ret.push_back((*iter)->getName());
 	return ret;
 }
 

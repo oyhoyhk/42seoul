@@ -9,26 +9,27 @@ using namespace std;
 class User;
 
 enum ChannelMode{
-	O = 0,
-	P,
-	S,
-	I,
-	T,
-	N,
-	M,
-	L,
-	B,
-	V,
-	K
+	CHANNEL_O = 0,
+	CHANNEL_P,
+	CHANNEL_S,
+	CHANNEL_I,
+	CHANNEL_T,
+	CHANNEL_N,
+	CHANNEL_M,
+	CHANNEL_L,
+	CHANNEL_B,
+	CHANNEL_V,
+	CHANNEL_K
 };
 
 class Channel {
-private :
-	typedef map<string, User*>::const_iterator users_const_iter;
-	typedef map<string, User*>::iterator users_iter;
+private:
+	typedef set<User*> users_type;
+	typedef users_type::const_iterator users_const_iter;
+	typedef users_type::iterator users_iter;
 
 	string 				_name;
-	map<string, User*>	_users;
+	users_type			_users;
 	unsigned int		_mode_bit;
 
 	Channel operator= (const Channel& ref);
@@ -40,10 +41,9 @@ public :
 
 	const string& getName(void) const;
 
-	bool	hasUser(const User* user) const;
+	bool	hasUser(User* const user) const;
 	void	addUser(User* user);
-	void	deleteUser(const User* user);
-	void	deleteUser(const string& user_name);
+	void	deleteUser(User* const user);
 
 	void	setMode(const ChannelMode& mode);
 	void	unsetMode(const ChannelMode& mode);

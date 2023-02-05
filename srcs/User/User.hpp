@@ -27,14 +27,15 @@ class Channel;
 
 class User {
 private :
-	typedef map<string, Channel*>::const_iterator channels_const_iter;
-	typedef map<string, Channel*>::iterator channels_iter;
+	typedef set<Channel*> channels_type;
+	typedef channels_type::const_iterator channels_const_iter;
+	typedef channels_type::iterator channels_iter;
 	string 					_name;
+	string					_hostname;
 	int						_fd;
 	USER_STATUS				_status;
 	unsigned int			_mode_bit;
-	string 					_password;
-	map<string, Channel*>	_channels;
+	channels_type			_channels;
 
 	User operator= (const User& ref);
 	User (const User& ref);
@@ -44,12 +45,15 @@ public:
 	User(const string& name, const int& fd);
 
 	const string& getName(void) const;
+	void setName(const string& name);
+	const string& getHostname(void) const;
+	void setHostname(const string& hostname);
 	int	getFD(void) const;
 	const string& getPassword(void) const;
 
-	bool				hasChannel(const Channel* channel) const;
+	bool				hasChannel(Channel* const channel) const;
 	void				joinChannel(Channel* channel);
-	void				partChannel(const Channel* channel);
+	void				partChannel(Channel* const channel);
 	vector<string>		getChannelNames(void) const;
 	vector<Channel*>	getChannels(void) const;
 

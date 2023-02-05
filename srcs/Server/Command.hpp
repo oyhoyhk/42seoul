@@ -34,7 +34,6 @@ private:
 	void	_handlePASS(Server&, int, const string&);
 	void	_handleUSER(Server&, int, const string&);
 	void	_handleMODE(Server&, int, const string&);
-	void	_sendMessage(int fd, int type, const string &msg, const Server &server);
 
 public:
 	Command();
