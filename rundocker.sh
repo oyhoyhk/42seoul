@@ -5,7 +5,7 @@ if [ -z $exec_flag ] ; then
     docker rm sandbox
     docker rmi -f sandbox
     docker build -t sandbox .
-    docker run --name sandbox --rm -d -p 6667:6667 sandbox
+    docker run --name sandbox --rm -d -p 6667:6667
 else
     docker exec -it sandbox /bin/bash
 fi
