@@ -45,9 +45,10 @@ public:
     /*
     * @param user_name: 추가할 유저의 이름
     * @param fd: 추가할 유저의 fd
-    * @brief 만약 유저가 있다면, 아무것도 하지 않음
+    * @brief 유저를 추가하고 성공, 실패 여부를 리턴
+    * @return 유저 성공 추가하면 true, 이미 존재하는 유저이름이면 false 리턴
     */
-    void addUser(const string& user_name, const int& fd);
+    bool addUser(const string& user_name, const int& fd);
 
     /*
     * @param user_name: 지우고 싶은 유저의 이름

@@ -20,6 +20,7 @@ private :
 	int								_socket;
 	struct pollfd					_pollFDs[MAX_FD_SIZE];
 	Command*						_command;
+	ServerService					_serverService;
 
 	void	_acceptConnections(void);
 	void	_sendResponse(void);
@@ -41,6 +42,10 @@ public :
 	** @brief server poll 실행 무한 반복
 	*/
 	void	start(void);
+
+	/*
+	** @brief UserManager 멤버 클래스  반반환환
+	*/
 
 	ServerService& getService(void);
 

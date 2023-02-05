@@ -15,10 +15,10 @@ enum USER_STATUS {
 };
 
 enum UserMode {
-	I = 0,
-	S,
-	W,
-	O
+	USER_I = 0,
+	USER_S,
+	USER_W,
+	USER_O
 };
 
 #define HOST_NAME "root@127.0.0.1"

@@ -20,9 +20,10 @@ User*	UserManager::getUserWithName(const string& name) const {
 	return temp->second;
 }
 
-void	UserManager::addUser(const string& name, const int& fd) {
-	if (getUserWithName(name)) return;
+bool	UserManager::addUser(const string& name, const int& fd) {
+	if (getUserWithName(name)) return false;
 	_users[name] = new User(name, fd);
+	return true;
 }
 
 void	UserManager::deleteUser(const string& name) {
