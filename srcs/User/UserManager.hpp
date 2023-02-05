@@ -12,23 +12,23 @@ public:
 	typedef map<int, User*>::iterator users_iter;
 	~UserManager();
 
-    /************************
-    read
-    ************************/
+	/************************
+	read
+	************************/
 	User*		getUserWithFD(const int& fd) const;
 	User*		getUserWithName(const string& name) const;
 
-    /************************
-    create
-    ************************/
-	void		addUser(const string& name, const int& fd);
+	/************************
+	create
+	************************/
+	User*		addUser(const string& name, const int& fd);
 
-    /************************
+	/************************
 	delete
-    ************************/
+	************************/
 	void		deleteUser(const string& name);
 	void		deleteUser(const int& fd);
-	void		deleteUser(User* user);
+	void		deleteUser(User* const user);
 
 };
 

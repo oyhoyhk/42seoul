@@ -44,12 +44,11 @@ public:
 	User(void);
 	User(const string& name, const int& fd);
 
-	const string& getName(void) const;
-	void setName(const string& name);
-	const string& getHostname(void) const;
-	void setHostname(const string& hostname);
-	int	getFD(void) const;
-	const string& getPassword(void) const;
+	const string&	getName(void) const;
+	int				getFD(void) const;
+	const string&	getHostname(void) const;
+	void			setName(const string& name);
+	void			setHostname(const string& hostname);
 
 	bool				hasChannel(Channel* const channel) const;
 	void				joinChannel(Channel* channel);
