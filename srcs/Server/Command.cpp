@@ -146,7 +146,8 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
 void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {
     vector<string> result = split(msg, " ");
     string  channelName = result.at(1);
-    string  msgInfo = result.at(2);
+    const int idx = msg.find(':');
+    string  msgInfo = msg.substr(idx);
     
     // :ace!root@127.0.0.1 PRIVMSG #test :adsfasdf
     Channel* channel = _service.getChannelWithName(channelName);
