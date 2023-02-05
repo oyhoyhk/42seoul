@@ -134,6 +134,12 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
     User*           user = NULL;
 
     // 모든 채널에서 이름으로 조회해서 없으면
+    try {
+        channel = _service.getChannelWithName(channelName);
+    } catch (exception &e) {
+        _service.Channel
+        _service.joinChannelWithUserName(channelName, _service.getUserWithFD(fd)->getName()));
+    }
     user = _service.getUserWithFD(fd);
     _service.joinChannelWithUserName(user->getName(), channelName);
         /*
@@ -208,13 +214,12 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handlePASS(Server &server, int fd, const string &msg) {
-    (void)fd;
-    (void)server;
     vector<string> result = split(msg, " ");
     const string &inputPassword = result.at(1);
 
     if (server.getPassword() != inputPassword) {
         string res("Password Wrong\r\n");
+        cout<<res<<endl;
         //_sendMessage(fd, RES_SELF, res, server);
         return;
     }
