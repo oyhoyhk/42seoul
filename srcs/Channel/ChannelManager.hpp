@@ -12,21 +12,27 @@ public:
 	typedef map<string, Channel*>::iterator channel_iter;
 	~ChannelManager(void);
 
-    /************************
-    read
-    ************************/
+	/************************
+	read
+	************************/
 	Channel*	getChannelWithName(const string& name) const;
 
-    /************************
+	/************************
 	create
-    ************************/
-	void		addChannel(const string& name);
+	************************/
+	Channel*	addChannel(const string& name);
+	
+	/************************
+	update
+	************************/
+	void		updateUserFromChannel(User* const user, Channel* const channel);
 
-    /************************
+	/************************
 	delete
-    ************************/
+	************************/
 	void		deleteChannel(const string& name);
 	void		partUserFromChannels(User* user, const vector<string>& channels);
+
 };
 
 #endif

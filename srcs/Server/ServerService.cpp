@@ -6,87 +6,96 @@ ServerService::ServerService(void){}
 ServerService::~ServerService(void){}
 
 User* ServerService::getUserWithName(const string& user_name) const {
-    User* user = _userManager.getUserWithName(user_name);
-    if (user == NULL) throw UserNotExist();
-    return user;
+	User* user = _userManager.getUserWithName(user_name);
+	if (user == NULL) throw UserNotExist();
+	return user;
 }
 
 User* ServerService::getUserWithFD(const int& fd) const {
-    User* user = _userManager.getUserWithFD(fd);
-    if (user == NULL) throw UserNotExist();
-    return user;
+	User* user = _userManager.getUserWithFD(fd);
+	if (user == NULL) throw UserNotExist();
+	return user;
 }
 
 Channel* ServerService::getChannelWithName(const string& channel_name) const {
-    Channel* channel = _channelManager.getChannelWithName(channel_name);
-    if (channel == NULL) throw ChannelNotExist();
-    return channel;
+	Channel* channel = _channelManager.getChannelWithName(channel_name);
+	if (channel == NULL) throw ChannelNotExist();
+	return channel;
 }
 
-void ServerService::addUser(const string& name, const int& fd) {
-    if (_userManager.getUserWithName(name) || _userManager.getUserWithFD(fd))
-        throw UserAlreadyExist();
-    return _userManager.addUser(name, fd);
+User*	ServerService::addUser(const string& name, const int& fd) {
+	if (_userManager.getUserWithName(name) || _userManager.getUserWithFD(fd))
+		throw UserAlreadyExist();
+	return _userManager.addUser(name, fd);
 }
 
 void ServerService::deleteUser(User* user) {
-    if (user == NULL) return;
-    vector<string> channelNames = user->getChannelNames();
-    _channelManager.partUserFromChannels(user, channelNames);
-    _userManager.deleteUser(user);
+	if (user == NULL) return;
+	vector<string> channelNames = user->getChannelNames();
+	_channelManager.partUserFromChannels(user, channelNames);
+	_userManager.deleteUser(user);
 }
 
 void ServerService::deleteUserWithName(const string& name) {
-    deleteUser(getUserWithName(name));
+	deleteUser(getUserWithName(name));
 }
 
 void ServerService::deleteUserWithFD(const int& fd) {
-    deleteUser(getUserWithFD(fd));
+	deleteUser(getUserWithFD(fd));
 }
 
-void ServerService::joinChannelWithUserName(const string& channel_name, const string& user_name) {
-    Channel* channel = NULL;
-    try {
-        channel = getChannelWithName(channel_name);
-    } catch (const ChannelNotExist& e) {
-        _channelManager.addChannel(channel_name);
-    }
-    User* user = getUserWithName(user_name);
-    user->joinChannel(channel);
-    channel->addUser(user);
+Channel* ServerService::joinChannelWithUserName(const string& channel_name, const string& user_name) {
+	Channel* channel = NULL;
+	try {
+		channel = getChannelWithName(channel_name);
+	} catch (const ChannelNotExist& e) {
+		channel = _channelManager.addChannel(channel_name);
+	}
+	User* user = getUserWithName(user_name);
+	user->joinChannel(channel);
+	channel->addUser(user);
+	return channel;
 }
 
 void ServerService::partChannelWithUserName(const string& channel_name, const string& user_name) {
-    Channel* channel = getChannelWithName(channel_name);
-    User* user = getUserWithName(user_name);
-    user->partChannel(channel);
-    channel->deleteUser(user);
+	Channel* channel = getChannelWithName(channel_name);
+	User* user = getUserWithName(user_name);
+	user->partChannel(channel);
+	channel->deleteUser(user);
 }
 
 vector<User*> ServerService::getUsersInChannel(const string& channel_name) const {
-    Channel* channel = getChannelWithName(channel_name);
-    vector<User*> ret = channel->getUsers();
-    return ret;
+	Channel* channel = getChannelWithName(channel_name);
+	vector<User*> ret = channel->getUsers();
+	return ret;
 }
 
 vector<Channel*> ServerService::getChannelsFromUser(const string& user_name) const {
-    User* user = getUserWithName(user_name);
-    vector<Channel*> ret = user->getChannels();
-    return ret;
+	User* user = getUserWithName(user_name);
+	vector<Channel*> ret = user->getChannels();
+	return ret;
+}
+
+void ServerService::changeUserName(const string& oldUserName, const string& newUserName) {
+	User* user = NULL;
+
+	if (_userManager.getUserWithName(newUserName)) throw UserAlreadyExist();
+	user = getUserWithName(oldUserName);
+	user->setName(newUserName);
 }
 
 const char* ServerService::UserAlreadyExist::what(void) const throw() {
-    return "user exist!";
+	return "user exist!";
 }
 
 const char* ServerService::UserNotExist::what(void) const throw() {
-    return "user not exist!";
+	return "user not exist!";
 }
 
 const char* ServerService::ChannelNotExist::what(void) const throw() {
-    return "channel not exist!";
+	return "channel not exist!";
 }
 
 const char* ServerService::ChannelAlreadyExist::what(void) const throw() {
-    return "channel exist!";
+	return "channel exist!";
 }
