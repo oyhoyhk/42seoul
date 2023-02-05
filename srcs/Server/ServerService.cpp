@@ -1,6 +1,6 @@
 #include "ServerService.hpp"
 
-ServerService ServerService::operator= (const ServerService& ref) { }
+ServerService ServerService::operator= (const ServerService& ref) { return *this; }
 ServerService::ServerService(const ServerService& ref) {}
 ServerService::ServerService(void){}
 ServerService::~ServerService(void){}
@@ -23,15 +23,25 @@ Channel* ServerService::getChannelWithName(const string& channel_name) const {
     return channel;
 }
 
-bool ServerService::addUser(const string& name, const int& fd) {
+void ServerService::addUser(const string& name, const int& fd) {
+    if (_userManager.getUserWithName(name) || _userManager.getUserWithFD(fd))
+        throw UserAlreadyExist();
     return _userManager.addUser(name, fd);
 }
 
-void ServerService::deleteUserWithName(const string& name) {
-    User* user = getUserWithName(name);
+void ServerService::deleteUser(User* user) {
+    if (user == NULL) return;
     vector<string> channelNames = user->getChannelNames();
-    _channelManager.partUserFromChannels(name, channelNames);
-    _userManager.deleteUser(name);
+    _channelManager.partUserFromChannels(user, channelNames);
+    _userManager.deleteUser(user);
+}
+
+void ServerService::deleteUserWithName(const string& name) {
+    deleteUser(getUserWithName(name));
+}
+
+void ServerService::deleteUserWithFD(const int& fd) {
+    deleteUser(getUserWithFD(fd));
 }
 
 void ServerService::joinChannelWithUserName(const string& channel_name, const string& user_name) {
@@ -65,10 +75,18 @@ vector<Channel*> ServerService::getChannelsFromUser(const string& user_name) con
     return ret;
 }
 
+const char* ServerService::UserAlreadyExist::what(void) const throw() {
+    return "user exist!";
+}
+
 const char* ServerService::UserNotExist::what(void) const throw() {
     return "user not exist!";
 }
 
 const char* ServerService::ChannelNotExist::what(void) const throw() {
     return "channel not exist!";
+}
+
+const char* ServerService::ChannelAlreadyExist::what(void) const throw() {
+    return "channel exist!";
 }
