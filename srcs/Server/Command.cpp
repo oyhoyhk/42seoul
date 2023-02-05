@@ -43,12 +43,9 @@ void Command::_handleCAP(Server &server, int fd, const string &msg) {
 void Command::_handleNICK(Server &server, int fd, const string &msg) {
     vector<string> result = split(msg, " ");
     // TODO: 유저가 없을 경우 try catch를 써야하나?
-    User* user = _service.getUserWithFD(fd);
-	cout<<"can reach here?"<<endl;
-    string oldNickname = user->getName();
+    string oldNickname = "*";
     string newNickname;
     string response;
-	(void) fd;
     // "/nick"
     if (result.size() <= 1) {
         // ERR_NONICKNAMEGIVEN, 431,  :No nickname given
@@ -84,8 +81,9 @@ void Command::_handleNICK(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handleUSER(Server &server, int fd, const string &msg) {
-    cout << msg << endl;
+    vector<string> result = split(msg, " ");
 
+    cout << msg << endl;
     cout << "USER!!!" << endl;
 }
 
