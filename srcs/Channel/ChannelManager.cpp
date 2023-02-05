@@ -12,7 +12,7 @@ Channel*	ChannelManager::getChannelWithName(const string& name) const {
 }
 
 Channel*		ChannelManager::addChannel(const string& name) {
-	if (getChannelWithName(name)) return;
+	if (getChannelWithName(name)) return NULL;
 	_channels[name] = new Channel(name);
 	return _channels[name];
 }
