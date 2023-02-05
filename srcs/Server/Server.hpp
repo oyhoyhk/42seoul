@@ -42,7 +42,9 @@ public :
 	*/
 	void	start(void);
 
-	ServerService& getService(void);
+	/*
+	** @brief UserManager 멤버 클래스  반반환환
+	*/
 
 	class InitServerException : public exception {
 	public :

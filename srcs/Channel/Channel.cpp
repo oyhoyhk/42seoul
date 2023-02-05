@@ -1,14 +1,14 @@
 #include "Channel.hpp"
 
-Channel Channel::operator= (const Channel& ref) { }
+Channel Channel::operator= (const Channel& ref) { return *this; }
 Channel::Channel (const Channel& ref) { }
 
 Channel::Channel(void):_mode_bit(0) { }
 
 Channel::Channel(const string &name) : _name(name), _mode_bit(0) { }
 
-bool	Channel::hasUser(const User* user) const {
-	users_const_iter iter = _users.find(user->getName());
+bool	Channel::hasUser(User* const user) const {
+	users_const_iter iter = _users.find(user);
 	if (iter == _users.end()) return false;
 	return true;
 }
@@ -19,17 +19,13 @@ const string& Channel::getName(void) const {
 
 void	Channel::addUser(User* user) {
 	if (hasUser(user)) return;
-	_users[user->getName()] = user;
+	_users.insert(user);
 }
 
-void	Channel::deleteUser(const string& user_name) {
-	users_iter iter = _users.find(user_name);
+void	Channel::deleteUser(User* const user) {
+	users_const_iter iter = _users.find(user);
 	if (iter == _users.end()) return;
 	_users.erase(iter);
-}
-
-void	Channel::deleteUser(const User* user) {
-	deleteUser(user->getName());
 }
 
 void	Channel::setMode(const ChannelMode& mode) {
@@ -47,6 +43,6 @@ bool	Channel::isSetMode(const ChannelMode& mode) const {
 vector<User*> Channel::getUsers(void) const {
 	vector<User*> ret;
 	for(users_const_iter iter = _users.begin(); iter != _users.end(); ++iter)
-		ret.push_back(iter->second);
+		ret.push_back(*iter);
 	return ret;
 }

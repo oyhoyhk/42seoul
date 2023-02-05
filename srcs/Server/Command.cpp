@@ -1,5 +1,6 @@
 #include "Server/Command.hpp"
 #include "Utils.hpp"
+#include "header.hpp"
 
 Command::Command() {
     _cmds["CAP"] = &Command::_handleCAP;
@@ -40,31 +41,22 @@ void Command::_handleCAP(Server &server, int fd, const string &msg) {
 }
 
 void Command::_handleNICK(Server &server, int fd, const string &msg) {
-	UserManager userManager = server.getUserManager();
     vector<string> result = split(msg, " ");
     // TODO: 유저가 없을 경우 try catch를 써야하나?
-    User user = userManager.getUserWithFD(fd);
+    User* user = _service.getUserWithFD(fd);
 	cout<<"can reach here?"<<endl;
-    string newNickname = result.at(1);
-    string oldNickname = user.getName();
+    string oldNickname = user->getName();
+    string newNickname;
     string response;
 	(void) fd;
-
     // "/nick"
     if (result.size() <= 1) {
         // ERR_NONICKNAMEGIVEN, 431,  :No nickname given
         response = string(SERVER_PREFIX) + " 431 " + oldNickname + " :No nickname given";
         cout << response << endl;
+        sendMessage(fd, response);
         return;
     }
-
-	if (userManager.nameDupCheck(result.at(1))) {
-        response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
-                 " :Nickname is already in use";
-        cout << response << endl;
-		return;		
-	}
-
     newNickname = result.at(1);
     // "/nick morethan9letters"
     if (newNickname.length() > 9) {
@@ -72,35 +64,36 @@ void Command::_handleNICK(Server &server, int fd, const string &msg) {
         response = string(SERVER_PREFIX) + " 432 " + oldNickname + " " + newNickname +
                  " :Erroneus nickname";
 		cout << response << endl;
+        sendMessage(fd, response);
         return;
     }
-
-    // "/nick existingnickname"
     try {
-       userManager.getUserWithName(oldNickname);
-       // :irc.local 433 <nickname> <nickname> :Nickname is already in use
-       response = string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname +
-                " :Nickname is already in use";
-       cout << response << endl;
-		return;
-    } catch (exception &e) {
-       // "/nick newnickname"
-		// TODO: string userInfo = user.getUserInfo();
-		if (user.getMode() == NEED_NICKNAME) {
-			response = "NICK " + newNickname;
-			user.setMode(NEED_USERREGISTER);
-		} else {
-			response = ":" + string(HOST_NAME) + " NICK " + newNickname;
-		}
-		cout << response << endl;
+        _service.addUser(newNickname, fd);
+    } catch (const exception &e) {
+        response = ":" + string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname + " :Nickname is already in use.\r\n";
+        cout << response << endl;
+        sendMessage(fd, response);
+        cerr << e.what() << endl;
     }
+
+    string userName = _service.getUserWithFD(fd)->getName();
+    response = ":irc.local 001 " + userName +
+                    " :Welcome to the Localnet IRC Network " + userName +
+                    "!root@127.0.0.1\r\n";
+    sendMessage(fd, response);    //server._service.       // "/nick newnickname"
 }
+
+void Command::_handleUSER(Server &server, int fd, const string &msg) {
+    cout << msg << endl;
+
+    cout << "USER!!!" << endl;
+}
+
 
 void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {
     (void)fd;
     (void)server;
 
-    cout << "PRIVMSG!!!" << endl;
     cout << msg << endl;
 }
 
@@ -163,26 +156,22 @@ void Command::_handleQUIT(Server &server, int fd, const string &msg) {
     vector<User*>       tempUsers;
     set<User*>          targetUsers;
 
-    _service.deleteUserWithName(reqUserName);
-    sendMessage(fd, message);
-    for (vector<Channel*>::iterator iter = channels.begin(); iter != channels.end(); ++iter) {
-        tempUsers = (*iter)->getUsers();
-        targetUsers.insert(tempUsers.begin(), tempUsers.end());
-    }
-    for (set<User*>::iterator iter = targetUsers.begin(); iter != targetUsers.end(); ++iter) {
-        message = ":" + reqUserName + "!" + string(HOST_NAME) + "QUIT :Quit: " + endMsg;
-        sendMessage((*iter)->getFD(), message);
+  _service.deleteUserWithName(reqUserName);
+  sendMessage(fd, message);
+  for (vector<Channel*>::iterator iter = channels.begin(); iter != channels.end(); ++iter) {
+      tempUsers = (*iter)->getUsers();
+      targetUsers.insert(tempUsers.begin(), tempUsers.end());
+  }
+  for (set<User*>::iterator iter = targetUsers.begin(); iter != targetUsers.end(); ++iter) {
+      message = ":" + reqUserName + "!" + string(HOST_NAME) + "QUIT :Quit: " + endMsg;
+      sendMessage((*iter)->getFD(), message);
     }
 }
 
-
 void Command::_handlePART(Server &server, int fd, const string &msg) {
-    (void)fd;
-    (void)server;
-
-    cout << "PART!!!" << endl;
-    cout << msg << endl;
-    
+  (void)fd;
+  (void)server;
+  cout << "PART!!!" << endl;
 }
 
 void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
@@ -228,112 +217,103 @@ void Command::_handlePASS(Server &server, int fd, const string &msg) {
 
     if (server.getPassword() != inputPassword) {
         string res("Password Wrong\r\n");
-        _sendMessage(fd, RES_SELF, res, server);
+        //_sendMessage(fd, RES_SELF, res, server);
         return;
     }
     cout << "PASS!!!" << endl;
 }
 
-void Command::_handleUSER(Server &server, int fd, const string &msg) {
-    cout << msg << endl;
-    vector<string> list;
-    // const string &userName =
-    server.getUserManager().getUserWithFD(fd).getName();
-    list.push_back((":irc.local 001 " + userName +
-                    " :Welcome to the Localnet IRC Network " + userName +
-                    "!root@127.0.0.1\n"));
-    vector<string>::iterator it;
-    for (it = list.begin(); it != list.end(); ++it)
-        write(fd, (*it).c_str(), strlen((*it).c_str()));
-    cout << "USER!!!" << endl;
+void Command::_handleMODE(Server &server, int fd, const string &msg){
+
 }
 
-void Command::_handleMODE(Server &server, int fd, const string &msg) {
-    // user, channel 구분: 시작 '#'
-    vector<string> words = split(msg, " ");
-    const string& targetName = words[1];
-    const string& targetMode = words[2];
-    User* user = NULL;
-    User* target = NULL;
-
-    if (targetName[0] != '#') {
-        // user MODE: _handleUserMode()
-        user = _service.getUserWithFD(fd);
-        try {
-            target = _service.getUserWithName(targetName);
-        } catch (const exception& e) {
-            string res = SERVER_PREFIX + string(" 401 ") + user->getName() + " " + targetName + " :No such nick/channel\n";
-            sendMessage(fd, res);
-            return ;
-        }
+//void Command::_handleUSER(Server &server, int fd, const string &msg) {
+//    cout << msg << endl;
+//    vector<string> list;
+//    // const string &userName =
+//    server.getUserManager().getUserWithFD(fd).getName();
+//    list.push_back((":irc.local 001 " + userName +
+//                    " :Welcome to the Localnet IRC Network " + userName +
+//                    "!root@127.0.0.1\n"));
+//    vector<string>::iterator it;
+// if (targetName[0] != '#') {
+//        // user MODE: _handleUserMode()
+//        user = _service.getUserWithFD(fd);
+//        try {
+//            target = _service.getUserWithName(targetName);
+//        } catch (const exception& e) {
+//            string res = SERVER_PREFIX + string(" 401 ") + user->getName() + " " + targetName + " :No such nick/channel\n";
+//            sendMessage(fd, res);
+//            return ;
+//        }
         
-        // user nickname과 명령어를 보낸 nickname 같은지 확인
-        if (user->getName() != targetName) {
-            // :irc.local 502 nickname_ :Can't change mode for other users
-            string res(SERVER_PREFIX + string(" 502 ") + user->getName() + " :Can't change mode for other users\n");
-            sendMessage(fd, res);
-            return ;
-        }
+//        // user nickname과 명령어를 보낸 nickname 같은지 확인
+//        if (user->getName() != targetName) {
+//            // :irc.local 502 nickname_ :Can't change mode for other users
+//            string res(SERVER_PREFIX + string(" 502 ") + user->getName() + " :Can't change mode for other users\n");
+//            sendMessage(fd, res);
+//            return ;
+//        }
 
-        // mode 검사
-        for (int i = 0; i < targetMode.length(); i++) {
-            switch (targetMode[i]) {
-            case 'i':
-                -iows -i-o+s  ios
-                break;
-            case 'w':
-                break;
-            case 'o':
-                break;
-            case 's':
-                break;
-            case '-':
-            case '+':
-                break;
-            default:
-            }
-            if (words[2][i] != 'i' && words[2][i] != 'w' && words[2][i] != 'o' && words[2][i] != 's' && words[2][i] != '+' && words[2][i] != '-') {
-                // :irc.local 501 nickname_ :Unknown MODE flag
-                string res(SERVER_PREFIX + string(" 501 ") + nickname + string(" :Unknown MODE flag\n"));
-                _sendMessage(fd, RES_SELF, res, server);
-                continue;
-            }
-            // find i
-            else if (words[2][i] == 'i') {
-                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_I]) {
-                    user.setInvisible(false);
-                    // :nickname_!root@127.0.0.1 MODE nickname_ -i
-                    _sendMessage(fd, RES_SELF, string(user.), server);
-                } else if (user.mode[USER_MODE_I] == 0) {                    
-                    user.setInvisible(true);
-                }
-            } else if (words[2][i] == 'w') {
-                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_W]) {
-                    user.setReceiveWallops(false);
-                } else if (user.mode[USER_MODE_W] == 0) {
-                    user.setReceiveWallops(true);
-                }
-            } else if (words[2][i] == 'o') {
-                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_O]) {
-                    user.setOperator(false);
-                } else if (user.mode[USER_MODE_O] == 0) {
-                    user.setOperator(true);
-                }
-            } else if (words[2][i] == 's') {
-                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_S]) {
-                    user.setInvisible(false);
-                } else if (user.mode[USER_MODE_S] == 0) {
-                    user.setInvisible(true);
-                }
-            }
-        }
+//        // mode 검사
+//        for (int i = 0; i < targetMode.length(); i++) {
+//            switch (targetMode[i]) {
+//            case 'i':
+//                -iows -i-o+s  ios
+//                break;
+//            case 'w':
+//                break;
+//            case 'o':
+//                break;
+//            case 's':
+//                break;
+//            case '-':
+//            case '+':
+//                break;
+//            default:
+//            }
+//            if (words[2][i] != 'i' && words[2][i] != 'w' && words[2][i] != 'o' && words[2][i] != 's' && words[2][i] != '+' && words[2][i] != '-') {
+//                // :irc.local 501 nickname_ :Unknown MODE flag
+//                string res(SERVER_PREFIX + string(" 501 ") + nickname + string(" :Unknown MODE flag\n"));
+//                _sendMessage(fd, RES_SELF, res, server);
+//                continue;
+//            }
+//            // find i
+//            else if (words[2][i] == 'i') {
+//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_I]) {
+//                    user.setInvisible(false);
+//                    // :nickname_!root@127.0.0.1 MODE nickname_ -i
+//                    _sendMessage(fd, RES_SELF, string(user.), server);
+//                } else if (user.mode[USER_MODE_I] == 0) {                    
+//                    user.setInvisible(true);
+//                }
+//            } else if (words[2][i] == 'w') {
+//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_W]) {
+//                    user.setReceiveWallops(false);
+//                } else if (user.mode[USER_MODE_W] == 0) {
+//                    user.setReceiveWallops(true);
+//                }
+//            } else if (words[2][i] == 'o') {
+//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_O]) {
+//                    user.setOperator(false);
+//                } else if (user.mode[USER_MODE_O] == 0) {
+//                    user.setOperator(true);
+//                }
+//            } else if (words[2][i] == 's') {
+//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_S]) {
+//                    user.setInvisible(false);
+//                } else if (user.mode[USER_MODE_S] == 0) {
+//                    user.setInvisible(true);
+//                }
+//            }
+//        }
         
         
-    } else {
-        // channel MODE: _handleChannelMode()
+//    } else {
+//        // channel MODE: _handleChannelMode()
 
-    }
-    // user MODE
+//    }
+//    // user MODE
 
-    // 
-}
+//    // 
+//}

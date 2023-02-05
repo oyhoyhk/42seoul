@@ -94,10 +94,10 @@ void	Server::_sendResponse(void) {
 						cerr << e.what() << endl;
 					}
 				}
-				for (int j = 1; j < MAX_FD_SIZE; ++j) {
-					if (_pollFDs[j].fd != -1 && _pollFDs[i].fd != _pollFDs[j].fd)
-						write(_pollFDs[j].fd, msg.c_str(), strlen(msg.c_str()));
-				}
+				//for (int j = 1; j < MAX_FD_SIZE; ++j) {
+				//	if (_pollFDs[j].fd != -1 && _pollFDs[i].fd != _pollFDs[j].fd)
+				//		write(_pollFDs[j].fd, msg.c_str(), strlen(msg.c_str()));
+				//}
 				break ;
 			default :
 				close(_pollFDs[i].fd);

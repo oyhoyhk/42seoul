@@ -17,9 +17,12 @@ private:
     ServerService(const ServerService& ref);
 
 public:
-
     ServerService(void);
     ~ServerService(void);
+
+    /************************
+    read
+    ************************/
 
     /*
     * @param user_name: 찾고 싶은 유저 이름
@@ -43,35 +46,6 @@ public:
     Channel* getChannelWithName(const string& channel_name) const;
 
     /*
-    * @param user_name: 추가할 유저의 이름
-    * @param fd: 추가할 유저의 fd
-    * @brief 만약 유저가 있다면, 아무것도 하지 않음
-    */
-    void addUser(const string& user_name, const int& fd);
-
-    /*
-    * @param user_name: 지우고 싶은 유저의 이름
-    * @throw 만약 없는 유저를 지운다면,ServerService::UserNotExist를 던짐
-    */
-    void deleteUserWithName(const string& user_name);
-
-    /*
-    * @param channel_name: 들어갈 채널 이름
-    * @param user_name: 들어갈 유저 이름
-    * @throw 만약 없는 유저라면, ServerService::UserNotExist를 던짐
-    * @brief 만약 채널이 존재하지 않는다면 새로운 채널을 만듬
-    */
-    void joinChannelWithUserName(const string& channel_name, const string& user_name);
-
-    /*
-    * @param channel_name: 나갈 채널 이름
-    * @param user_name: 나갈 유저 이름
-    * @throw 만약 없는 채널이라면 ServerService::ChannelNotExist를 던짐
-    * @throw 만약 없는 유저라면 ServerService::UserNotExist를 던짐
-    */
-    void partChannelWithUserName(const string& channel_name, const string& user_name);
-
-    /*
     * @param channel_name: 검색할 채널 이름
     * @throw 만약 없는 채널이라면 ServerService::ChannelNotExist를 던짐
     * @return 해당 채널에 들어있는 User객체의 포인터값들의 vector를 리턴함
@@ -84,6 +58,54 @@ public:
     * @return 해당 유저가 들어가 있는 Channel객체의 포인터값들의 vector를 리턴함
     */
     vector<Channel*> getChannelsFromUser(const string& user_name) const;
+
+    /************************
+    create
+    ************************/
+
+    /*
+    * @param user_name: 추가할 유저의 이름
+    * @param fd: 추가할 유저의 fd
+    * @brief 유저를 추가하고 성공, 실패 여부를 리턴
+    * @throw 만약 유저가 있다면 ServerService::UserAlreadyExist던짐
+    */
+    void addUser(const string& user_name, const int& fd);
+
+    /*
+    * @param channel_name: 들어갈 채널 이름
+    * @param user_name: 들어갈 유저 이름
+    * @throw 만약 없는 유저라면, ServerService::UserNotExist를 던짐
+    * @brief 만약 채널이 존재하지 않는다면 새로운 채널을 만듬
+    */
+    void joinChannelWithUserName(const string& channel_name, const string& user_name);
+
+    /************************
+    delete
+    ************************/
+    /*
+    * @param user_name: 지우고 싶은 유저의 이름
+    * @throw 만약 없는 유저를 지운다면,ServerService::UserNotExist를 던짐
+    */
+    void deleteUserWithName(const string& user_name);
+    /*
+    * @param user_name: 지우고 싶은 유저의 fd
+    * @throw 만약 없는 유저를 지운다면,ServerService::UserNotExist를 던짐
+    */
+    void deleteUserWithFD(const int& fd);
+    /*
+    * @param user_name: 지우고 싶은 유저의 pointer
+    * @brief 만약 user가 NULL이면 아무것도 하지 않음. (pointer값이 잘못됬다는 것은 고려하지 않음)
+    */
+    void deleteUser(User* user);
+
+    /*
+    * @param channel_name: 나갈 채널 이름
+    * @param user_name: 나갈 유저 이름
+    * @throw 만약 없는 채널이라면 ServerService::ChannelNotExist를 던짐
+    * @throw 만약 없는 유저라면 ServerService::UserNotExist를 던짐
+    */
+    void partChannelWithUserName(const string& channel_name, const string& user_name);
+
       
 
     class UserNotExist: public exception {
@@ -91,7 +113,15 @@ public:
         const char* what() const throw();
     };
 
+    class UserAlreadyExist: public exception {
+    public:
+        const char* what() const throw();
+    };
     class ChannelNotExist: public exception {
+    public:
+        const char* what() const throw();
+    };
+    class ChannelAlreadyExist: public exception {
     public:
         const char* what() const throw();
     };
