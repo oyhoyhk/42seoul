@@ -13,7 +13,7 @@ public:
 	~UserManager();
 	User*	getUserWithFD(const int& fd) const;
 	User*	getUserWithName(const string& name) const;
-	void	addUser(const string& name, const int& fd);
+	bool	addUser(const string& name, const int& fd);
 	void	deleteUser(const string& name);
 	void	deleteUser(User* user);
 };

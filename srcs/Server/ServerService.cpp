@@ -23,8 +23,8 @@ Channel* ServerService::getChannelWithName(const string& channel_name) const {
     return channel;
 }
 
-void ServerService::addUser(const string& name, const int& fd) {
-    _userManager.addUser(name, fd);
+bool ServerService::addUser(const string& name, const int& fd) {
+    return _userManager.addUser(name, fd);
 }
 
 void ServerService::deleteUserWithName(const string& name) {

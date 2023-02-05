@@ -115,6 +115,10 @@ const struct pollfd *Server::getPollFDs() const {
 	return this->_pollFDs;
 }
 
+ServerService &Server::getService(void) {
+	return this->_serverService;
+}
+
 const char* Server::InitServerException::what(void) const throw() {
 	return "Initiating Server Failed...";
 }
