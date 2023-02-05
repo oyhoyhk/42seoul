@@ -42,7 +42,7 @@ public :
 	const string& getName(void) const;
 
 	bool	hasUser(User* const user) const;
-	void	addUser(User* user);
+	void	addUser(User* const user);
 	void	deleteUser(User* const user);
 
 	void	setMode(const ChannelMode& mode);
@@ -50,6 +50,7 @@ public :
 	bool	isSetMode(const ChannelMode& mode) const;
 
 	vector<User*> getUsers(void) const;
+	vector<int> getUserFDs(void) const;
 }; 
 
 #endif

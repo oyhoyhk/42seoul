@@ -2,25 +2,21 @@
 
 User User::operator= (const User& ref) { return *this; }
 User::User (const User& ref) {}
-
 User::User(void): _name("*"), _fd(-1), _mode_bit(0) {}
-
 User::User(const string& name, const int& fd): _name(name), _fd(fd), _mode_bit(0) { }
 
 const string& User::getName(void) const { return _name; }
-void User::setName(const string& name) { _name = name; }
-const string& User::getHostname(void) const { return _hostname; }
-void User::setHostname(const string& hostname) { _hostname = hostname; }
 int	User::getFD(void) const { return _fd; }
-
+const string& User::getHostname(void) const { return _hostname; }
+void User::setName(const string& name) { _name = name; }
+void User::setHostname(const string& hostname) { _hostname = hostname; }
 
 bool User::hasChannel(Channel* const channel) const {
-	channels_const_iter iter = _channels.find(channel);
-	return iter != _channels.end();
+	return _channels.find(channel) != _channels.end();
 }
 
 void User::joinChannel(Channel* channel) {
-	if (hasChannel(channel)) return ;
+	if (channel == NULL || hasChannel(channel)) return ;
 	_channels.insert(channel);
 }
 
