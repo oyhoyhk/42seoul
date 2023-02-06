@@ -4,7 +4,7 @@
 #include "header.hpp"
 #include "Server/Server.hpp"
 #include "Server/ServerService.hpp"
-#include "Response.hpp"
+#include "Server/Response.hpp"
 #include "poll.h"
 
 #define RES_SELF 0
@@ -40,20 +40,6 @@ public:
 	void execute(Server& server, int fd, const string& msg);
 };
 
-/*
-TODO:
-void	_handleNICK(Server&, int, const string&);
-void	_handleCAP(Server&, int, const string&);
-void	_handlePRIVMSG(Server&, int, const string&);
-void	_handleLIST(Server&, int, const string&);
-void	_handleINVITE(Server&, int, const string&);
-void	_handleKICK(Server&, int, const string&);
-void	_handlePING(Server&, int, const string&);
-void	_handleJOIN(Server&, int, const string&);
-void	_handlePART(Server&, int, const string&);
-void	_handlePASS(Server&, int, const string&);
-void	_handleUSER(Server&, int, const string&);
-void	_handleMODE(Server&, int, const string&);
-*/
+void sendMessage(const int& fd, const string& msg);
 
 #endif
