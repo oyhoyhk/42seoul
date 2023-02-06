@@ -2,7 +2,7 @@
 #define SERVER_HPP
 
 #include "header.hpp"
-#include "Server/Command.hpp"
+#include "Command/Command.hpp"
 #include "Server/ServerService.hpp"
 #include <sys/socket.h>
 #include <sys/poll.h>
