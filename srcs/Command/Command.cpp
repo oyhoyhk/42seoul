@@ -1,4 +1,4 @@
-#include "Server/Command.hpp"
+#include "Command.hpp"
 #include "Utils.hpp"
 #include "header.hpp"
 
@@ -19,7 +19,7 @@ Command::Command() {
     _cmds["MODE"] = &Command::_handleMODE;
 }
 
-static void sendMessage(const int& fd, const string& msg) {
+void sendMessage(const int& fd, const string& msg) {
     const char *temp = msg.c_str();
     write(fd, temp, strlen(temp));
 }
@@ -40,52 +40,6 @@ void Command::_handleCAP(Server &server, int fd, const string &msg) {
     cout << msg << endl;
 }
 
-void Command::_handleNICK(Server &server, int fd, const string &msg) {
-    vector<string> result = split(msg, " ");
-    // TODO: 유저가 없을 경우 try catch를 써야하나?
-    string oldNickname = "*";
-    string newNickname;
-    string response;
-    // "/nick"
-    if (result.size() <= 1) {
-        // ERR_NONICKNAMEGIVEN, 431,  :No nickname given
-        response = string(SERVER_PREFIX) + " 431 " + oldNickname + " :No nickname given";
-        cout << response << endl;
-        sendMessage(fd, response);
-        return;
-    }
-    newNickname = result.at(1);
-    // "/nick morethan9letters"
-    if (newNickname.length() > 9) {
-        // :irc.local 432 <nickname> <nickname> :Erroneus nickname
-        response = string(SERVER_PREFIX) + " 432 " + oldNickname + " " + newNickname +
-                 " :Erroneus nickname";
-		cout << response << endl;
-        sendMessage(fd, response);
-        return;
-    }
-    try {
-        _service.addUser(newNickname, fd);
-    } catch (const exception &e) {
-        response = ":" + string(SERVER_PREFIX) + " 433 " + oldNickname + " " + newNickname + " :Nickname is already in use.\r\n";
-        cout << response << endl;
-        sendMessage(fd, response);
-        cerr << e.what() << endl;
-    }
-
-    string userName = _service.getUserWithFD(fd)->getName();
-    response = ":irc.local 001 " + userName +
-                    " :Welcome to the Localnet IRC Network " + userName +
-                    "!root@127.0.0.1\r\n";
-    sendMessage(fd, response);    //server._service.       // "/nick newnickname"
-}
-
-void Command::_handleUSER(Server &server, int fd, const string &msg) {
-    vector<string> result = split(msg, " ");
-
-    cout << msg << endl;
-    cout << "USER!!!" << endl;
-}
 
 void Command::_handleLIST(Server &server, int fd, const string &msg) {
     (void)fd;
@@ -119,30 +73,6 @@ void Command::_handlePING(Server &server, int fd, const string &msg) {
     write(fd, res, strlen(res));
 }
 
-void Command::_handleJOIN(Server &server, int fd, const string &msg) {
-    vector<string>  msgChannel = split(msg, " ");
-    const string&   channelName = msgChannel[1];
-    Channel*        channel = NULL;
-    User*           user = NULL;
-
-    // 모든 채널에서 이름으로 조회해서 없으면
-    user = _service.getUserWithFD(fd);
-    channel = _service.joinChannelWithUserName(channelName, user->getName());
-
-    vector<User *> list = channel->getUsers();
-    vector<User *>::iterator it;
-
-    for(it = list.begin();it != list.end(); ++it) {
-        std::cout << "list : " << (*it)->getName() << endl;
-    }
-        /*
-        TODO:
-        1. 채널이 invite-only인 경우 초대를 꼭 받아야함.
-        2. active-bans에 유저의 /nick/username/hostname이 없어야한다.
-        3. 비밀번호가 설정되어 있는 채널이면 올바른 비밀번호를 입력해야한다.
-        */
-}
-
 void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {
     vector<string> result = split(msg, " ");
     string  channelName = result.at(1);
@@ -153,10 +83,9 @@ void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {
     Channel* channel = _service.getChannelWithName(channelName);
     vector<User *> users = channel->getUsers();
     for(vector<User *>::iterator user = users.begin(); user != users.end(); ++user) {
-        cout<<"in vector fd : " << fd << "  user->getFD : " << (*user)->getFD() <<  " msg : " << msgInfo << endl;
         if (fd != (*user)->getFD()){
             string response = ":" + _service.getUserWithFD(fd)->getName() + "!yooh@localhost PRIVMSG " + channel->getName() + " " + msgInfo + "\r\n";
-            std::cout <<response << std::endl;
+            std::cout << "[response] : " << response << std::endl;
             sendMessage((*user)->getFD(), response);
         }
     }
@@ -188,41 +117,6 @@ void Command::_handlePART(Server &server, int fd, const string &msg) {
   (void)fd;
   (void)server;
   cout << "PART!!!" << endl;
-}
-
-void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
-	bool			isChannel;
-	vector<string>	taker = split(msg, " ");
-	string 			noticeMsg;
-    User*           sender = _service.getUserWithFD(fd);
-    const string&   target = taker[1];
-
-    /* 두가지로 나뉘는데 그 안에 두가지가 또 있어 그 두가지 형태가 같아요 그래서 함수로 만들까 하다다가 안했다*/
-    /* Notice 받는사람 메시지 */
-	isChannel = (taker[1][0] == '#');
-    if (isChannel) {
-        // 채널이 존재하면, 채널 멤버 받고, 모두에게 뿌리기.
-        try {
-            Channel* channel = _service.getChannelWithName(target);
-            vector<User*> users = channel->getUsers();
-            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + msg;
-            for (vector<User*>::iterator iter = users.begin(); iter != users.end(); iter++)
-                if ((*iter) != sender) sendMessage((*iter)->getFD(), noticeMsg);
-        } catch (const exception& e) {
-            noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No such nick/channel";
-            sendMessage(fd, noticeMsg);
-        }
-    } else {
-        // 개인에게 보내면 개인에게 문자 보내기
-        try {
-            User* user = _service.getUserWithName(target);
-            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + msg;
-            sendMessage(user->getFD(), noticeMsg);
-        } catch (const exception& e) {
-            noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No suchnick/channel";
-            sendMessage(fd, noticeMsg);
-        }
-    }
 }
 
 void Command::_handlePASS(Server &server, int fd, const string &msg) {

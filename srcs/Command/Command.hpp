@@ -4,7 +4,7 @@
 #include "header.hpp"
 #include "Server/Server.hpp"
 #include "Server/ServerService.hpp"
-#include "Response.hpp"
+#include "Server/Response.hpp"
 #include "poll.h"
 
 #define RES_SELF 0
@@ -39,5 +39,7 @@ public:
 	Command();
 	void execute(Server& server, int fd, const string& msg);
 };
+
+void sendMessage(const int& fd, const string& msg);
 
 #endif
