@@ -15,7 +15,7 @@ inline static string join(const vector<string>& emts) {
 
 typedef const string replie_type;
 inline replie_type ERR_NOSUCHNICK_401(const string& nickname) {
-	return nickname + " :No such nick/channel";
+	return nickname + " :No such nick/channel\r\n";
 }
 
 inline replie_type ERR_NONICKNAMEGIVEN_431(void) {
@@ -36,7 +36,7 @@ inline replie_type ERR_USERONCHANNEL_443(const string& user, const string& chann
 
 inline replie_type RPL_NAMREPLY_353(const string& channel, const vector<string>& names) {
 	string ret = channel + " :";
-	ret += join(names);
+	ret += join(names) + "\r\n";
 	return ret;
 }
 
@@ -45,7 +45,19 @@ inline replie_type RPL_ENDOFNAMES_366(const string& channel) {
 }
 
 inline replie_type RPL_INVITING_341(const string& channel, const string& nick) {
-    return channel + " " + nick;
+    return channel + " " + nick + "\r\n";
+}
+
+inline replie_type ERR_UNKNOWNMODE_472(void) {
+	return " :is unknown mode char to me\r\n";
+}
+
+inline replie_type ERR_USERSDONTMATCH_502(void) {
+	return " :Can't change mode for other users\r\n";
+}
+
+inline replie_type ERR_UMODEUNKNOWNFLAG_501(void) {
+	return ":Unknown MODE flag\r\n";
 }
 
 #endif 
