@@ -26,7 +26,7 @@ void	Channel::deleteUser(User* const user) {
 }
 
 void	Channel::setMode(const ChannelMode& mode) {
-	_mode_bit &=  1 << mode;
+	_mode_bit |=  1 << mode;
 }
 
 void	Channel::unsetMode(const ChannelMode& mode) {
