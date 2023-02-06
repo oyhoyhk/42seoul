@@ -173,10 +173,6 @@ void Command::_handlePASS(Server &server, int fd, const string &msg) {
     cout << "PASS!!!" << endl;
 }
 
-void Command::_handleMODE(Server &server, int fd, const string &msg){
-
-}
-
 //void Command::_handleUSER(Server &server, int fd, const string &msg) {
 //    cout << msg << endl;
 //    vector<string> list;
