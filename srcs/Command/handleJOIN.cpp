@@ -12,7 +12,7 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
     channel = _service.joinChannelWithUserName(channelName, user->getName());
 
     string joinMessage = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channel->getName() + "\r\n";
-    string nameReply   = channel->getName() + " :@";
+    string nameReply   = ":irc.local 353 " + user->getName() + " = " + channel->getName() + " :@";
     
     vector<User *> list = channel->getUsers();
     vector<User *>::iterator it;
@@ -20,7 +20,7 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
         nameReply += (*it)->getName() + " ";
     }
     nameReply += "\r\n";
-    string endOfNames   = channel->getName() + " :End of /NAMES list.\r\n";
+    string endOfNames   = ":irc.local 366 " + user->getName() + " " + channel->getName() + " :End of /NAMES list.\r\n";
 
     sendMessage(fd, joinMessage);
     sendMessage(fd, nameReply);
