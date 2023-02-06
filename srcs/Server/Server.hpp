@@ -19,6 +19,7 @@ private :
 	string							_password;
 	int								_socket;
 	struct pollfd					_pollFDs[MAX_FD_SIZE];
+	string							_buf;
 	Command*						_command;
 
 	void	_acceptConnections(void);

@@ -17,6 +17,7 @@ Command::Command() {
     _cmds["PASS"] = &Command::_handlePASS;
     _cmds["USER"] = &Command::_handleUSER;
     _cmds["MODE"] = &Command::_handleMODE;
+    _cmds["OPER"] = &Command::_handleOPER;
 }
 
 void sendMessage(const int& fd, const string& msg) {
@@ -67,10 +68,8 @@ void Command::_handleKICK(Server &server, int fd, const string &msg) {
 
 void Command::_handlePING(Server &server, int fd, const string &msg) {
     (void)server;
-
-    cout << msg << endl;
-    const char *res = ":irc.local PONG irc.local :irc.local";
-    write(fd, res, strlen(res));
+    string response = ":irc.local PONG irc.local :irc.local";
+    sendMessage(fd, response);
 }
 
 void Command::_handlePRIVMSG(Server &server, int fd, const string &msg) {
