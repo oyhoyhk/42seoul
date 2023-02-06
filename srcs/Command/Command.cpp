@@ -23,6 +23,7 @@ Command::Command() {
 
 void sendMessage(const int& fd, const string& msg) {
     const char *temp = msg.c_str();
+    cout << msg;    // TEST
     write(fd, temp, strlen(temp));
 }
 
@@ -154,11 +155,11 @@ void Command::_handleQUIT(Server &server, int fd, const string &msg) {
     }
 }
 
-void Command::_handlePART(Server &server, int fd, const string &msg) {
-  (void)fd;
-  (void)server;
-  cout << "PART!!!" << endl;
-}
+// void Command::_handlePART(Server &server, int fd, const string &msg) {
+//   (void)fd;
+//   (void)server;
+//   cout << "PART!!!" << endl;
+// }
 
 void Command::_handlePASS(Server &server, int fd, const string &msg) {
     vector<string> result = split(msg, " ");
