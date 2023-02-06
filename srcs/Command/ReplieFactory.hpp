@@ -14,8 +14,9 @@ inline static string join(const vector<string>& emts) {
 }
 
 typedef const string replie_type;
-inline replie_type ERR_NOSUCHNICK_401(const string& nickname) {
-	return nickname + " :No such nick/channel\r\n";
+
+inline replie_type ERR_NOSUCHNICK_401(const string& name) {
+	return name + " :No such nick/channel\r\n";
 }
 
 inline replie_type ERR_NONICKNAMEGIVEN_431(void) {
@@ -28,6 +29,10 @@ inline replie_type ERR_ERRONEUSNICKNAME_432(const string& nick) {
 
 inline replie_type ERR_NICKNAMEINUSE_433(const string& nick) {
 	return nick + " :Nickname is already in use\r\n";
+}
+
+inline replie_type ERR_NOTONCHANNEL_442(const string& channel) {
+	return channel + " :You're not on that channel\r\n";
 }
 
 inline replie_type ERR_USERONCHANNEL_443(const string& user, const string& channel) {
