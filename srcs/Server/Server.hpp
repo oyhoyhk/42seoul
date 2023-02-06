@@ -29,7 +29,6 @@ public :
 	~Server();
 	const string &getPassword() const;
 	const struct pollfd	*getPollFDs() const;
-	const map<string, Channel> &getChannels(void) const;
 
 	/*
 	** @brief server 소켓 liten까지 실행
