@@ -149,12 +149,6 @@ void Command::_handleQUIT(Server &server, int fd, const string &msg) {
 void Command::_handlePASS(Server &server, int fd, const string &msg) {
     vector<string> result = split(msg, " ");
     const string &inputPassword = result.at(1);
-
-    if (server.getPassword() != inputPassword) {
-        string res("Password Wrong\r\n");
-        cout<<res<<endl;
-        //_sendMessage(fd, RES_SELF, res, server);
-        return;
-    }
+    _service.insertPassword(fd, inputPassword);
     cout << "PASS!!!" << endl;
 }

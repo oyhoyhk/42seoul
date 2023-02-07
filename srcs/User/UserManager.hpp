@@ -24,6 +24,12 @@ public:
 	User*		addUser(const string& name, const int& fd);
 
 	/************************
+	update
+	************************/
+	void		deleteCahnnelFromUser(Channel* const channel, User* const user);
+
+
+	/************************
 	delete
 	************************/
 	void		deleteUser(const string& name);

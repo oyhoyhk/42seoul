@@ -22,11 +22,18 @@ public:
 	************************/
 	Channel*	addChannel(const string& name);
 
+
+	/************************
+	update
+	************************/
+	void		partUserFromChannels(User* const user, const vector<string>& channels);
+	void		partUserFromChannel(User* const user, Channel* const channel);
+
 	/************************
 	delete
 	************************/
 	void		deleteChannel(const string& name);
-	void		partUserFromChannels(User* user, const vector<string>& channels);
+	void		deleteChannel(Channel* const channel);
 
 };
 
