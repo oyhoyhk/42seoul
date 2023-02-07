@@ -31,6 +31,10 @@ inline replie_type ERR_NICKNAMEINUSE_433(const string& nick) {
 	return nick + " :Nickname is already in use\r\n";
 }
 
+inline replie_type ERR_USERNOTINCHANNEL_441(const string& nick, const string& channel) {
+	return nick + " " + channel + " :They aren't on that channel\r\n";
+}
+
 inline replie_type ERR_NOTONCHANNEL_442(const string& channel) {
 	return channel + " :You're not on that channel\r\n";
 }
@@ -63,6 +67,11 @@ inline replie_type ERR_USERSDONTMATCH_502(void) {
 
 inline replie_type ERR_UMODEUNKNOWNFLAG_501(void) {
 	return ":Unknown MODE flag\r\n";
+}
+
+// :irc.local 482 yubchoi #t2 :You must be a channel operator
+inline replie_type ERR_CHANOPRIVSNEEDED_482(const string& user, const string& channel) {
+	return ":irc.local 482 " +  user + " " + channel + " :You must be a channel operator\r\n";
 }
 
 #endif 

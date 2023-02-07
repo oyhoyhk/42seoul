@@ -26,7 +26,7 @@ public:
 	/************************
 	update
 	************************/
-	void		deleteCahnnelFromUser(Channel* const channel, User* const user);
+	void		deleteChannelFromUser(Channel* const channel, User* const user);
 
 
 	/************************

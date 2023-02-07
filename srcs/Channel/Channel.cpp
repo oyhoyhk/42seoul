@@ -33,6 +33,10 @@ void	Channel::setOperator(User* const user) {
 	_operator = user;
 }
 
+bool	Channel::isOperator(User* const user) const {
+	return _operator == user;
+}
+
 User*	Channel::getOperator(void) const {
 	return _operator;
 }

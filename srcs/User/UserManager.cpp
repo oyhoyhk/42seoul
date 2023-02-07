@@ -18,7 +18,7 @@ User*	UserManager::getUserWithName(const string& name) const {
 	return NULL;
 }
 
-void	UserManager::deleteCahnnelFromUser(Channel* const channel, User* const user) {
+void	UserManager::deleteChannelFromUser(Channel* const channel, User* const user) {
 	user->partChannel(channel);
 }
 

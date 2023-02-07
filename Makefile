@@ -1,5 +1,5 @@
 NAME		=	ircserv
-CXX			=	c++
+CXX			=	c++ -fsanitize=address -g3
 RM			=	rm -rf
 CXXFLAGS	=	-std=c++98 -g -MMD # -Wall -Werror -Wextra
 SRC_DIR		=	srcs/

@@ -37,6 +37,5 @@ void		ChannelManager::partUserFromChannel(User* const user, Channel* const chann
 	channel->deleteUser(user);
 	if (!channel->hasUser()) {
 		deleteChannel(channel);
-		delete channel;
 	}
 }

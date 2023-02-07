@@ -48,6 +48,7 @@ public :
 	void	deleteUser(User* const user);
 
 	void	setOperator(User* const user);
+	bool	isOperator(User* const user) const;
 	User*	getOperator(void) const;
 
 	void	setMode(const ChannelMode& mode);
