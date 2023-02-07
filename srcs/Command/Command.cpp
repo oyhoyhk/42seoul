@@ -155,12 +155,6 @@ void Command::_handleQUIT(Server &server, int fd, const string &msg) {
     }
 }
 
-// void Command::_handlePART(Server &server, int fd, const string &msg) {
-//   (void)fd;
-//   (void)server;
-//   cout << "PART!!!" << endl;
-// }
-
 void Command::_handlePASS(Server &server, int fd, const string &msg) {
     vector<string> result = split(msg, " ");
     const string &inputPassword = result.at(1);
@@ -173,94 +167,3 @@ void Command::_handlePASS(Server &server, int fd, const string &msg) {
     }
     cout << "PASS!!!" << endl;
 }
-
-//void Command::_handleUSER(Server &server, int fd, const string &msg) {
-//    cout << msg << endl;
-//    vector<string> list;
-//    // const string &userName =
-//    server.getUserManager().getUserWithFD(fd).getName();
-//    list.push_back((":irc.local 001 " + userName +
-//                    " :Welcome to the Localnet IRC Network " + userName +
-//                    "!root@127.0.0.1\n"));
-//    vector<string>::iterator it;
-// if (targetName[0] != '#') {
-//        // user MODE: _handleUserMode()
-//        user = _service.getUserWithFD(fd);
-//        try {
-//            target = _service.getUserWithName(targetName);
-//        } catch (const exception& e) {
-//            string res = SERVER_PREFIX + string(" 401 ") + user->getName() + " " + targetName + " :No such nick/channel\n";
-//            sendMessage(fd, res);
-//            return ;
-//        }
-        
-//        // user nickname과 명령어를 보낸 nickname 같은지 확인
-//        if (user->getName() != targetName) {
-//            // :irc.local 502 nickname_ :Can't change mode for other users
-//            string res(SERVER_PREFIX + string(" 502 ") + user->getName() + " :Can't change mode for other users\n");
-//            sendMessage(fd, res);
-//            return ;
-//        }
-
-//        // mode 검사
-//        for (int i = 0; i < targetMode.length(); i++) {
-//            switch (targetMode[i]) {
-//            case 'i':
-//                -iows -i-o+s  ios
-//                break;
-//            case 'w':
-//                break;
-//            case 'o':
-//                break;
-//            case 's':
-//                break;
-//            case '-':
-//            case '+':
-//                break;
-//            default:
-//            }
-//            if (words[2][i] != 'i' && words[2][i] != 'w' && words[2][i] != 'o' && words[2][i] != 's' && words[2][i] != '+' && words[2][i] != '-') {
-//                // :irc.local 501 nickname_ :Unknown MODE flag
-//                string res(SERVER_PREFIX + string(" 501 ") + nickname + string(" :Unknown MODE flag\n"));
-//                _sendMessage(fd, RES_SELF, res, server);
-//                continue;
-//            }
-//            // find i
-//            else if (words[2][i] == 'i') {
-//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_I]) {
-//                    user.setInvisible(false);
-//                    // :nickname_!root@127.0.0.1 MODE nickname_ -i
-//                    _sendMessage(fd, RES_SELF, string(user.), server);
-//                } else if (user.mode[USER_MODE_I] == 0) {                    
-//                    user.setInvisible(true);
-//                }
-//            } else if (words[2][i] == 'w') {
-//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_W]) {
-//                    user.setReceiveWallops(false);
-//                } else if (user.mode[USER_MODE_W] == 0) {
-//                    user.setReceiveWallops(true);
-//                }
-//            } else if (words[2][i] == 'o') {
-//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_O]) {
-//                    user.setOperator(false);
-//                } else if (user.mode[USER_MODE_O] == 0) {
-//                    user.setOperator(true);
-//                }
-//            } else if (words[2][i] == 's') {
-//                if (i && words[2][i-1] == '-' && user.mode[USER_MODE_S]) {
-//                    user.setInvisible(false);
-//                } else if (user.mode[USER_MODE_S] == 0) {
-//                    user.setInvisible(true);
-//                }
-//            }
-//        }
-        
-        
-//    } else {
-//        // channel MODE: _handleChannelMode()
-
-//    }
-//    // user MODE
-
-//    // 
-//}

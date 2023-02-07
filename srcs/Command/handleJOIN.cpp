@@ -3,42 +3,39 @@
 
 void Command::_handleJOIN(Server &server, int fd, const string &msg) {
     vector<string>  msgChannel = split(msg, " ");
-    const string&   channelName = msgChannel[1];
-    Channel*        channel = NULL;
-    User*           user = NULL;
+    vector<string> channels = split(msgChannel[1], ",");
 
-    // 모든 채널에서 이름으로 조회해서 없으면
-    user = _service.getUserWithFD(fd);
-    channel = _service.joinChannelWithUserName(channelName, user->getName());
+    for (vector<string>::iterator ch = channels.begin(); ch != channels.end(); ++ch) {
+        const string&   channelName = *ch;
+        Channel*        channel = NULL;
+        User*           user = NULL;
 
-    string joinMessage = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channel->getName() + "\r\n";
-    string nameReply   = ":irc.local 353 " + user->getName() + " = " + channel->getName() + " :@";
-    
-    vector<User *> list = channel->getUsers();
-    vector<User *>::iterator it;
-    for (it = list.begin(); it != list.end(); ++it) {
-        nameReply += (*it)->getName() + " ";
-    }
-    nameReply += "\r\n";
-    string endOfNames   = ":irc.local 366 " + user->getName() + " " + channel->getName() + " :End of /NAMES list.\r\n";
+        // 모든 채널에서 이름으로 조회해서 없으면
+        user = _service.getUserWithFD(fd);
+        channel = _service.joinChannelWithUserName(channelName, user->getName());
 
-    sendMessage(fd, joinMessage);
-    sendMessage(fd, nameReply);
-    sendMessage(fd, endOfNames);
+        string joinMessage = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channel->getName() + "\r\n";
+        string nameReply   = ":irc.local 353 " + user->getName() + " = " + channel->getName() + " :@";
+        
+        vector<User *> list = channel->getUsers();
+        vector<User *>::iterator it;
+        for (it = list.begin(); it != list.end(); ++it) {
+            nameReply += (*it)->getName() + " ";
+        }
+        nameReply += "\r\n";
+        string endOfNames   = ":irc.local 366 " + user->getName() + " " + channel->getName() + " :End of /NAMES list.\r\n";
 
-    string response = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channelName + "\r\n";
+        sendMessage(fd, joinMessage);
+        sendMessage(fd, nameReply);
+        sendMessage(fd, endOfNames);
 
-    for(it = list.begin();it != list.end(); ++it) {
-        if ((*it)->getFD() != fd) {
-            cout << "[JOIN RESPONSE] " << _service.getUserWithFD((*it)->getFD())->getName() << " >> " << response << endl;
-            sendMessage((*it)->getFD(), response);
+        string response = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channelName + "\r\n";
+
+        for(it = list.begin();it != list.end(); ++it) {
+            if ((*it)->getFD() != fd) {
+                cout << "[JOIN RESPONSE] " << _service.getUserWithFD((*it)->getFD())->getName() << " >> " << response << endl;
+                sendMessage((*it)->getFD(), response);
+            }
         }
     }
-
-        /*
-        TODO:
-        1. 채널이 invite-only인 경우 초대를 꼭 받아야함.
-        2. active-bans에 유저의 /nick/username/hostname이 없어야한다.
-        3. 비밀번호가 설정되어 있는 채널이면 올바른 비밀번호를 입력해야한다.
-        */
 }
