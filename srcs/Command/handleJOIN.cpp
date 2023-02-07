@@ -38,11 +38,4 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
             }
         }
     }
-
-        /*
-        TODO:
-        1. 채널이 invite-only인 경우 초대를 꼭 받아야함.
-        2. active-bans에 유저의 /nick/username/hostname이 없어야한다.
-        3. 비밀번호가 설정되어 있는 채널이면 올바른 비밀번호를 입력해야한다.
-        */
 }
