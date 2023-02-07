@@ -43,6 +43,7 @@ public :
 	const string& getName(void) const;
 
 	bool	hasUser(User* const user) const;
+	bool	hasUser(void) const;
 	void	addUser(User* const user);
 	void	deleteUser(User* const user);
 

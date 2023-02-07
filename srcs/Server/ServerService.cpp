@@ -58,8 +58,8 @@ Channel* ServerService::joinChannelWithUserName(const string& channel_name, cons
 void ServerService::partChannelWithUserName(const string& channel_name, const string& user_name) {
 	Channel* channel = getChannelWithName(channel_name);
 	User* user = getUserWithName(user_name);
-	user->partChannel(channel);
-	channel->deleteUser(user);
+	_channelManager.partUserFromChannel(user, channel);
+	_userManager.deleteCahnnelFromUser(channel, user);
 }
 
 vector<User*> ServerService::getUsersInChannel(const string& channel_name) const {
