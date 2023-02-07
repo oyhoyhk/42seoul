@@ -12,7 +12,7 @@ void Command::_handleUSER(Server &server, int fd, const string &msg) {
 
     string response;
     string inputPassword = _service.getMappedPassword(fd);
-    cout<<"Password : "<<server.getPassword()<<endl;
+    cout<<"Password : ["<<server.getPassword() << "] , stored Password : [" << inputPassword  <<"]"<<endl;
     if (server.getPassword() != inputPassword) {
         response = ":irc.local 464 " + user->getName() +  " :Password Incorrect\r\n";
         sendMessage(fd, response);
