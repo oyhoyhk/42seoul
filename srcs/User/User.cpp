@@ -59,3 +59,5 @@ void	User::unsetMode(const UserMode& mode) {
 bool	User::isSetMode(const UserMode& mode) const {
 	return _mode_bit & (1 << mode);
 }
+
+User::~User() { close(_fd); }
