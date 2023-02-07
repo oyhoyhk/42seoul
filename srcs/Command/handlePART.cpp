@@ -8,11 +8,9 @@ void Command::_handlePART(Server &server, int fd, const string &msg) {
 
 	for (vector<string>::iterator it = channels.begin(); it != channels.end(); ++it) {
 		Channel*        channel = NULL;
-		User*           user = NULL;
-		string			channelName = "";
+		User*           user = _service.getUserWithFD(fd);
+		const string&	channelName = *it;
 
-		user = _service.getUserWithFD(fd);
-		channelName = *it;
 		cout << "channelName: " + channelName << endl;	// TEST
 		// 해당 채널이 존재하지 않는 경우
 		try {
