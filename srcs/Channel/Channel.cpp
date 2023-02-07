@@ -33,6 +33,10 @@ void	Channel::setOperator(User* const user) {
 	_operator = user;
 }
 
+User*	Channel::getOperator(void) const {
+	return _operator;
+}
+
 void	Channel::setMode(const ChannelMode& mode) {
 	_mode_bit |=  1 << mode;
 }
