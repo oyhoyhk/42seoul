@@ -1,6 +1,6 @@
 FROM ubuntu
 
-RUN	apt update && apt upgrade
+RUN	apt update -y && apt upgrade -y
 RUN apt	install -y inspircd
 RUN apt install -y tcpflow
 RUN apt install -y irssi
