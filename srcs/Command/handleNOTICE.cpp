@@ -16,7 +16,7 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
         try {
             Channel* channel = _service.getChannelWithName(target);
             vector<User*> users = channel->getUsers();
-            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + msg;
+            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + " " +msg + "\r\n";
             for (vector<User*>::iterator iter = users.begin(); iter != users.end(); iter++)
                 if ((*iter) != sender) sendMessage((*iter)->getFD(), noticeMsg);
         } catch (const exception& e) {
@@ -27,7 +27,7 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
         // 개인에게 보내면 개인에게 문자 보내기
         try {
             User* user = _service.getUserWithName(target);
-            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + msg;
+            noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + " " + msg + "\r\n";
             sendMessage(user->getFD(), noticeMsg);
         } catch (const exception& e) {
             noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No suchnick/channel\r\n";
