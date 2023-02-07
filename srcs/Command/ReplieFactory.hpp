@@ -65,4 +65,9 @@ inline replie_type ERR_UMODEUNKNOWNFLAG_501(void) {
 	return ":Unknown MODE flag\r\n";
 }
 
+// :irc.local 482 yubchoi #t2 :You must be a channel operator
+inline replie_type ERR_CHANOPRIVSNEEDED_482(const string& user, const string& channel) {
+	return ":irc.local 482 " +  user + " " + channel + " :You must be a channel operator\r\n";
+}
+
 #endif 
