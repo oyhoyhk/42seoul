@@ -30,6 +30,7 @@ private:
 
 	string 				_name;
 	users_type			_users;
+	User*				_operator;
 	unsigned int		_mode_bit;
 
 	Channel operator= (const Channel& ref);
@@ -45,12 +46,14 @@ public :
 	void	addUser(User* const user);
 	void	deleteUser(User* const user);
 
+	void	setOperator(User* const user);
+
 	void	setMode(const ChannelMode& mode);
 	void	unsetMode(const ChannelMode& mode);
 	bool	isSetMode(const ChannelMode& mode) const;
 
 	vector<User*> getUsers(void) const;
 	vector<int> getUserFDs(void) const;
-}; 
+};
 
 #endif

@@ -21,11 +21,6 @@ public:
 	create
 	************************/
 	Channel*	addChannel(const string& name);
-	
-	/************************
-	update
-	************************/
-	void		updateUserFromChannel(User* const user, Channel* const channel);
 
 	/************************
 	delete

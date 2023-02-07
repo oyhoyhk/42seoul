@@ -25,6 +25,10 @@ void	Channel::deleteUser(User* const user) {
 	_users.erase(iter);
 }
 
+void	Channel::setOperator(User* const user) {
+	_operator = user;
+}
+
 void	Channel::setMode(const ChannelMode& mode) {
 	_mode_bit |=  1 << mode;
 }
