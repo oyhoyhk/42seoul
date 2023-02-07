@@ -1,5 +1,6 @@
 #include "Command.hpp"
 #include "Utils.hpp"
+#include "ReplieFactory.hpp"
 
 void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
 	bool			isChannel;
@@ -20,7 +21,7 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
             for (vector<User*>::iterator iter = users.begin(); iter != users.end(); iter++)
                 if ((*iter) != sender) sendMessage((*iter)->getFD(), noticeMsg);
         } catch (const exception& e) {
-            noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No such nick/channel\r\n";
+            noticeMsg = ":irc.local 401 " + sender->getName() + " " + ERR_NOSUCHNICK_401(target);
             sendMessage(fd, noticeMsg);
         }
     } else {
@@ -30,7 +31,7 @@ void Command::_handleNOTICE(Server &server, int fd, const string &msg) {
             noticeMsg = ":" + sender->getName() + "!" + HOST_NAME + " " + msg + "\r\n";
             sendMessage(user->getFD(), noticeMsg);
         } catch (const exception& e) {
-            noticeMsg = ":irc.local 401 " + sender->getName() + " " + target + " :No suchnick/channel\r\n";
+            noticeMsg = ":irc.local 401 " + sender->getName() + " " + ERR_NOSUCHNICK_401(target);
             sendMessage(fd, noticeMsg);
         }
     }

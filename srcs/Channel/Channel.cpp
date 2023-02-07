@@ -56,6 +56,13 @@ vector<User*> Channel::getUsers(void) const {
 	return ret;
 }
 
+vector<string> Channel::getUserNames(void) const {
+	vector<string> ret;
+	for(users_const_iter iter = _users.begin(); iter != _users.end(); ++iter)
+		ret.push_back((*iter)->getName());
+	return ret;
+}
+
 vector<int> Channel::getUserFDs(void) const {
 	vector<int> ret;
 	for(users_const_iter iter = _users.begin(); iter != _users.end(); ++iter)

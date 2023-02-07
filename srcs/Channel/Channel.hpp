@@ -55,6 +55,7 @@ public :
 	bool	isSetMode(const ChannelMode& mode) const;
 
 	vector<User*> getUsers(void) const;
+	vector<string> getUserNames(void) const;
 	vector<int> getUserFDs(void) const;
 };
 

@@ -1,5 +1,6 @@
 #include "Command.hpp"
 #include "Utils.hpp"
+#include "ReplieFactory.hpp"
 
 void Command::_handleJOIN(Server &server, int fd, const string &msg) {
     vector<string>  msgChannel = split(msg, " ");
@@ -7,34 +8,21 @@ void Command::_handleJOIN(Server &server, int fd, const string &msg) {
 
     for (vector<string>::iterator ch = channels.begin(); ch != channels.end(); ++ch) {
         const string&   channelName = *ch;
-        Channel*        channel = NULL;
-        User*           user = NULL;
-
         // 모든 채널에서 이름으로 조회해서 없으면
-        user = _service.getUserWithFD(fd);
-        channel = _service.joinChannelWithUserName(channelName, user->getName());
-
-        string joinMessage = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channel->getName() + "\r\n";
-        string nameReply   = ":irc.local 353 " + user->getName() + " = " + channel->getName() + " :@";
-        
-        vector<User *> list = channel->getUsers();
-        vector<User *>::iterator it;
-        for (it = list.begin(); it != list.end(); ++it) {
-            nameReply += (*it)->getName() + " ";
-        }
-        nameReply += "\r\n";
-        string endOfNames   = ":irc.local 366 " + user->getName() + " " + channel->getName() + " :End of /NAMES list.\r\n";
-
-        sendMessage(fd, joinMessage);
-        sendMessage(fd, nameReply);
-        sendMessage(fd, endOfNames);
+        User* user = _service.getUserWithFD(fd);
+        Channel* channel = _service.joinChannelWithUserName(channelName, user->getName());
+        vector<string> userNames = channel->getUserNames();
+        replace(userNames.begin(), userNames.end(), channel->getOperator()->getName(), "@" + channel->getOperator()->getName());
+        sendMessage(fd, ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channel->getName() + "\r\n");
+        sendMessage(fd, ":irc.local 353 " + user->getName() + " = " + RPL_NAMREPLY_353(channel->getName(), userNames));
+        sendMessage(fd, ":irc.local 366 " + user->getName() + " " + RPL_ENDOFNAMES_366(channel->getName()));
 
         string response = ":" + user->getName() + "!" + user->getId() + "@" + user->getHostname() + " JOIN :" + channelName + "\r\n";
-
-        for(it = list.begin();it != list.end(); ++it) {
-            if ((*it)->getFD() != fd) {
-                cout << "[JOIN RESPONSE] " << _service.getUserWithFD((*it)->getFD())->getName() << " >> " << response << endl;
-                sendMessage((*it)->getFD(), response);
+        vector<User*> users = channel->getUsers();
+        for(vector<User*>::iterator iter = users.begin(); iter != users.end(); ++iter) {
+            if ((*iter)->getFD() != fd) {
+                cout << "[JOIN RESPONSE] " << (*iter)->getName() << " >> " << response << endl;
+                sendMessage((*iter)->getFD(), response);
             }
         }
     }
