@@ -31,6 +31,10 @@ inline replie_type ERR_NICKNAMEINUSE_433(const string& nick) {
 	return nick + " :Nickname is already in use\r\n";
 }
 
+inline replie_type ERR_USERNOTINCHANNEL_441(const string& nick, const string& channel) {
+	return nick + " " + channel + " :They aren't on that channel\r\n";
+}
+
 inline replie_type ERR_NOTONCHANNEL_442(const string& channel) {
 	return channel + " :You're not on that channel\r\n";
 }
