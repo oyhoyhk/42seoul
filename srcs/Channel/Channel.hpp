@@ -43,10 +43,12 @@ public :
 	const string& getName(void) const;
 
 	bool	hasUser(User* const user) const;
+	bool	hasUser(void) const;
 	void	addUser(User* const user);
 	void	deleteUser(User* const user);
 
 	void	setOperator(User* const user);
+	User*	getOperator(void) const;
 
 	void	setMode(const ChannelMode& mode);
 	void	unsetMode(const ChannelMode& mode);

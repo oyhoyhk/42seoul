@@ -14,6 +14,10 @@ bool	Channel::hasUser(User* const user) const {
 	return _users.find(user) != _users.end();
 }
 
+bool	Channel::hasUser(void) const {
+	return !_users.empty();
+}
+
 void	Channel::addUser(User* const user) {
 	if (user == NULL || hasUser(user)) return;
 	_users.insert(user);
@@ -27,6 +31,10 @@ void	Channel::deleteUser(User* const user) {
 
 void	Channel::setOperator(User* const user) {
 	_operator = user;
+}
+
+User*	Channel::getOperator(void) const {
+	return _operator;
 }
 
 void	Channel::setMode(const ChannelMode& mode) {
