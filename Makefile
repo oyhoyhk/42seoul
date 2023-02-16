@@ -1,4 +1,6 @@
 all:
+	mkdir -p /home/yooh/data/mysql
+	mkdir -p /home/yooh/data/wordpress
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
