@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="tutorial" width="600" height="400">hello</canvas>
+    <script>
+      const canvas = document.getElementById("tutorial");
+      const ctx = canvas.getContext("2d");
+      //  ctx.fillStyle = "rgb(150,0,0)";
+      //  ctx.fillRect(10, 10, 50, 50);
+      //  ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+      //  ctx.fillRect(30, 30, 50, 50);
+      const ITER_MAX = 100;
+      const WIN_WIDTH = 600;
+      const WIN_HEIGHT = 400;
+
+      const getRandomColor = () =>
+        "#" +
+        (
+          (Math.floor(Math.random() * 256) << 4) +
+          (Math.floor(Math.random() * 256) << 2) +
+          Math.floor(Math.random() * 256)
+        ).toString(16);
+
+      const out = getRandomColor();
+
+      const in_color = getRandomColor();
+
+      console.log(out, in_color);
+
+      for (let i = 0; i < WIN_WIDTH; ++i) {
+        for (let j = 0; j < WIN_HEIGHT; ++j) {
+          iter = mandelbrot(i, j, 0);
+          if (iter < ITER_MAX) {
+            ctx.fillStyle = out;
+            ctx.fillRect(i, j, 1, 1);
+          } else {
+            ctx.fillStyle = in_color;
+            ctx.fillRect(i, j, 1, 1);
+          }
+        }
+      }
+      function mandelbrot(w, h, iter) {
+        let c_re, c_im, x, x_new, y;
+
+        c_re = ((w - WIN_WIDTH / 2) * 3) / WIN_WIDTH - 0.5;
+        c_im = ((WIN_HEIGHT / 2 - h) * 2) / WIN_HEIGHT;
+        x = 0;
+        y = 0;
+        while (Math.pow(x, 2) + Math.pow(y, 2) < 4 && iter < ITER_MAX) {
+          x_new = Math.pow(x, 2) - Math.pow(y, 2) + c_re;
+          y = 2 * x * y + c_im;
+          x = x_new;
+          iter++;
+        }
+        return iter;
+      }
+    </script>
+  </body>
+</html>
